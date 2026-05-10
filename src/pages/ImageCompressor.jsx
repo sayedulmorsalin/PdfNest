@@ -105,9 +105,23 @@ export default function ImageCompressor() {
   return (
     <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <SEO 
-        title="Image Compressor" 
-        description="Fast, client-side image compression. Reduce file sizes without losing quality. No server uploads - your privacy is guaranteed."
+        title="Image Compressor - Reduce File Size without Quality Loss" 
+        description="Fast, client-side image compression. Reduce PNG, JPG, and WebP file sizes instantly. 100% private processing right in your browser."
         canonical="/image-compressor"
+        keywords="image compressor, reduce image size, compress png, compress jpg, online image optimizer, client-side image compression"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          "name": "PdfNest Image Compressor",
+          "operatingSystem": "Web",
+          "applicationCategory": "MultimediaApplication",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          "featureList": "PNG Compression, JPG Compression, WebP Support, Quality Control, Privacy-first"
+        }}
       />
 
       <div className="flex items-center gap-4 mb-2">

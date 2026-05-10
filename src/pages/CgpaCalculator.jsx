@@ -15,7 +15,7 @@ const GRADES = [
   { label: 'F (0.0)', value: 0.0 },
 ];
 
-export default function GpaCalculator() {
+export default function CgpaCalculator() {
   const [subjects, setSubjects] = useState([
     { id: 1, name: '', credit: 3, grade: 4.0 }
   ]);
@@ -36,7 +36,7 @@ export default function GpaCalculator() {
     ));
   };
 
-  const calculateGpa = () => {
+  const calculateCgpa = () => {
     let totalPoints = 0;
     let totalCredits = 0;
     
@@ -48,14 +48,28 @@ export default function GpaCalculator() {
     return totalCredits > 0 ? (totalPoints / totalCredits).toFixed(2) : '0.00';
   };
 
-  const gpa = calculateGpa();
+  const cgpa = calculateCgpa();
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <SEO 
-        title="GPA Calculator (Bangladesh)" 
-        description="Calculate your CGPA/GPA based on the Bangladesh (BD) grading system. Supports dynamic subject addition and credit weighting."
-        canonical="/gpa-calculator"
+        title="CGPA Calculator (Bangladesh Grading System)" 
+        description="Free online CGPA calculator for Bangladesh university students. Supports DU, BUET, NSU, AIUB and more. Calculate CGPA with credit weighting easily."
+        canonical="/cgpa-calculator"
+        keywords="CGPA calculator BD, Bangladesh CGPA calculator, calculate CGPA DU, BUET GPA calculator, university CGPA calculator"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          "name": "PdfNest CGPA Calculator",
+          "operatingSystem": "Web",
+          "applicationCategory": "EducationalApplication",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          "featureList": "Bangladesh Grading System, Dynamic Subject Addition, Credit Weighting, Instant Calculation"
+        }}
       />
 
       <div className="flex items-center gap-4 mb-2">
@@ -63,7 +77,7 @@ export default function GpaCalculator() {
           <Calculator className="w-8 h-8" />
         </div>
         <div>
-          <h1 className="text-3xl font-bold">GPA Calculator</h1>
+          <h1 className="text-3xl font-bold">CGPA Calculator</h1>
           <p className="text-muted-foreground text-sm">Bangladesh (BD) University/College Grading System.</p>
         </div>
       </div>
@@ -139,13 +153,13 @@ export default function GpaCalculator() {
             <div className="glass rounded-3xl p-8 text-center space-y-6 overflow-hidden relative group">
               <div className="absolute inset-0 bg-gradient-to-br from-purple-400/10 to-transparent pointer-none" />
               <div className="relative z-10">
-                <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">Your GPA is</p>
+                <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">Your CGPA is</p>
                 <div className="text-7xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-white/50 mb-2">
-                  {gpa}
+                  {cgpa}
                 </div>
                 <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-400/10 text-emerald-400 text-xs font-bold">
                   <Sparkles className="w-3 h-3" /> 
-                  {parseFloat(gpa) >= 3.5 ? 'Excellent!' : parseFloat(gpa) >= 3.0 ? 'Great Job!' : 'Keep Going!'}
+                  {parseFloat(cgpa) >= 3.5 ? 'Excellent!' : parseFloat(cgpa) >= 3.0 ? 'Great Job!' : 'Keep Going!'}
                 </div>
               </div>
             </div>

@@ -45,11 +45,11 @@ const TOOLS = [
     bgColor: 'bg-emerald-400/10'
   },
   {
-    id: 'gpa-calculator',
-    name: 'GPA Calculator',
-    description: 'Calculate your GPA based on the Bangladesh (BD) grading system.',
+    id: 'cgpa-calculator',
+    name: 'CGPA Calculator',
+    description: 'Calculate your CGPA based on the Bangladesh (BD) grading system.',
     icon: <Calculator className="w-6 h-6" />,
-    path: '/gpa-calculator',
+    path: '/cgpa-calculator',
     category: 'Student Tools',
     color: 'text-purple-400',
     bgColor: 'bg-purple-400/10'
@@ -81,7 +81,12 @@ export default function Home() {
 
   return (
     <div className="space-y-12 animate-in fade-in duration-700">
-      <SEO />
+      <SEO 
+        title="All-in-One Free Online Tools"
+        description="PdfNest is your ultimate hub for free online utilities. PDF editor, JSON formatter, Image compressor, CGPA calculator, and Code formatter — all in one place. Fast, secure, and privacy-focused."
+        keywords="free online tools, PDF tools, developer tools, student tools, CGPA calculator, JSON beautifier, image optimizer"
+        canonical="/"
+      />
       
       {/* Hero Section */}
       <section className="text-center py-16 space-y-6">

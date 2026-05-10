@@ -3,7 +3,7 @@ import { Copy, Trash2, Check, Code, Wand2 } from 'lucide-react';
 import SEO from '../components/SEO';
 
 export default function CodeFormatter() {
-  const [code, setCode] = useState('function hello() {\n  console.log("Welcome to ToolNest");\n}');
+  const [code, setCode] = useState('function hello() {\n  console.log("Welcome to PdfNest");\n}');
   const [language, setLanguage] = useState('javascript');
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
@@ -78,9 +78,23 @@ export default function CodeFormatter() {
   return (
     <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <SEO 
-        title="Code Formatter" 
-        description="Online code formatter for JavaScript, HTML, CSS and JSON. Beautify and minify your code instantly."
+        title="Online Code Formatter & Beautifier" 
+        description="Format and minify JavaScript, HTML, CSS, and JSON instantly. Online code beautifier with support for multiple languages and privacy-first processing."
         canonical="/code-formatter"
+        keywords="code formatter, js beautifier, html formatter, css beautifier, minify code, online code editor"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          "name": "PdfNest Code Formatter",
+          "operatingSystem": "Web",
+          "applicationCategory": "DeveloperApplication",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          "featureList": "JavaScript Formatting, HTML Beautifier, CSS Minifier, JSON Validator"
+        }}
       />
 
       <div className="flex items-center gap-4 mb-2">

@@ -3,7 +3,7 @@ import { FileJson, Wand2, Trash2, Copy, Check, Minimize2 } from 'lucide-react';
 import SEO from '../components/SEO';
 
 export default function JsonFormatter() {
-  const [code, setCode] = useState('{\n  "name": "ToolNest"\n}');
+  const [code, setCode] = useState('{\n  "name": "PdfNest"\n}');
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
 
@@ -64,7 +64,25 @@ export default function JsonFormatter() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500">
-      <SEO title="JSON Formatter" description="Beautify, minify, and validate your JSON data with syntax highlighting." />
+      <SEO 
+        title="JSON Formatter & Validator" 
+        description="Clean, format, minify, and validate your JSON data instantly. Online JSON beautifier with syntax highlighting and privacy-focused processing." 
+        canonical="/json-formatter"
+        keywords="JSON formatter, JSON validator, beautify JSON, minify JSON, online JSON editor, JSON lint"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          "name": "PdfNest JSON Formatter",
+          "operatingSystem": "Web",
+          "applicationCategory": "DeveloperApplication",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          "featureList": "Format JSON, Minify JSON, Validate JSON, Client-side processing"
+        }}
+      />
       
       <div className="flex items-center gap-4">
         <div className="p-3 rounded-xl bg-blue-400/10 text-blue-400">

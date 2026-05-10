@@ -8,7 +8,7 @@ export default function Footer() {
         <div className="col-span-1 md:col-span-1">
           <Link to="/" className="flex items-center gap-2 mb-6">
             <Hammer className="w-6 h-6 text-primary" />
-            <span className="text-xl font-bold tracking-tight">ToolNest</span>
+            <span className="text-xl font-bold tracking-tight">PdfNest</span>
           </Link>
           <p className="text-muted-foreground text-sm leading-relaxed">
             Beautiful, fast, and free tools for students and developers. 
@@ -21,7 +21,7 @@ export default function Footer() {
           <ul className="space-y-4 text-sm text-muted-foreground">
             <li><Link to="/json-formatter" className="hover:text-primary transition-colors">JSON Formatter</Link></li>
             <li><Link to="/image-compressor" className="hover:text-primary transition-colors">Image Compressor</Link></li>
-            <li><Link to="/gpa-calculator" className="hover:text-primary transition-colors">GPA Calculator</Link></li>
+            <li><Link to="/cgpa-calculator" className="hover:text-primary transition-colors">CGPA Calculator</Link></li>
             <li><Link to="/code-formatter" className="hover:text-primary transition-colors">Code Formatter</Link></li>
           </ul>
         </div>
@@ -53,7 +53,7 @@ export default function Footer() {
       </div>
       
       <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-muted-foreground">
-        <p>© {new Date().getFullYear()} ToolNest. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} PdfNest. All rights reserved.</p>
         <p>Built with ❤️ for the community.</p>
       </div>
     </footer>

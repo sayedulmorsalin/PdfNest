@@ -573,9 +573,24 @@ export default function PdfEditor() {
   return (
     <>
       <SEO
-        title="PDF Editor Tool"
-        description="Free online PDF editor — convert PDFs to Word (preserving formatting), PowerPoint, merge, split, and compress. Privacy-first, browser-only processing."
+        title="Professional PDF Editor & Converter"
+        description="Free online PDF editor to convert PDF to Word with preserved formatting, PDF to PowerPoint, merge, split, and compress PDFs. 100% browser-based for maximum security."
         canonical="/pdf-editor"
+        keywords="PDF to Word, PDF converter, merge PDF, split PDF, compress PDF, PDF to PPTX, browser-based PDF editor"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          "name": "PdfNest PDF Editor",
+          "operatingSystem": "Web",
+          "applicationCategory": "OfficeApplication",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          "featureList": "Convert PDF to Word, Convert PDF to PowerPoint, Merge PDF, Split PDF, Compress PDF",
+          "screenshot": "https://pdfnest.com/screenshots/pdf-editor.png"
+        }}
       />
       <div className="min-h-screen">
         {/* Hero */}

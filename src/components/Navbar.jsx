@@ -10,7 +10,7 @@ export default function Navbar() {
     { name: 'Home', path: '/' },
     { name: 'PDF Editor', path: '/pdf-editor' },
     { name: 'Image Compressor', path: '/image-compressor' },
-    { name: 'GPA Calculator', path: '/gpa-calculator' },
+    { name: 'CGPA Calculator', path: '/cgpa-calculator' },
     { name: 'Code Formatter', path: '/code-formatter' },
   ];
 
@@ -22,7 +22,7 @@ export default function Navbar() {
             <Hammer className="w-5 h-5 text-primary-foreground" />
           </div>
           <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
-            UltraTools
+            PdfNest
           </span>
         </Link>
 

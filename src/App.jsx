@@ -3,7 +3,7 @@ import Layout from './components/Layout';
 import Home from './pages/Home';
 import JsonFormatter from './pages/JsonFormatter';
 import ImageCompressor from './pages/ImageCompressor';
-import GpaCalculator from './pages/GpaCalculator';
+import CgpaCalculator from './pages/CgpaCalculator';
 import CodeFormatter from './pages/CodeFormatter';
 import PdfEditor from './pages/PdfEditor';
 
@@ -15,7 +15,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/json-formatter" element={<JsonFormatter />} />
           <Route path="/image-compressor" element={<ImageCompressor />} />
-          <Route path="/gpa-calculator" element={<GpaCalculator />} />
+          <Route path="/cgpa-calculator" element={<CgpaCalculator />} />
           <Route path="/code-formatter" element={<CodeFormatter />} />
           <Route path="/pdf-editor" element={<PdfEditor />} />
         </Routes>
