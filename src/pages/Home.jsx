@@ -82,9 +82,9 @@ export default function Home() {
   return (
     <div className="space-y-12 animate-in fade-in duration-700">
       <SEO 
-        title="All-in-One Free Online Tools"
-        description="PdfNest is your ultimate hub for free online utilities. PDF editor, JSON formatter, Image compressor, CGPA calculator, and Code formatter — all in one place. Fast, secure, and privacy-focused."
-        keywords="free online tools, PDF tools, developer tools, student tools, CGPA calculator, JSON beautifier, image optimizer"
+        title="PdfNest | Free Online PDF Editor, JSON Formatter & Developer Tools"
+        description="PdfNest is your ultimate hub for free online tools. Professional PDF editor to convert PDF to Word, merge & split PDFs, JSON formatter, Image compressor, and more. 100% private and secure."
+        keywords="free PDF editor, convert PDF to Word, merge PDF, split PDF, compress PDF, JSON formatter, image compressor, CGPA calculator, online developer tools, pdfnest.shop"
         canonical="/"
       />
       

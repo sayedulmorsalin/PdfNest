@@ -65,10 +65,10 @@ export default function JsonFormatter() {
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500">
       <SEO 
-        title="JSON Formatter & Validator" 
-        description="Clean, format, minify, and validate your JSON data instantly. Online JSON beautifier with syntax highlighting and privacy-focused processing." 
+        title="JSON Formatter, Validator & Beautifier" 
+        description="Clean, format, minify, and validate your JSON data instantly. Online JSON beautifier with syntax highlighting, auto-validation, and privacy-focused processing." 
         canonical="/json-formatter"
-        keywords="JSON formatter, JSON validator, beautify JSON, minify JSON, online JSON editor, JSON lint"
+        keywords="JSON formatter, JSON validator, beautify JSON, minify JSON, online JSON editor, JSON lint, validate JSON online, format JSON string"
         schema={{
           "@context": "https://schema.org",
           "@type": "SoftwareApplication",
@@ -80,7 +80,12 @@ export default function JsonFormatter() {
             "price": "0",
             "priceCurrency": "USD"
           },
-          "featureList": "Format JSON, Minify JSON, Validate JSON, Client-side processing"
+          "featureList": [
+            "Format JSON data",
+            "Minify JSON",
+            "Validate JSON syntax",
+            "Client-side processing for privacy"
+          ]
         }}
       />
       

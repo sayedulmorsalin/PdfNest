@@ -78,10 +78,10 @@ export default function CodeFormatter() {
   return (
     <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <SEO 
-        title="Online Code Formatter & Beautifier" 
-        description="Format and minify JavaScript, HTML, CSS, and JSON instantly. Online code beautifier with support for multiple languages and privacy-first processing."
+        title="Online Code Formatter - Beautify JS, HTML, CSS & JSON" 
+        description="Format and minify JavaScript, HTML, CSS, and JSON instantly. Online code beautifier with support for multiple languages and privacy-first browser-based processing."
         canonical="/code-formatter"
-        keywords="code formatter, js beautifier, html formatter, css beautifier, minify code, online code editor"
+        keywords="code formatter, js beautifier, html formatter, css beautifier, minify code, online code editor, beautify javascript, format html online"
         schema={{
           "@context": "https://schema.org",
           "@type": "SoftwareApplication",
@@ -93,7 +93,12 @@ export default function CodeFormatter() {
             "price": "0",
             "priceCurrency": "USD"
           },
-          "featureList": "JavaScript Formatting, HTML Beautifier, CSS Minifier, JSON Validator"
+          "featureList": [
+            "JavaScript Formatting",
+            "HTML Beautifier",
+            "CSS Minifier",
+            "JSON Validator"
+          ]
         }}
       />
 

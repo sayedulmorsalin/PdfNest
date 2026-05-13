@@ -1,4 +1,4 @@
-import { Hammer, ExternalLink, Github, Mail } from 'lucide-react';
+import { ExternalLink, Github, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function Footer() {
@@ -6,8 +6,10 @@ export default function Footer() {
     <footer className="w-full border-t border-white/5 bg-background/50 pt-16 pb-8 px-4 mt-20">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
         <div className="col-span-1 md:col-span-1">
-          <Link to="/" className="flex items-center gap-2 mb-6">
-            <Hammer className="w-6 h-6 text-primary" />
+          <Link to="/" className="flex items-center gap-2 mb-6 group">
+            <div className="w-8 h-8 rounded-lg overflow-hidden border border-white/10 group-hover:rotate-12 transition-transform">
+              <img src="/image.png?v=2" alt="PdfNest Logo" className="w-full h-full object-cover" />
+            </div>
             <span className="text-xl font-bold tracking-tight">PdfNest</span>
           </Link>
           <p className="text-muted-foreground text-sm leading-relaxed">
@@ -19,6 +21,7 @@ export default function Footer() {
         <div>
           <h4 className="font-semibold mb-6 text-white">Tools</h4>
           <ul className="space-y-4 text-sm text-muted-foreground">
+            <li><Link to="/pdf-editor" className="hover:text-primary transition-colors">PDF Editor & Converter</Link></li>
             <li><Link to="/json-formatter" className="hover:text-primary transition-colors">JSON Formatter</Link></li>
             <li><Link to="/image-compressor" className="hover:text-primary transition-colors">Image Compressor</Link></li>
             <li><Link to="/cgpa-calculator" className="hover:text-primary transition-colors">CGPA Calculator</Link></li>

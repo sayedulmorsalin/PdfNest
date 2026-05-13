@@ -105,10 +105,10 @@ export default function ImageCompressor() {
   return (
     <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <SEO 
-        title="Image Compressor - Reduce File Size without Quality Loss" 
-        description="Fast, client-side image compression. Reduce PNG, JPG, and WebP file sizes instantly. 100% private processing right in your browser."
+        title="Image Compressor - Reduce JPG, PNG & WebP Size" 
+        description="Fast, client-side image compression. Reduce PNG, JPG, and WebP file sizes instantly while maintaining high quality. 100% private processing right in your browser."
         canonical="/image-compressor"
-        keywords="image compressor, reduce image size, compress png, compress jpg, online image optimizer, client-side image compression"
+        keywords="image compressor, reduce image size, compress png, compress jpg, online image optimizer, client-side image compression, optimize images for web"
         schema={{
           "@context": "https://schema.org",
           "@type": "SoftwareApplication",
@@ -120,7 +120,13 @@ export default function ImageCompressor() {
             "price": "0",
             "priceCurrency": "USD"
           },
-          "featureList": "PNG Compression, JPG Compression, WebP Support, Quality Control, Privacy-first"
+          "featureList": [
+            "PNG Compression",
+            "JPG Compression",
+            "WebP Support",
+            "Quality Control",
+            "Privacy-first local processing"
+          ]
         }}
       />
 

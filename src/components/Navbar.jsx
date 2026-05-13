@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Hammer, Search, Menu, X, Sun, Moon } from 'lucide-react';
+import { Search, Menu, X, Sun, Moon } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Navbar() {
@@ -18,8 +18,8 @@ export default function Navbar() {
     <nav className="sticky top-0 z-50 w-full border-b border-white/5 glass px-4 py-3">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2 group">
-          <div className="bg-primary p-1.5 rounded-lg group-hover:rotate-12 transition-transform">
-            <Hammer className="w-5 h-5 text-primary-foreground" />
+          <div className="w-8 h-8 rounded-lg overflow-hidden group-hover:rotate-12 transition-transform border border-white/10">
+            <img src="/image.png?v=2" alt="PdfNest Logo" className="w-full h-full object-cover" />
           </div>
           <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
             PdfNest

@@ -1,0 +1,23 @@
+{
+  "name": "PdfNest - Free Online Tools",
+  "short_name": "PdfNest",
+  "description": "Your all-in-one hub for free online tools. PDF to Word, JSON formatter, image compressor, and more.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#09090b",
+  "theme_color": "#3b82f6",
+  "icons": [
+    {
+      "src": "/image.png?v=2",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/image.png?v=2",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

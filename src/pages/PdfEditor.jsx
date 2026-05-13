@@ -573,10 +573,10 @@ export default function PdfEditor() {
   return (
     <>
       <SEO
-        title="Professional PDF Editor & Converter"
+        title="Professional PDF Editor - Convert PDF to Word, Merge & Split"
         description="Free online PDF editor to convert PDF to Word with preserved formatting, PDF to PowerPoint, merge, split, and compress PDFs. 100% browser-based for maximum security."
         canonical="/pdf-editor"
-        keywords="PDF to Word, PDF converter, merge PDF, split PDF, compress PDF, PDF to PPTX, browser-based PDF editor"
+        keywords="PDF to Word, free PDF editor, merge PDF, split PDF, compress PDF, PDF to PPTX, browser-based PDF editor, edit PDF online, convert PDF to Docx"
         schema={{
           "@context": "https://schema.org",
           "@type": "SoftwareApplication",
@@ -588,8 +588,15 @@ export default function PdfEditor() {
             "price": "0",
             "priceCurrency": "USD"
           },
-          "featureList": "Convert PDF to Word, Convert PDF to PowerPoint, Merge PDF, Split PDF, Compress PDF",
-          "screenshot": "https://pdfnest.com/screenshots/pdf-editor.png"
+          "featureList": [
+            "Convert PDF to Word (Docx)",
+            "Convert PDF to PowerPoint (PPTX)",
+            "Merge PDF files",
+            "Split PDF pages",
+            "Compress PDF size"
+          ],
+          "applicationSubCategory": "PDF Converter",
+          "screenshot": "https://pdfnest.shop/screenshots/pdf-editor.png"
         }}
       />
       <div className="min-h-screen">
