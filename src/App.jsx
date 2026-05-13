@@ -6,6 +6,9 @@ import ImageCompressor from './pages/ImageCompressor';
 import CgpaCalculator from './pages/CgpaCalculator';
 import CodeFormatter from './pages/CodeFormatter';
 import PdfEditor from './pages/PdfEditor';
+import Privacy from './pages/Privacy';
+import Terms from './pages/Terms';
+import Contact from './pages/Contact';
 
 function App() {
   return (
@@ -18,6 +21,9 @@ function App() {
           <Route path="/cgpa-calculator" element={<CgpaCalculator />} />
           <Route path="/code-formatter" element={<CodeFormatter />} />
           <Route path="/pdf-editor" element={<PdfEditor />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/contact" element={<Contact />} />
         </Routes>
       </Layout>
     </Router>
