@@ -188,6 +188,58 @@ export default function Home() {
         </div>
       )}
 
+      {/* FAQ Section */}
+      <section className="py-20">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-16 space-y-4">
+            <h2 className="text-4xl font-bold tracking-tight">Frequently Asked Questions</h2>
+            <p className="text-muted-foreground">Everything you need to know about PdfNest and our tools.</p>
+          </div>
+
+          <div className="space-y-4">
+            {[
+              {
+                q: "How to compress PDF without losing quality?",
+                a: "Our PDF compressor uses advanced algorithms to remove redundant data and optimize images within the file. By choosing 'Recommended Compression', you get the perfect balance between file size reduction and visual quality."
+              },
+              {
+                q: "What is the best PDF format for printing?",
+                a: "For high-quality printing, PDF/X is generally the best choice as it ensures all fonts are embedded and colors are correctly defined. However, our standard PDF output is optimized for both digital viewing and standard office printing."
+              },
+              {
+                q: "How to convert JPG to PDF?",
+                a: "You can use our Image Compressor or PDF Editor tools. Simply upload your JPG files, and you can export them as a single, multi-page PDF document in seconds. All processing happens locally in your browser."
+              },
+              {
+                q: "Is PdfNest safe and private?",
+                a: "Yes! PdfNest is built with a 'Privacy First' philosophy. Your files are processed locally using JavaScript in your browser. This means your sensitive documents never leave your computer and are never uploaded to any server."
+              },
+              {
+                q: "Do I need to create an account or pay?",
+                a: "No. PdfNest is 100% free and requires no registration. You have full access to all our tools—including PDF editing, JSON formatting, and image compression—without any hidden costs or accounts."
+              }
+            ].map((faq, i) => (
+              <div 
+                key={i} 
+                className="glass p-6 rounded-2xl border border-white/5 hover:border-white/10 transition-colors group"
+              >
+                <details className="cursor-pointer">
+                  <summary className="text-lg font-semibold list-none flex justify-between items-center text-white group-open:text-primary transition-colors">
+                    {faq.q}
+                    <span className="text-primary group-open:rotate-180 transition-transform">
+                      <ArrowRight className="w-5 h-5 rotate-90" />
+                    </span>
+                  </summary>
+                  <p className="mt-4 text-muted-foreground leading-relaxed animate-in fade-in slide-in-from-top-2">
+                    {faq.a}
+                  </p>
+                </details>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Ad Placeholder Bottom */}
       <div className="w-full h-32 glass rounded-2xl flex items-center justify-center text-muted-foreground text-xs uppercase tracking-widest border-dashed border-white/10 mt-12">
         Advertisement
