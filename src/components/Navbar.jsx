@@ -11,8 +11,10 @@ export default function Navbar() {
     { name: 'PDF Editor', path: '/pdf-editor' },
     { name: 'Merge PDF', path: '/merge-pdf' },
     { name: 'Compress PDF', path: '/compress-pdf' },
-    { name: 'PDF to Word', path: '/pdf-to-word' },
     { name: 'Split PDF', path: '/split-pdf' },
+  ];
+
+  const dropdownLinks = [
     { name: 'JSON Formatter', path: '/json-formatter' },
     { name: 'Image Compressor', path: '/image-compressor' },
     { name: 'CGPA Calculator', path: '/cgpa-calculator' },

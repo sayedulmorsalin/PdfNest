@@ -9,8 +9,6 @@ import RelatedTools from '../components/RelatedTools';
 import MergeTool from '../components/pdf/MergeTool';
 import SplitTool from '../components/pdf/SplitTool';
 import CompressTool from '../components/pdf/CompressTool';
-import WordToPdfTool from '../components/pdf/WordToPdfTool';
-
 const faqs = [
   {
     q: "Is this PDF Editor completely free?",
@@ -34,7 +32,7 @@ const faqs = [
   }
 ];
 import * as pdfjsLib from 'pdfjs-dist';
-import { convertPdfToWord, convertPdfToPptx, triggerDownload } from '../utils/pdfConverter';
+import { convertPdfToPptx, triggerDownload } from '../utils/pdfConverter';
 
 // ─── React Component ───────────────────────────────────────────────────────────
 
@@ -47,7 +45,7 @@ export default function PdfEditor() {
   const [alertModal, setAlertModal] = useState({ isOpen: false, title: '', message: '', icon: null });
 
   useEffect(() => {
-    if (tabParam && ['converter', 'wordtopdf', 'merger', 'splitter', 'compressor'].includes(tabParam)) {
+    if (tabParam && ['converter', 'merger', 'splitter', 'compressor'].includes(tabParam)) {
       setActiveTab(tabParam);
     }
   }, [tabParam]);
@@ -60,7 +58,6 @@ export default function PdfEditor() {
 
   const tabs = [
     { id: 'converter', name: 'PDF Converter', icon: Zap },
-    { id: 'wordtopdf', name: 'Word to PDF', icon: FileText },
     { id: 'merger', name: 'PDF Merger', icon: Merge },
     { id: 'splitter', name: 'PDF Splitter', icon: Scissors },
     { id: 'compressor', name: 'PDF Compressor', icon: FileDown },
@@ -134,10 +131,7 @@ export default function PdfEditor() {
     setStatus({ type: 'loading', message: 'Starting conversion…' });
 
     try {
-      if (format === 'DOCX') {
-        await convertPdfToWord(file, msg => setStatus({ type: 'loading', message: msg }));
-        setStatus({ type: 'success', message: '✅ Word document downloaded with preserved formatting!' });
-      } else if (format === 'PPTX') {
+      if (format === 'PPTX') {
         await convertPdfToPptx(file, msg => setStatus({ type: 'loading', message: msg }));
         setStatus({ type: 'success', message: '✅ PowerPoint downloaded successfully!' });
       } else if (format === 'PNG' || format === 'JPG') {
@@ -193,7 +187,6 @@ export default function PdfEditor() {
   };
 
   const converterOptions = [
-    { format: 'DOCX', label: 'PDF → Word', description: 'Preserves headings, bullets, bold, paragraphs', icon: '📄' },
     { format: 'PPTX', label: 'PDF → PowerPoint', description: 'Smart slide layout from PDF structure', icon: '📊' },
     { format: 'PNG', label: 'PDF → PNG', description: 'High-quality lossless images inside ZIP', icon: '🖼️' },
     { format: 'JPG', label: 'PDF → JPG', description: 'Compressed JPEG images inside ZIP', icon: '🗜️' },
@@ -253,7 +246,6 @@ export default function PdfEditor() {
 
   const tabComponents = {
     converter: renderConverterTab,
-    wordtopdf: () => <WordToPdfTool />,
     merger: () => <MergeTool />,
     splitter: () => <SplitTool />,
     compressor: () => <CompressTool />

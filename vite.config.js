@@ -9,7 +9,7 @@ export default defineConfig({
     tailwindcss(),
   ],
   optimizeDeps: {
-    include: ['mammoth', 'docx', 'jspdf', 'jszip', 'pdf-lib'],
+    include: ['jspdf', 'jszip', 'pdf-lib'],
   },
 })
 
