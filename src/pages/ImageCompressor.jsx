@@ -1,7 +1,32 @@
 import { useState, useCallback } from 'react';
 import { Upload, Download, Image as ImageIcon, RotateCcw, Sliders, Zap, AlertCircle } from 'lucide-react';
 import imageCompression from 'browser-image-compression';
-import SEO from '../components/SEO';
+import SEO, { buildFAQSchema } from '../components/SEO';
+import FAQSection from '../components/FAQSection';
+import RelatedTools from '../components/RelatedTools';
+
+const faqs = [
+  {
+    q: "How does the online image compressor work?",
+    a: "Our image compressor uses advanced algorithms to reduce the file size of your images (JPG, PNG, WebP) by stripping unnecessary metadata and applying smart lossy compression. You can control the exact quality level using the slider."
+  },
+  {
+    q: "Will my images lose quality when compressed?",
+    a: "It depends on the quality setting you choose. At standard settings (around 80%), the visual difference is virtually imperceptible to the human eye, but the file size reduction can be up to 70%. You can use the live preview feature to compare the original and compressed images before downloading."
+  },
+  {
+    q: "Is it safe to compress personal photos online?",
+    a: "Yes, completely safe. PdfNest's image compressor is built using client-side technology. This means your images are processed directly on your device (in your web browser) and are NEVER uploaded to any external servers."
+  },
+  {
+    q: "What image formats are supported?",
+    a: "Our tool currently supports compressing JPG (JPEG), PNG, and WebP images. When you download the compressed image, it will maintain its original file format."
+  },
+  {
+    q: "Why should I compress my images?",
+    a: "Compressing images is crucial for website performance (faster loading times), reducing storage space on your device, and meeting file size limits when uploading documents or attaching photos to emails."
+  }
+];
 
 export default function ImageCompressor() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -109,25 +134,28 @@ export default function ImageCompressor() {
         description="Fast, client-side image compression. Reduce PNG, JPG, and WebP file sizes instantly while maintaining high quality. 100% private processing right in your browser."
         canonical="/image-compressor"
         keywords="image compressor, reduce image size, compress png, compress jpg, online image optimizer, client-side image compression, optimize images for web"
-        schema={{
-          "@context": "https://schema.org",
-          "@type": "SoftwareApplication",
-          "name": "PdfNest Image Compressor",
-          "operatingSystem": "Web",
-          "applicationCategory": "MultimediaApplication",
-          "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "USD"
+        schemas={[
+          {
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "PdfNest Image Compressor",
+            "operatingSystem": "Web",
+            "applicationCategory": "MultimediaApplication",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            },
+            "featureList": [
+              "PNG Compression",
+              "JPG Compression",
+              "WebP Support",
+              "Quality Control",
+              "Privacy-first local processing"
+            ]
           },
-          "featureList": [
-            "PNG Compression",
-            "JPG Compression",
-            "WebP Support",
-            "Quality Control",
-            "Privacy-first local processing"
-          ]
-        }}
+          buildFAQSchema(faqs)
+        ]}
       />
 
       <div className="flex items-center gap-4 mb-2">
@@ -273,6 +301,58 @@ export default function ImageCompressor() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* SEO Content Section */}
+      <section className="mt-16 pt-16 border-t border-white/5">
+        <div className="prose prose-invert prose-lg max-w-none">
+          <h2 className="text-3xl font-bold text-white mb-6">Compress Images Online Without Losing Quality</h2>
+          <p className="text-muted-foreground leading-relaxed mb-8">
+            Large image files can slow down your website, eat up your storage space, and make it difficult to send attachments via email. 
+            PdfNest's <strong>Free Image Compressor</strong> allows you to drastically reduce the file size of your photos and graphics while preserving stunning visual quality. 
+            Whether you are compressing JPGs for a blog, optimizing PNGs for an app, or shrinking WebP files, our tool handles it efficiently right in your browser.
+          </p>
+
+          <h3 className="text-2xl font-bold text-white mb-4">Why Compress Your Images?</h3>
+          <ul className="text-muted-foreground space-y-3 mb-8 list-disc list-inside">
+            <li><strong className="text-white">Faster Website Loading:</strong> Heavy images are the #1 cause of slow websites. Compressing images improves your Core Web Vitals and boosts SEO rankings.</li>
+            <li><strong className="text-white">Save Storage Space:</strong> Free up gigabytes of space on your hard drive or cloud storage (like Google Drive or Dropbox).</li>
+            <li><strong className="text-white">Meet Upload Limits:</strong> Many portals, job applications, and email clients have strict 5MB or 10MB limits. Shrink your photos to ensure they upload successfully.</li>
+            <li><strong className="text-white">Save Bandwidth:</strong> Smaller files consume less mobile data, making your content more accessible to users on slower network connections.</li>
+          </ul>
+
+          <h3 className="text-2xl font-bold text-white mb-4">JPG vs PNG vs WebP Compression</h3>
+          <p className="text-muted-foreground leading-relaxed mb-6">
+            Our tool intelligently handles different image formats to provide the best possible compression:
+          </p>
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
+            <div className="p-5 border border-white/10 rounded-xl bg-white/5">
+              <h4 className="font-bold text-white mb-2">JPG / JPEG</h4>
+              <p className="text-sm text-muted-foreground">Ideal for photographs and complex images. Uses lossy compression to discard unnecessary data while keeping the photo looking pristine.</p>
+            </div>
+            <div className="p-5 border border-white/10 rounded-xl bg-white/5">
+              <h4 className="font-bold text-white mb-2">PNG</h4>
+              <p className="text-sm text-muted-foreground">Best for graphics, logos, and images requiring transparency. We optimize PNGs by reducing the color palette and stripping metadata.</p>
+            </div>
+            <div className="p-5 border border-white/10 rounded-xl bg-white/5">
+              <h4 className="font-bold text-white mb-2">WebP</h4>
+              <p className="text-sm text-muted-foreground">The modern web standard. WebP already offers superior compression, but our tool can optimize it further for maximum performance.</p>
+            </div>
+          </div>
+
+          <h3 className="text-2xl font-bold text-white mb-4">100% Private, Client-Side Compression</h3>
+          <p className="text-muted-foreground leading-relaxed mb-6">
+            Your privacy is our top priority. Most online image compressors require you to upload your personal photos to their servers, where they are stored, processed, and then downloaded back to you. 
+            PdfNest works differently. We use cutting-edge <strong>client-side processing</strong>, meaning the compression algorithm runs entirely within your web browser using your device's memory. 
+            Your images are <strong>never uploaded to any server</strong>, guaranteeing complete privacy for your sensitive documents and personal photos.
+          </p>
+        </div>
+      </section>
+
+      <FAQSection faqs={faqs} title="Image Compressor — Frequently Asked Questions" />
+      
+      <div className="pt-8">
+        <RelatedTools currentToolId="image-compressor" category="Image Tools" />
       </div>
     </div>
   );

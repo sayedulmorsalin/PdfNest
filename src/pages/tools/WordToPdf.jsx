@@ -1,9 +1,9 @@
-import { Link } from 'react-router-dom';
-import { FileText, ArrowRight } from 'lucide-react';
+import { FileText } from 'lucide-react';
 import SEO, { buildSoftwareAppSchema, buildFAQSchema, buildBreadcrumbSchema } from '../../components/SEO';
 import Breadcrumb from '../../components/Breadcrumb';
 import FAQSection from '../../components/FAQSection';
 import RelatedTools from '../../components/RelatedTools';
+import WordToPdfTool from '../../components/pdf/WordToPdfTool';
 
 const faqs = [
   {
@@ -81,19 +81,7 @@ export default function WordToPdf() {
       {/* Tool UI */}
       <section className="px-4 py-10 border-b border-white/5">
         <div className="max-w-4xl mx-auto">
-          <div className="p-10 border-2 border-dashed border-white/20 rounded-xl text-center hover:border-primary/50 transition-colors">
-            <FileText className="w-14 h-14 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-white mb-2">Convert Word to PDF</h3>
-            <p className="text-muted-foreground mb-6 text-sm max-w-md mx-auto">
-              Upload your Word document and download it as a perfectly formatted PDF.
-            </p>
-            <Link
-              to="/pdf-editor"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-xl font-semibold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20"
-            >
-              Open PDF Editor <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
+          <WordToPdfTool />
         </div>
       </section>
 

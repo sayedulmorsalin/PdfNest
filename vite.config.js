@@ -8,4 +8,8 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  optimizeDeps: {
+    include: ['mammoth', 'docx', 'jspdf', 'jszip', 'pdf-lib'],
+  },
 })
+

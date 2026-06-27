@@ -1,6 +1,31 @@
 import { useState } from 'react';
 import { Plus, Trash2, Calculator, Save, RefreshCcw, Sparkles } from 'lucide-react';
-import SEO from '../components/SEO';
+import SEO, { buildFAQSchema } from '../components/SEO';
+import FAQSection from '../components/FAQSection';
+import RelatedTools from '../components/RelatedTools';
+
+const faqs = [
+  {
+    q: "What grading system does this calculator use?",
+    a: "This calculator uses the standard 4.0 grading scale adopted by the University Grants Commission (UGC) of Bangladesh. This is the official scale used by DU, BUET, NSU, AIUB, BRACU, and almost all public and private universities in Bangladesh."
+  },
+  {
+    q: "How is CGPA calculated?",
+    a: "CGPA (Cumulative Grade Point Average) is calculated by multiplying the grade points earned in each subject by the credit hours for that subject, adding all those values together, and then dividing by the total number of credit hours attempted."
+  },
+  {
+    q: "What is the difference between GPA and CGPA?",
+    a: "GPA (Grade Point Average) usually refers to the average of your grades for a single semester. CGPA refers to the cumulative average of your grades across all semesters you have completed."
+  },
+  {
+    q: "Are my grades saved?",
+    a: "No, PdfNest is a privacy-first platform. Your grades and subjects are processed entirely in your browser and are deleted the moment you close the tab or refresh the page."
+  },
+  {
+    q: "How many subjects can I add?",
+    a: "You can add an unlimited number of subjects! Just keep clicking the 'Add Another Subject' button for as many courses as you need to calculate."
+  }
+];
 
 const GRADES = [
   { label: 'A+ (4.0)', value: 4.0 },
@@ -57,19 +82,22 @@ export default function CgpaCalculator() {
         description="Free online CGPA calculator for Bangladesh university students. Supports DU, BUET, NSU, AIUB and more. Calculate CGPA with credit weighting easily."
         canonical="/cgpa-calculator"
         keywords="CGPA calculator BD, Bangladesh CGPA calculator, calculate CGPA DU, BUET GPA calculator, university CGPA calculator"
-        schema={{
-          "@context": "https://schema.org",
-          "@type": "SoftwareApplication",
-          "name": "PdfNest CGPA Calculator",
-          "operatingSystem": "Web",
-          "applicationCategory": "EducationalApplication",
-          "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "USD"
+        schemas={[
+          {
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "PdfNest CGPA Calculator",
+            "operatingSystem": "Web",
+            "applicationCategory": "EducationalApplication",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            },
+            "featureList": "Bangladesh Grading System, Dynamic Subject Addition, Credit Weighting, Instant Calculation"
           },
-          "featureList": "Bangladesh Grading System, Dynamic Subject Addition, Credit Weighting, Instant Calculation"
-        }}
+          buildFAQSchema(faqs)
+        ]}
       />
 
       <div className="flex items-center gap-4 mb-2">
@@ -186,6 +214,53 @@ export default function CgpaCalculator() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* SEO Content Section */}
+      <section className="mt-16 pt-16 border-t border-white/5">
+        <div className="prose prose-invert prose-lg max-w-none">
+          <h2 className="text-3xl font-bold text-white mb-6">Online CGPA Calculator for Bangladesh Universities</h2>
+          <p className="text-muted-foreground leading-relaxed mb-8">
+            Calculating your CGPA manually with a traditional calculator can be tedious and prone to errors, especially when factoring in credit weights for different subjects. 
+            PdfNest's <strong>CGPA Calculator</strong> is designed specifically for university and college students in Bangladesh to instantly and accurately determine their Grade Point Average.
+          </p>
+
+          <h3 className="text-2xl font-bold text-white mb-4">The Standard 4.0 Grading System</h3>
+          <p className="text-muted-foreground leading-relaxed mb-6">
+            The University Grants Commission (UGC) of Bangladesh mandates a standard 4.0 grading scale for higher education. Our tool comes pre-configured with this exact scale, mapping letter grades to their correct grade points:
+          </p>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 text-center">
+            {[{ g: 'A+', p: '4.00' }, { g: 'A', p: '3.75' }, { g: 'A-', p: '3.50' }, { g: 'B+', p: '3.25' }].map(item => (
+              <div key={item.g} className="p-4 bg-white/5 rounded-xl border border-white/10">
+                <div className="text-xl font-bold text-white mb-1">{item.g}</div>
+                <div className="text-purple-400 font-mono">{item.p}</div>
+              </div>
+            ))}
+          </div>
+
+          <h3 className="text-2xl font-bold text-white mb-4">How to Use the Calculator</h3>
+          <ol className="text-muted-foreground space-y-3 mb-8 list-decimal list-inside">
+            <li><strong className="text-white">Enter Subject Name:</strong> (Optional) Type the name of your course, e.g., "Data Structures".</li>
+            <li><strong className="text-white">Enter Credits:</strong> Input the credit hours assigned to the course (usually 3.0 or 1.5 for labs).</li>
+            <li><strong className="text-white">Select Grade:</strong> Choose your expected or achieved letter grade from the dropdown menu.</li>
+            <li><strong className="text-white">Add More Subjects:</strong> Click "Add Another Subject" to enter all the courses you took this semester.</li>
+            <li><strong className="text-white">View Result:</strong> Your CGPA updates in real-time on the right side of the screen!</li>
+          </ol>
+
+          <h3 className="text-2xl font-bold text-white mb-4">Supported Universities</h3>
+          <p className="text-muted-foreground leading-relaxed mb-6">
+            Because this tool utilizes the UGC standard, it is perfectly compatible with almost every major institution in Bangladesh. 
+            This includes public universities like <strong>Dhaka University (DU)</strong>, <strong>BUET</strong>, and <strong>Rajshahi University</strong>, 
+            as well as private institutions like <strong>North South University (NSU)</strong>, <strong>BRAC University</strong>, <strong>AIUB</strong>, and <strong>IUB</strong>.
+          </p>
+        </div>
+      </section>
+
+      <FAQSection faqs={faqs} title="CGPA Calculator — Frequently Asked Questions" />
+      
+      <div className="pt-8">
+        <RelatedTools currentToolId="cgpa-calculator" category="Student Tools" />
       </div>
     </div>
   );

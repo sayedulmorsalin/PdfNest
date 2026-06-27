@@ -1,384 +1,66 @@
-import { useState } from 'react';
-import { FileUp, Download, Zap, Merge, Scissors, FileDown, CheckCircle, AlertCircle, Loader, X } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import SEO from '../components/SEO';
-import {
-  Document, Packer, Paragraph, TextRun, HeadingLevel,
-  AlignmentType, LevelFormat, convertInchesToTwip,
-} from 'docx';
-import PptxGenJS from 'pptxgenjs';
+import { FileUp, Download, Zap, Merge, Scissors, FileDown, CheckCircle, AlertCircle, Loader, X, FileText, Image } from 'lucide-react';
+import SEO, { buildFAQSchema } from '../components/SEO';
+import FAQSection from '../components/FAQSection';
+import RelatedTools from '../components/RelatedTools';
+
+import MergeTool from '../components/pdf/MergeTool';
+import SplitTool from '../components/pdf/SplitTool';
+import CompressTool from '../components/pdf/CompressTool';
+import WordToPdfTool from '../components/pdf/WordToPdfTool';
+
+const faqs = [
+  {
+    q: "Is this PDF Editor completely free?",
+    a: "Yes! PdfNest offers a 100% free PDF editor. There are no daily limits, no watermarks added to your documents, and you don't even need to create an account to use our tools."
+  },
+  {
+    q: "How does the PDF to Word converter preserve formatting?",
+    a: "Our advanced client-side PDF parser analyzes the geometric position, font size, and weight of every text element in the PDF. It uses this data to reconstruct headings, bullet points, and paragraphs in the output Word (.docx) document, rather than just dumping raw text."
+  },
+  {
+    q: "Are my sensitive PDF documents secure?",
+    a: "Absolutely. We built PdfNest with a privacy-first architecture. All PDF processing (conversion, formatting analysis, splitting, merging) happens entirely inside your web browser. Your confidential business documents, resumes, and personal files are never uploaded to any cloud server."
+  },
+  {
+    q: "Can I use this on my mobile phone?",
+    a: "Yes, our PDF tools are fully responsive and work on iOS and Android devices directly through your mobile web browser."
+  },
+  {
+    q: "Why do some scanned PDFs not convert to text?",
+    a: "If a PDF was created by scanning a physical piece of paper, it is essentially an image wrapped in a PDF file. Currently, our tool requires 'searchable' PDFs (PDFs where you can highlight the text). OCR (Optical Character Recognition) support for scanned documents is coming in a future update."
+  }
+];
 import * as pdfjsLib from 'pdfjs-dist';
-
-// ─── Smart PDF Structure Analyser ──────────────────────────────────────────────
-
-/**
- * Extracts rich structured data from a PDF file using PDF.js.
- * Returns an array of logical "lines", each with text, fontSize, bold,
- * italic, x-indent, and page number.
- */
-async function extractStructuredContent(file) {
-  // pdfjs v5: workerSrc must be a string URL
-  pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
-
-  const arrayBuffer = await file.arrayBuffer();
-  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-
-  const allLines = [];
-
-  for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-    const page = await pdf.getPage(pageNum);
-    // includeMarkedContent: false keeps items as pure TextItem (no TextMarkedContent mixed in)
-    const textContent = await page.getTextContent({ includeMarkedContent: false });
-    const viewport = page.getViewport({ scale: 1 });
-
-    // pdfjs v5: item.fontName is an INTERNAL key (e.g. "g_d0_f1").
-    // The human-readable font family lives in textContent.styles[item.fontName].fontFamily
-    const styles = textContent.styles || {};
-
-    // Group items into visual lines by their Y coordinate (transform[5])
-    const lineMap = new Map();
-
-    for (const item of textContent.items) {
-      // Skip non-text items (TextMarkedContent has no .str)
-      if (typeof item.str === 'undefined' || item.str.trim() === '') continue;
-
-      const y = Math.round(viewport.height - item.transform[5]); // flip Y axis
-      const x = Math.round(item.transform[4]);
-
-      // pdfjs v5: font size = magnitude of the first column of the 2×3 transform matrix
-      // transform = [scaleX, skewX, skewY, scaleY, translateX, translateY]
-      const fontSize = Math.round(Math.hypot(item.transform[0], item.transform[1])) ||
-                       Math.round(Math.abs(item.height)) || 11;
-
-      // Resolve the human-readable font name from styles map (pdfjs v5 fix)
-      const styleEntry = styles[item.fontName] || {};
-      const resolvedFontFamily = (styleEntry.fontFamily || item.fontName || '').toLowerCase();
-
-      const isBold = resolvedFontFamily.includes('bold') ||
-                     resolvedFontFamily.includes('heavy') ||
-                     resolvedFontFamily.includes('black');
-      const isItalic = resolvedFontFamily.includes('italic') ||
-                       resolvedFontFamily.includes('oblique');
-
-      // Group by Y within a 3px tolerance
-      let lineKey = null;
-      for (const k of lineMap.keys()) {
-        if (Math.abs(k - y) <= 3) { lineKey = k; break; }
-      }
-      if (lineKey === null) { lineKey = y; lineMap.set(lineKey, []); }
-
-      lineMap.get(lineKey).push({ text: item.str, x, fontSize, isBold, isItalic });
-    }
-
-    // Sort lines top-to-bottom
-    const sortedKeys = [...lineMap.keys()].sort((a, b) => a - b);
-
-    for (const key of sortedKeys) {
-      const items = lineMap.get(key).sort((a, b) => a.x - b.x);
-      const minX = items[0].x;
-      const maxFontSize = Math.max(...items.map(i => i.fontSize));
-      // A line is bold if the majority of its characters are bold
-      const boldCount = items.filter(i => i.isBold).length;
-      const allBold = boldCount > items.length / 2;
-      const allItalic = items.every(i => i.isItalic);
-      const text = items.map(i => i.text).join('').replace(/\s+/g, ' ').trim();
-
-      if (!text) continue;
-
-      allLines.push({
-        text,
-        fontSize: maxFontSize,
-        isBold: allBold,
-        isItalic: allItalic,
-        x: minX,
-        page: pageNum,
-        // Keep rich runs for mixed bold/italic on same line
-        runs: items,
-      });
-    }
-
-    // Add a page-break sentinel between pages
-    if (pageNum < pdf.numPages) {
-      allLines.push({ pageBreak: true, page: pageNum });
-    }
-  }
-
-  return allLines;
-}
-
-/**
- * Classify each line into a role: heading1, heading2, heading3, bullet, body, spacer
- */
-function classifyLines(lines) {
-  // Collect all font sizes to compute median body size
-  const sizes = lines.filter(l => !l.pageBreak && l.fontSize > 0).map(l => l.fontSize);
-  const sorted = [...sizes].sort((a, b) => a - b);
-  const medianSize = sorted[Math.floor(sorted.length / 2)] || 11;
-
-  // Common indent baseline (leftmost X across all lines)
-  const xValues = lines.filter(l => !l.pageBreak).map(l => l.x);
-  const baseX = Math.min(...xValues);
-
-  return lines.map(line => {
-    if (line.pageBreak) return { ...line, role: 'pageBreak' };
-
-    const { text, fontSize, isBold, x } = line;
-    const indent = x - baseX;
-    const isBullet = /^[\u2022\u2023\u25e6\u2043\u2219\-\*]\s/.test(text) || /^\d+\.\s/.test(text);
-    const isNumberedBullet = /^\d+\.\s/.test(text);
-
-    let role = 'body';
-
-    if (fontSize >= medianSize * 1.8 || (fontSize >= medianSize * 1.4 && isBold)) {
-      role = 'heading1';
-    } else if (fontSize >= medianSize * 1.35 || (fontSize >= medianSize * 1.2 && isBold)) {
-      role = 'heading2';
-    } else if (fontSize >= medianSize * 1.15 || (fontSize > medianSize && isBold)) {
-      role = 'heading3';
-    } else if (isBullet) {
-      role = isNumberedBullet ? 'numberedBullet' : 'bullet';
-    } else if (indent > 20 && fontSize <= medianSize) {
-      role = 'indented';
-    }
-
-    return { ...line, role, indent };
-  });
-}
-
-// ─── DOCX Builder ──────────────────────────────────────────────────────────────
-
-function buildDocxParagraphs(classifiedLines) {
-  const paragraphs = [];
-
-  for (const line of classifiedLines) {
-    if (line.pageBreak) {
-      paragraphs.push(new Paragraph({ pageBreakBefore: true }));
-      continue;
-    }
-
-    const { text, role, isBold, isItalic, runs } = line;
-
-    // Build text runs - try to preserve mixed bold/italic within a line
-    const makeRuns = (overrideBold) =>
-      runs && runs.length > 1
-        ? runs.map(r => new TextRun({
-            text: r.text + ' ',
-            bold: r.isBold || overrideBold,
-            italics: r.isItalic || isItalic,
-            size: 22, // 11pt default
-          }))
-        : [new TextRun({ text, bold: isBold || overrideBold, italics: isItalic, size: 22 })];
-
-    if (role === 'heading1') {
-      paragraphs.push(new Paragraph({
-        heading: HeadingLevel.HEADING_1,
-        children: [new TextRun({ text, bold: true, size: 32 })],
-        spacing: { before: 240, after: 120 },
-      }));
-
-    } else if (role === 'heading2') {
-      paragraphs.push(new Paragraph({
-        heading: HeadingLevel.HEADING_2,
-        children: [new TextRun({ text, bold: true, size: 26 })],
-        spacing: { before: 200, after: 80 },
-      }));
-
-    } else if (role === 'heading3') {
-      paragraphs.push(new Paragraph({
-        heading: HeadingLevel.HEADING_3,
-        children: [new TextRun({ text, bold: true, size: 24 })],
-        spacing: { before: 160, after: 60 },
-      }));
-
-    } else if (role === 'bullet') {
-      const cleanText = text.replace(/^[\u2022\u2023\u25e6\u2043\u2219\-\*]\s*/, '').trim();
-      paragraphs.push(new Paragraph({
-        bullet: { level: 0 },
-        children: [new TextRun({ text: cleanText, size: 22 })],
-        spacing: { after: 60 },
-      }));
-
-    } else if (role === 'numberedBullet') {
-      const cleanText = text.replace(/^\d+\.\s*/, '').trim();
-      paragraphs.push(new Paragraph({
-        numbering: { reference: 'numbered-list', level: 0 },
-        children: [new TextRun({ text: cleanText, size: 22 })],
-        spacing: { after: 60 },
-      }));
-
-    } else if (role === 'indented') {
-      paragraphs.push(new Paragraph({
-        indent: { left: convertInchesToTwip(0.5) },
-        children: makeRuns(false),
-        spacing: { after: 80 },
-      }));
-
-    } else {
-      // body
-      paragraphs.push(new Paragraph({
-        children: makeRuns(false),
-        spacing: { after: 100 },
-        alignment: AlignmentType.JUSTIFIED,
-      }));
-    }
-  }
-
-  return paragraphs;
-}
-
-// ─── Utility: Manual Download Trigger ────────────────────────────────────────
-
-/**
- * Manually triggers a browser download for a Blob with a specific filename.
- * This is a more robust alternative to file-saver for some environments.
- */
-function triggerDownload(blob, fileName) {
-  const url = window.URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = fileName;
-  
-  // Append to body, click, and cleanup
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  
-  // Small delay before revoking to ensure browser starts download
-  setTimeout(() => window.URL.revokeObjectURL(url), 100);
-}
-
-// ─── Main Converter Functions ──────────────────────────────────────────────────
-
-async function convertPdfToWord(file, onProgress) {
-  onProgress('Analyzing PDF structure…');
-  const rawLines = await extractStructuredContent(file);
-  
-  if (!rawLines || rawLines.length === 0) {
-    throw new Error("No text content found. This PDF might be scanned (an image) or protected. Please try a searchable PDF.");
-  }
-
-  onProgress('Classifying text elements…');
-  const classified = classifyLines(rawLines);
-
-  onProgress('Building Word document…');
-  const paragraphs = buildDocxParagraphs(classified);
-
-  const doc = new Document({
-    numbering: {
-      config: [
-        {
-          reference: 'numbered-list',
-          levels: [
-            {
-              level: 0,
-              format: LevelFormat.DECIMAL,
-              text: '%1.',
-              alignment: AlignmentType.LEFT,
-              style: {
-                paragraph: { indent: { left: convertInchesToTwip(0.5), hanging: convertInchesToTwip(0.25) } },
-              },
-            },
-          ],
-        },
-      ],
-    },
-    sections: [{ children: paragraphs }],
-  });
-
-  onProgress('Generating file…');
-  const blob = await Packer.toBlob(doc);
-  
-  // Generate a clean filename
-  const baseName = (file.name || 'document').replace(/\.[^/.]+$/, "").replace(/[^a-z0-9\-_ ]/gi, '_');
-  const fileName = `${baseName}.docx`;
-    
-  triggerDownload(blob, fileName);
-}
-
-async function convertPdfToPptx(file, onProgress) {
-  onProgress('Extracting PDF content…');
-  const rawLines = await extractStructuredContent(file);
-  
-  if (!rawLines || rawLines.length === 0) {
-    throw new Error("No content found in PDF. Scanned documents are not yet supported.");
-  }
-  
-  const classified = classifyLines(rawLines);
-
-  onProgress('Building PowerPoint slides…');
-  const prs = new PptxGenJS();
-  const PRIMARY = '2563EB';
-  const DARK = '111827';
-  const GRAY = '6B7280';
-
-  // Title slide
-  const titleLine = classified.find(l => l.role === 'heading1' || l.role === 'heading2');
-  const slide0 = prs.addSlide();
-  slide0.background = { color: 'F8FAFC' };
-  slide0.addText(titleLine ? titleLine.text : file.name.replace(/\.pdf$/i, ''), {
-    x: 0.8, y: 1.8, w: 8.4, h: 1.4,
-    fontSize: 40, bold: true, color: PRIMARY, align: 'center', fontFace: 'Calibri',
-  });
-  slide0.addShape(prs.ShapeType.rect, { x: 3.5, y: 4.0, w: 3, h: 0.06, fill: { color: PRIMARY }, line: { type: 'none' } });
-  slide0.addText(new Date().toLocaleDateString(), {
-    x: 0.8, y: 4.3, w: 8.4, h: 0.4, fontSize: 14, color: GRAY, align: 'center',
-  });
-
-  // Group content lines into slide-sized chunks
-  const contentLines = classified.filter(l => !l.pageBreak && l.role !== 'heading1');
-  const LINES_PER_SLIDE = 12;
-  const chunks = [];
-  for (let i = 0; i < contentLines.length; i += LINES_PER_SLIDE) {
-    chunks.push(contentLines.slice(i, i + LINES_PER_SLIDE));
-  }
-
-  chunks.forEach((chunk, idx) => {
-    const slide = prs.addSlide();
-    slide.background = { color: 'FFFFFF' };
-
-    // Header bar
-    slide.addShape(prs.ShapeType.rect, { x: 0, y: 0, w: 10, h: 0.7, fill: { color: PRIMARY }, line: { type: 'none' } });
-    slide.addText(`Page ${idx + 1}`, {
-      x: 0.3, y: 0.1, w: 9.4, h: 0.5, fontSize: 18, bold: true, color: 'FFFFFF', fontFace: 'Calibri',
-    });
-
-    // Content rows
-    let yPos = 0.9;
-    for (const line of chunk) {
-      if (yPos > 6.5) break;
-      const isHead = line.role === 'heading2' || line.role === 'heading3';
-      slide.addText(line.role === 'bullet' ? `• ${line.text.replace(/^[\u2022\-\*]\s*/, '')}` : line.text, {
-        x: 0.4, y: yPos, w: 9.2, h: isHead ? 0.5 : 0.38,
-        fontSize: isHead ? 18 : 13,
-        bold: isHead || line.isBold,
-        color: isHead ? PRIMARY : DARK,
-        fontFace: 'Calibri',
-        align: 'left',
-      });
-      yPos += isHead ? 0.55 : 0.42;
-    }
-  });
-
-  onProgress('Saving file…');
-  const pptxBlob = await prs.write({ outputType: 'blob' });
-  
-  // Generate a clean filename
-  const baseName = (file.name || 'presentation').replace(/\.[^/.]+$/, "").replace(/[^a-z0-9\-_ ]/gi, '_');
-  const fileName = `${baseName}.pptx`;
-
-  triggerDownload(pptxBlob, fileName);
-}
+import { convertPdfToWord, convertPdfToPptx, triggerDownload } from '../utils/pdfConverter';
 
 // ─── React Component ───────────────────────────────────────────────────────────
 
 export default function PdfEditor() {
-  const [activeTab, setActiveTab] = useState('converter');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tabParam = searchParams.get('tab');
+  const [activeTab, setActiveTab] = useState(tabParam || 'converter');
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [status, setStatus] = useState({ type: null, message: '' }); // null | 'loading' | 'success' | 'error'
   const [alertModal, setAlertModal] = useState({ isOpen: false, title: '', message: '', icon: null });
 
+  useEffect(() => {
+    if (tabParam && ['converter', 'wordtopdf', 'merger', 'splitter', 'compressor'].includes(tabParam)) {
+      setActiveTab(tabParam);
+    }
+  }, [tabParam]);
+
+  const handleTabChange = (tabId) => {
+    setActiveTab(tabId);
+    setSearchParams({ tab: tabId });
+    setStatus({ type: null, message: '' });
+  };
+
   const tabs = [
     { id: 'converter', name: 'PDF Converter', icon: Zap },
+    { id: 'wordtopdf', name: 'Word to PDF', icon: FileText },
     { id: 'merger', name: 'PDF Merger', icon: Merge },
     { id: 'splitter', name: 'PDF Splitter', icon: Scissors },
     { id: 'compressor', name: 'PDF Compressor', icon: FileDown },
@@ -458,6 +140,49 @@ export default function PdfEditor() {
       } else if (format === 'PPTX') {
         await convertPdfToPptx(file, msg => setStatus({ type: 'loading', message: msg }));
         setStatus({ type: 'success', message: '✅ PowerPoint downloaded successfully!' });
+      } else if (format === 'PNG' || format === 'JPG') {
+        setStatus({ type: 'loading', message: `Converting pages to ${format}...` });
+        
+        // Configure PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        const numPages = pdf.numPages;
+        
+        const JSZip = (await import('jszip')).default;
+        const zip = new JSZip();
+        
+        for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+          setStatus({
+            type: 'loading',
+            message: `Rendering page ${pageNum} of ${numPages} to ${format}...`
+          });
+          
+          const page = await pdf.getPage(pageNum);
+          const scale = 2.0; // Render at 2x scale for higher quality images
+          const viewport = page.getViewport({ scale });
+          const canvas = document.createElement('canvas');
+          const context = canvas.getContext('2d');
+          canvas.height = viewport.height;
+          canvas.width = viewport.width;
+          
+          await page.render({
+            canvasContext: context,
+            viewport: viewport
+          }).promise;
+          
+          const mimeType = format === 'PNG' ? 'image/png' : 'image/jpeg';
+          const fileExt = format === 'PNG' ? 'png' : 'jpg';
+          const dataUrl = canvas.toDataURL(mimeType, 0.92);
+          const base64Data = dataUrl.split(',')[1];
+          zip.file(`page_${pageNum}.${fileExt}`, base64Data, { base64: true });
+        }
+        
+        setStatus({ type: 'loading', message: 'Creating ZIP file...' });
+        const zipBlob = await zip.generateAsync({ type: 'blob' });
+        
+        triggerDownload(zipBlob, `${file.name.replace(/\.pdf$/i, '')}_images.zip`);
+        setStatus({ type: 'success', message: `✅ Successfully converted PDF to ${format} ZIP!` });
       } else {
         setStatus({ type: 'error', message: `${format} conversion coming soon!` });
       }
@@ -470,8 +195,8 @@ export default function PdfEditor() {
   const converterOptions = [
     { format: 'DOCX', label: 'PDF → Word', description: 'Preserves headings, bullets, bold, paragraphs', icon: '📄' },
     { format: 'PPTX', label: 'PDF → PowerPoint', description: 'Smart slide layout from PDF structure', icon: '📊' },
-    { format: 'PNG', label: 'PDF → PNG', description: 'High-quality image export (coming soon)', icon: '🖼️' },
-    { format: 'JPG', label: 'PDF → JPG', description: 'Compressed image export (coming soon)', icon: '🗜️' },
+    { format: 'PNG', label: 'PDF → PNG', description: 'High-quality lossless images inside ZIP', icon: '🖼️' },
+    { format: 'JPG', label: 'PDF → JPG', description: 'Compressed JPEG images inside ZIP', icon: '🗜️' },
   ];
 
   const StatusBar = () => {
@@ -526,49 +251,13 @@ export default function PdfEditor() {
     </div>
   );
 
-  const renderMergerTab = () => (
-    <div className="p-8 border-2 border-dashed border-white/20 rounded-xl text-center hover:border-primary/50 transition-colors">
-      <Merge className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-      <h3 className="text-lg font-semibold text-white mb-2">Merge PDF Files</h3>
-      <p className="text-muted-foreground mb-4 text-sm">Combine multiple PDFs into one document</p>
-      <button
-        onClick={() => showAlert('Coming Soon', 'Our PDF Merger tool is currently in development. You will soon be able to combine multiple PDF files into a single document right in your browser.', Merge)}
-        className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
-      >
-        Coming Soon
-      </button>
-    </div>
-  );
-
-  const renderSplitterTab = () => (
-    <div className="p-8 border-2 border-dashed border-white/20 rounded-xl text-center hover:border-primary/50 transition-colors">
-      <Scissors className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-      <h3 className="text-lg font-semibold text-white mb-2">Split PDF</h3>
-      <p className="text-muted-foreground mb-4 text-sm">Extract pages or split into multiple files</p>
-      <button
-        onClick={() => showAlert('Coming Soon', 'The PDF Splitter is almost ready! Soon you will be able to extract specific pages or split large PDFs into multiple smaller files with ease.', Scissors)}
-        className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
-      >
-        Coming Soon
-      </button>
-    </div>
-  );
-
-  const renderCompressorTab = () => (
-    <div className="p-8 border-2 border-dashed border-white/20 rounded-xl text-center hover:border-primary/50 transition-colors">
-      <FileDown className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-      <h3 className="text-lg font-semibold text-white mb-2">Compress PDF</h3>
-      <p className="text-muted-foreground mb-4 text-sm">Reduce file size while maintaining quality</p>
-      <button
-        onClick={() => showAlert('Coming Soon', 'We are working on a high-performance PDF Compressor that reduces file size while maintaining excellent visual quality.', FileDown)}
-        className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
-      >
-        Coming Soon
-      </button>
-    </div>
-  );
-
-  const tabComponents = { converter: renderConverterTab, merger: renderMergerTab, splitter: renderSplitterTab, compressor: renderCompressorTab };
+  const tabComponents = {
+    converter: renderConverterTab,
+    wordtopdf: () => <WordToPdfTool />,
+    merger: () => <MergeTool />,
+    splitter: () => <SplitTool />,
+    compressor: () => <CompressTool />
+  };
 
   return (
     <>
@@ -577,7 +266,7 @@ export default function PdfEditor() {
         description="Free online PDF editor to convert PDF to Word with preserved formatting, PDF to PowerPoint, merge, split, and compress PDFs. 100% browser-based for maximum security."
         canonical="/pdf-editor"
         keywords="PDF to Word, free PDF editor, merge PDF, split PDF, compress PDF, PDF to PPTX, browser-based PDF editor, edit PDF online, convert PDF to Docx"
-        schema={{
+        schemas={[{
           "@context": "https://schema.org",
           "@type": "SoftwareApplication",
           "name": "PdfNest PDF Editor",
@@ -595,10 +284,11 @@ export default function PdfEditor() {
             "Split PDF pages",
             "Compress PDF size"
           ],
-          "applicationSubCategory": "PDF Converter",
           "screenshot": "https://pdfnest.shop/screenshots/pdf-editor.png"
-        }}
-      />
+        },
+        buildFAQSchema(faqs)
+      ]}
+    />
       <div className="min-h-screen">
         {/* Hero */}
         <section className="px-4 py-12 md:py-20 border-b border-white/5">
@@ -618,33 +308,35 @@ export default function PdfEditor() {
         </section>
 
         {/* Upload */}
-        <section className="px-4 py-8 border-b border-white/5">
-          <div className="max-w-4xl mx-auto">
-            <label
-              className="flex flex-col items-center justify-center p-10 border-2 border-dashed border-white/20 rounded-xl cursor-pointer hover:border-primary/50 transition-colors group"
-              onDrop={handleDrop}
-              onDragOver={e => e.preventDefault()}
-            >
-              <FileUp className="w-12 h-12 text-muted-foreground group-hover:text-primary transition-colors mb-4" />
-              <span className="text-lg font-semibold text-white mb-1">
-                {selectedFiles.length > 0 ? `${selectedFiles.length} file(s) selected` : 'Click or drag & drop PDF here'}
-              </span>
-              <span className="text-sm text-muted-foreground">Supports single or multiple PDF files</span>
-              <input type="file" multiple accept=".pdf" onChange={handleFileUpload} className="hidden" />
-            </label>
+        {activeTab === 'converter' && (
+          <section className="px-4 py-8 border-b border-white/5">
+            <div className="max-w-4xl mx-auto">
+              <label
+                className="flex flex-col items-center justify-center p-10 border-2 border-dashed border-white/20 rounded-xl cursor-pointer hover:border-primary/50 transition-colors group"
+                onDrop={handleDrop}
+                onDragOver={e => e.preventDefault()}
+              >
+                <FileUp className="w-12 h-12 text-muted-foreground group-hover:text-primary transition-colors mb-4" />
+                <span className="text-lg font-semibold text-white mb-1">
+                  {selectedFiles.length > 0 ? `${selectedFiles.length} file(s) selected` : 'Click or drag & drop PDF here'}
+                </span>
+                <span className="text-sm text-muted-foreground">Supports single or multiple PDF files</span>
+                <input type="file" multiple accept=".pdf" onChange={handleFileUpload} className="hidden" />
+              </label>
 
-            {selectedFiles.length > 0 && (
-              <div className="mt-4 space-y-2">
-                {selectedFiles.map((file, idx) => (
-                  <div key={idx} className="p-3 bg-white/5 rounded-lg flex items-center justify-between">
-                    <span className="text-sm text-white">📄 {file.name}</span>
-                    <span className="text-xs text-muted-foreground">{(file.size / 1024 / 1024).toFixed(2)} MB</span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </section>
+              {selectedFiles.length > 0 && (
+                <div className="mt-4 space-y-2">
+                  {selectedFiles.map((file, idx) => (
+                    <div key={idx} className="p-3 bg-white/5 rounded-lg flex items-center justify-between">
+                      <span className="text-sm text-white">📄 {file.name}</span>
+                      <span className="text-xs text-muted-foreground">{(file.size / 1024 / 1024).toFixed(2)} MB</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </section>
+        )}
 
         {/* Tabs */}
         <section className="px-4 py-12">
@@ -655,7 +347,7 @@ export default function PdfEditor() {
                 return (
                   <button
                     key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
+                    onClick={() => handleTabChange(tab.id)}
                     className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all text-sm font-medium ${
                       activeTab === tab.id
                         ? 'bg-primary/10 border border-primary/50 text-primary'
@@ -672,24 +364,56 @@ export default function PdfEditor() {
           </div>
         </section>
 
-        {/* Features */}
-        <section className="px-4 py-12 border-t border-white/5">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-2xl font-bold mb-8 text-center text-white">Why Choose Our PDF Editor?</h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              {[
-                { title: '🎯 Format Preserved', description: 'Headings, bold, bullets and spacing are reconstructed accurately' },
-                { title: '🔒 100% Secure', description: 'No server uploads — all processing happens in your browser' },
-                { title: '⚡ Free Forever', description: 'No signup, no watermarks, no limits' },
-              ].map((f, i) => (
-                <div key={i} className="p-6 border border-white/10 rounded-xl">
-                  <h3 className="font-semibold text-white mb-2">{f.title}</h3>
-                  <p className="text-sm text-muted-foreground">{f.description}</p>
-                </div>
-              ))}
+        {/* SEO Content Section */}
+        <section className="px-4 py-16 border-t border-white/5 mt-12">
+          <div className="max-w-4xl mx-auto prose prose-invert prose-lg">
+            <h2 className="text-3xl font-bold text-white mb-6">The Ultimate Free Online PDF Editor</h2>
+            <p className="text-muted-foreground leading-relaxed mb-8">
+              Managing PDF documents shouldn't require expensive software subscriptions or clunky desktop applications. 
+              Welcome to the PdfNest <strong>Online PDF Editor</strong> hub. This suite of tools is designed to handle all your daily document needs—from converting PDFs to editable Word documents, to merging reports, to compressing file sizes for email attachments.
+            </p>
+
+            <h3 className="text-2xl font-bold text-white mb-4">A Privacy-First Approach to PDF Editing</h3>
+            <p className="text-muted-foreground leading-relaxed mb-6">
+              When you use traditional online PDF converters, you are forced to upload your files to an external server. This is a massive security risk if you are working with tax returns, legal contracts, or confidential business data. 
+              <strong>PdfNest is different.</strong> Our tools utilize cutting-edge client-side WebAssembly and JavaScript technologies. This means that when you convert or edit a PDF, the processing power of your own device is used. <strong>Your files never leave your computer or mobile phone.</strong>
+            </p>
+
+            <h3 className="text-2xl font-bold text-white mb-4">Core PDF Features</h3>
+            <div className="grid md:grid-cols-2 gap-6 mb-8">
+              <div className="glass p-6 rounded-2xl border border-white/5">
+                <h4 className="font-bold text-white mb-2 flex items-center gap-2">
+                  <Zap className="w-5 h-5 text-blue-400" /> PDF to Word (Docx)
+                </h4>
+                <p className="text-sm text-muted-foreground">Unlike basic converters that ruin your layout, our smart parser detects font sizes to reconstruct Headings (H1, H2), Bullet points, and bold text, ensuring your downloaded Word document looks exactly like the original PDF.</p>
+              </div>
+              <div className="glass p-6 rounded-2xl border border-white/5">
+                <h4 className="font-bold text-white mb-2 flex items-center gap-2">
+                  <Zap className="w-5 h-5 text-orange-400" /> PDF to PowerPoint
+                </h4>
+                <p className="text-sm text-muted-foreground">Instantly transform lengthy PDF reports into ready-to-present PowerPoint (.pptx) slides. Our engine automatically paginates content and formats headers for slide titles.</p>
+              </div>
+              <div className="glass p-6 rounded-2xl border border-white/5">
+                <h4 className="font-bold text-white mb-2 flex items-center gap-2">
+                  <Merge className="w-5 h-5 text-green-400" /> Merge & Split
+                </h4>
+                <p className="text-sm text-muted-foreground">Combine multiple PDF documents into a single cohesive file, or extract specific pages from a massive document to create a smaller, targeted PDF.</p>
+              </div>
+              <div className="glass p-6 rounded-2xl border border-white/5">
+                <h4 className="font-bold text-white mb-2 flex items-center gap-2">
+                  <FileDown className="w-5 h-5 text-purple-400" /> Compress PDF
+                </h4>
+                <p className="text-sm text-muted-foreground">Struggling with a 50MB PDF that won't attach to an email? Our compressor reduces PDF file sizes significantly while maintaining crisp text and image quality.</p>
+              </div>
             </div>
           </div>
         </section>
+
+        <FAQSection faqs={faqs} title="PDF Editor — Frequently Asked Questions" />
+        
+        <div className="max-w-4xl mx-auto pt-8 pb-12">
+          <RelatedTools currentToolId="pdf-editor" category="PDF Tools" />
+        </div>
       </div>
       <AlertModal />
     </>
