@@ -10,6 +10,15 @@ import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
 import Contact from './pages/Contact';
 
+import MergePdf from './pages/tools/MergePdf';
+import CompressPdf from './pages/tools/CompressPdf';
+import PdfToWord from './pages/tools/PdfToWord';
+import WordToPdf from './pages/tools/WordToPdf';
+import SplitPdf from './pages/tools/SplitPdf';
+import PdfToJpg from './pages/tools/PdfToJpg';
+import Blog from './pages/Blog';
+import BlogPost from './pages/BlogPost';
+
 function App() {
   return (
     <Router>
@@ -21,6 +30,14 @@ function App() {
           <Route path="/cgpa-calculator" element={<CgpaCalculator />} />
           <Route path="/code-formatter" element={<CodeFormatter />} />
           <Route path="/pdf-editor" element={<PdfEditor />} />
+          <Route path="/merge-pdf" element={<MergePdf />} />
+          <Route path="/compress-pdf" element={<CompressPdf />} />
+          <Route path="/pdf-to-word" element={<PdfToWord />} />
+          <Route path="/word-to-pdf" element={<WordToPdf />} />
+          <Route path="/split-pdf" element={<SplitPdf />} />
+          <Route path="/pdf-to-jpg" element={<PdfToJpg />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/contact" element={<Contact />} />

@@ -1,5 +1,6 @@
 import { ExternalLink, Github, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { ALL_TOOLS } from './RelatedTools';
 
 export default function Footer() {
   return (
@@ -19,20 +20,18 @@ export default function Footer() {
         </div>
 
         <div>
-          <h4 className="font-semibold mb-6 text-white">Tools</h4>
+          <h4 className="font-semibold mb-6 text-white">Top Tools</h4>
           <ul className="space-y-4 text-sm text-muted-foreground">
-            <li><Link to="/pdf-editor" className="hover:text-primary transition-colors">PDF Editor & Converter</Link></li>
-            <li><Link to="/json-formatter" className="hover:text-primary transition-colors">JSON Formatter</Link></li>
-            <li><Link to="/image-compressor" className="hover:text-primary transition-colors">Image Compressor</Link></li>
-            <li><Link to="/cgpa-calculator" className="hover:text-primary transition-colors">CGPA Calculator</Link></li>
-            <li><Link to="/code-formatter" className="hover:text-primary transition-colors">Code Formatter</Link></li>
+            {ALL_TOOLS.slice(0, 5).map(tool => (
+              <li key={tool.id}><Link to={tool.path} className="hover:text-primary transition-colors">{tool.name}</Link></li>
+            ))}
           </ul>
         </div>
 
         <div>
           <h4 className="font-semibold mb-6 text-white">Resources</h4>
           <ul className="space-y-4 text-sm text-muted-foreground">
-            <li><Link to="/about" className="hover:text-primary transition-colors">About Us</Link></li>
+            <li><Link to="/blog" className="hover:text-primary transition-colors text-primary font-medium">Blog & Guides</Link></li>
             <li><Link to="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link></li>
             <li><Link to="/terms" className="hover:text-primary transition-colors">Terms of Service</Link></li>
             <li><Link to="/contact" className="hover:text-primary transition-colors">Contact</Link></li>
@@ -42,14 +41,30 @@ export default function Footer() {
         <div>
           <h4 className="font-semibold mb-6 text-white">Connect</h4>
           <div className="flex gap-4">
-            <a href="#" className="p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors">
-              <ExternalLink className="w-5 h-5 text-muted-foreground" />
+            <a 
+              href="https://sayedulmarsalin.vercel.app/" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors group"
+              title="Portfolio"
+            >
+              <ExternalLink className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
             </a>
-            <a href="#" className="p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors">
-              <Github className="w-5 h-5 text-muted-foreground" />
+            <a 
+              href="https://github.com/sayedulmorsalin" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors group"
+              title="GitHub"
+            >
+              <Github className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
             </a>
-            <a href="#" className="p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors">
-              <Mail className="w-5 h-5 text-muted-foreground" />
+            <a 
+              href="mailto:sayadulmorsalin123@gmail.com" 
+              className="p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors group"
+              title="Email"
+            >
+              <Mail className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
             </a>
           </div>
         </div>

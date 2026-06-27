@@ -1,80 +1,24 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
-  Code, 
-  FileJson, 
-  Image as ImageIcon, 
-  Calculator, 
   Search,
   Sparkles,
   ArrowRight,
-  FileText
+  BookOpen
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import SEO from '../components/SEO';
-
-const TOOLS = [
-  {
-    id: 'pdf-editor',
-    name: 'PDF Editor',
-    description: 'Convert PDFs to Word/PPTX, merge, split, and compress PDF files securely.',
-    icon: <FileText className="w-6 h-6" />,
-    path: '/pdf-editor',
-    category: 'PDF Tools',
-    color: 'text-red-400',
-    bgColor: 'bg-red-400/10'
-  },
-  {
-    id: 'json-formatter',
-    name: 'JSON Formatter',
-    description: 'Beautifully format and minify your JSON data with syntax highlighting.',
-    icon: <FileJson className="w-6 h-6" />,
-    path: '/json-formatter',
-    category: 'Developer Tools',
-    color: 'text-blue-400',
-    bgColor: 'bg-blue-400/10'
-  },
-  {
-    id: 'image-compressor',
-    name: 'Image Compressor',
-    description: 'Reduce image file size with client-side compression. Privacy first.',
-    icon: <ImageIcon className="w-6 h-6" />,
-    path: '/image-compressor',
-    category: 'Image Tools',
-    color: 'text-emerald-400',
-    bgColor: 'bg-emerald-400/10'
-  },
-  {
-    id: 'cgpa-calculator',
-    name: 'CGPA Calculator',
-    description: 'Calculate your CGPA based on the Bangladesh (BD) grading system.',
-    icon: <Calculator className="w-6 h-6" />,
-    path: '/cgpa-calculator',
-    category: 'Student Tools',
-    color: 'text-purple-400',
-    bgColor: 'bg-purple-400/10'
-  },
-  {
-    id: 'code-formatter',
-    name: 'Code Formatter',
-    description: 'Format JavaScript, HTML, CSS, and JSON using Prettier standards.',
-    icon: <Code className="w-6 h-6" />,
-    path: '/code-formatter',
-    category: 'Developer Tools',
-    color: 'text-orange-400',
-    bgColor: 'bg-orange-400/10'
-  }
-];
+import { ALL_TOOLS } from '../components/RelatedTools';
 
 export default function Home() {
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
 
-  const categories = ['All', ...new Set(TOOLS.map(t => t.category))];
+  const categories = ['All', ...new Set(ALL_TOOLS.map(t => t.category))];
 
-  const filteredTools = TOOLS.filter(tool => {
+  const filteredTools = ALL_TOOLS.filter(tool => {
     const matchesSearch = tool.name.toLowerCase().includes(search.toLowerCase()) || 
-                         tool.description.toLowerCase().includes(search.toLowerCase());
+                         tool.shortDescription.toLowerCase().includes(search.toLowerCase());
     const matchesCategory = activeCategory === 'All' || tool.category === activeCategory;
     return matchesSearch && matchesCategory;
   });
@@ -86,6 +30,7 @@ export default function Home() {
         description="PdfNest is your ultimate hub for free online tools. Professional PDF editor to convert PDF to Word, merge & split PDFs, JSON formatter, Image compressor, and more. 100% private and secure."
         keywords="free PDF editor, convert PDF to Word, merge PDF, split PDF, compress PDF, JSON formatter, image compressor, CGPA calculator, online developer tools, pdfnest.shop"
         canonical="/"
+        includeWebsite={true}
       />
       
       {/* Hero Section */}
@@ -165,10 +110,10 @@ export default function Home() {
               className="group block p-6 rounded-2xl glass-card relative h-full flex flex-col"
             >
               <div className={`w-12 h-12 rounded-xl ${tool.bgColor} ${tool.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
-                {tool.icon}
+                <tool.icon className="w-6 h-6" />
               </div>
               <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">{tool.name}</h3>
-              <p className="text-muted-foreground text-sm mb-6 flex-grow">{tool.description}</p>
+              <p className="text-muted-foreground text-sm mb-6 flex-grow">{tool.shortDescription}</p>
               <div className="flex items-center justify-between mt-auto">
                 <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold px-2 py-1 rounded bg-white/5">
                   {tool.category}
@@ -187,6 +132,28 @@ export default function Home() {
           <p className="text-muted-foreground">No tools found matching your search.</p>
         </div>
       )}
+
+      {/* Blog Promo */}
+      <section className="py-12">
+        <div className="max-w-4xl mx-auto glass p-8 rounded-2xl border border-primary/20 bg-primary/5 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+          <div className="flex-1">
+            <div className="inline-flex items-center gap-2 text-primary font-semibold mb-2">
+              <BookOpen className="w-4 h-4" />
+              <span>PdfNest Blog</span>
+            </div>
+            <h3 className="text-2xl font-bold text-white mb-2">Learn PDF Tips & Tricks</h3>
+            <p className="text-muted-foreground">
+              Read our latest guides on how to compress, convert, and edit PDF files effectively.
+            </p>
+          </div>
+          <Link
+            to="/blog"
+            className="px-6 py-3 bg-primary text-primary-foreground rounded-xl font-semibold hover:bg-primary/90 transition-all whitespace-nowrap shadow-lg shadow-primary/20"
+          >
+            Read the Blog
+          </Link>
+        </div>
+      </section>
 
       {/* FAQ Section */}
       <section className="py-20">
