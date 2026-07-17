@@ -31,8 +31,7 @@ const faqs = [
     a: "If a PDF was created by scanning a physical piece of paper, it is essentially an image wrapped in a PDF file. Currently, our tool requires 'searchable' PDFs (PDFs where you can highlight the text). OCR (Optical Character Recognition) support for scanned documents is coming in a future update."
   }
 ];
-import * as pdfjsLib from 'pdfjs-dist';
-import { convertPdfToPptx, triggerDownload } from '../utils/pdfConverter';
+
 
 // ─── React Component ───────────────────────────────────────────────────────────
 
@@ -40,7 +39,6 @@ export default function PdfEditor() {
   const [searchParams, setSearchParams] = useSearchParams();
   const tabParam = searchParams.get('tab');
   const [activeTab, setActiveTab] = useState(tabParam || 'converter');
-  const [selectedFiles, setSelectedFiles] = useState([]);
   const [status, setStatus] = useState({ type: null, message: '' }); // null | 'loading' | 'success' | 'error'
   const [alertModal, setAlertModal] = useState({ isOpen: false, title: '', message: '', icon: null });
 
@@ -114,82 +112,14 @@ export default function PdfEditor() {
     </AnimatePresence>
   );
 
-  const handleFileUpload = (e) => setSelectedFiles(Array.from(e.target.files));
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    const files = Array.from(e.dataTransfer.files).filter(f => f.type === 'application/pdf');
-    if (files.length) setSelectedFiles(files);
-  };
-
-  const handleConvert = async (format) => {
-    if (!selectedFiles.length) {
-      setStatus({ type: 'error', message: 'Please select a PDF file first.' });
-      return;
-    }
-    const file = selectedFiles[0];
-    setStatus({ type: 'loading', message: 'Starting conversion…' });
-
-    try {
-      if (format === 'PPTX') {
-        await convertPdfToPptx(file, msg => setStatus({ type: 'loading', message: msg }));
-        setStatus({ type: 'success', message: '✅ PowerPoint downloaded successfully!' });
-      } else if (format === 'PNG' || format === 'JPG') {
-        setStatus({ type: 'loading', message: `Converting pages to ${format}...` });
-        
-        // Configure PDF.js worker
-        pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
-        const arrayBuffer = await file.arrayBuffer();
-        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-        const numPages = pdf.numPages;
-        
-        const JSZip = (await import('jszip')).default;
-        const zip = new JSZip();
-        
-        for (let pageNum = 1; pageNum <= numPages; pageNum++) {
-          setStatus({
-            type: 'loading',
-            message: `Rendering page ${pageNum} of ${numPages} to ${format}...`
-          });
-          
-          const page = await pdf.getPage(pageNum);
-          const scale = 2.0; // Render at 2x scale for higher quality images
-          const viewport = page.getViewport({ scale });
-          const canvas = document.createElement('canvas');
-          const context = canvas.getContext('2d');
-          canvas.height = viewport.height;
-          canvas.width = viewport.width;
-          
-          await page.render({
-            canvasContext: context,
-            viewport: viewport
-          }).promise;
-          
-          const mimeType = format === 'PNG' ? 'image/png' : 'image/jpeg';
-          const fileExt = format === 'PNG' ? 'png' : 'jpg';
-          const dataUrl = canvas.toDataURL(mimeType, 0.92);
-          const base64Data = dataUrl.split(',')[1];
-          zip.file(`page_${pageNum}.${fileExt}`, base64Data, { base64: true });
-        }
-        
-        setStatus({ type: 'loading', message: 'Creating ZIP file...' });
-        const zipBlob = await zip.generateAsync({ type: 'blob' });
-        
-        triggerDownload(zipBlob, `${file.name.replace(/\.pdf$/i, '')}_images.zip`);
-        setStatus({ type: 'success', message: `✅ Successfully converted PDF to ${format} ZIP!` });
-      } else {
-        setStatus({ type: 'error', message: `${format} conversion coming soon!` });
-      }
-    } catch (err) {
-      setStatus({ type: 'error', message: `❌ Error: ${err.message}` });
-      console.error(err);
-    }
-  };
+  // File upload states removed since converter tab is now just links
 
   const converterOptions = [
-    { format: 'PPTX', label: 'PDF → PowerPoint', description: 'Smart slide layout from PDF structure', icon: '📊' },
-    { format: 'PNG', label: 'PDF → PNG', description: 'High-quality lossless images inside ZIP', icon: '🖼️' },
-    { format: 'JPG', label: 'PDF → JPG', description: 'Compressed JPEG images inside ZIP', icon: '🗜️' },
+    { format: 'DOCX', path: '/pdf-to-word', label: 'PDF → Word', description: 'Convert PDF to editable Word document', icon: '📝' },
+    { format: 'WORD_TO_PDF', path: '/word-to-pdf', label: 'Word → PDF', description: 'Convert Word document to PDF', icon: '📄' },
+    { format: 'PPTX', path: '/pdf-to-pptx', label: 'PDF → PowerPoint', description: 'Smart slide layout from PDF structure', icon: '📊' },
+    { format: 'PNG', path: '/pdf-to-png', label: 'PDF → PNG', description: 'High-quality lossless images inside ZIP', icon: '🖼️' },
+    { format: 'JPG', path: '/pdf-to-jpg', label: 'PDF → JPG', description: 'Compressed JPEG images inside ZIP', icon: '🗜️' },
   ];
 
   const StatusBar = () => {
@@ -211,13 +141,12 @@ export default function PdfEditor() {
 
   const renderConverterTab = () => (
     <div className="space-y-6">
-      <StatusBar />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {converterOptions.map((opt) => (
-          <div
+          <a
             key={opt.format}
-            onClick={() => handleConvert(opt.format)}
-            className="p-6 border border-white/10 rounded-xl hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer group"
+            href={opt.path}
+            className="p-6 border border-white/10 rounded-xl hover:border-primary/50 hover:bg-primary/5 transition-all group block"
           >
             <div className="flex items-start gap-4">
               <span className="text-3xl">{opt.icon}</span>
@@ -229,7 +158,7 @@ export default function PdfEditor() {
               </div>
               <Download className="w-5 h-5 text-primary opacity-0 group-hover:opacity-100 transition-opacity mt-1" />
             </div>
-          </div>
+          </a>
         ))}
       </div>
       <div className="p-4 bg-amber-500/10 border border-amber-500/20 rounded-lg text-sm text-amber-200 space-y-1">
@@ -299,33 +228,11 @@ export default function PdfEditor() {
           </div>
         </section>
 
-        {/* Upload */}
+        {/* Intro */}
         {activeTab === 'converter' && (
           <section className="px-4 py-8 border-b border-white/5">
-            <div className="max-w-4xl mx-auto">
-              <label
-                className="flex flex-col items-center justify-center p-10 border-2 border-dashed border-white/20 rounded-xl cursor-pointer hover:border-primary/50 transition-colors group"
-                onDrop={handleDrop}
-                onDragOver={e => e.preventDefault()}
-              >
-                <FileUp className="w-12 h-12 text-muted-foreground group-hover:text-primary transition-colors mb-4" />
-                <span className="text-lg font-semibold text-white mb-1">
-                  {selectedFiles.length > 0 ? `${selectedFiles.length} file(s) selected` : 'Click or drag & drop PDF here'}
-                </span>
-                <span className="text-sm text-muted-foreground">Supports single or multiple PDF files</span>
-                <input type="file" multiple accept=".pdf" onChange={handleFileUpload} className="hidden" />
-              </label>
-
-              {selectedFiles.length > 0 && (
-                <div className="mt-4 space-y-2">
-                  {selectedFiles.map((file, idx) => (
-                    <div key={idx} className="p-3 bg-white/5 rounded-lg flex items-center justify-between">
-                      <span className="text-sm text-white">📄 {file.name}</span>
-                      <span className="text-xs text-muted-foreground">{(file.size / 1024 / 1024).toFixed(2)} MB</span>
-                    </div>
-                  ))}
-                </div>
-              )}
+            <div className="max-w-4xl mx-auto text-center">
+              <p className="text-muted-foreground">Select one of our specialized tools below to begin your conversion.</p>
             </div>
           </section>
         )}

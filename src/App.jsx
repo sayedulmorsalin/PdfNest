@@ -14,6 +14,10 @@ import MergePdf from './pages/tools/MergePdf';
 import CompressPdf from './pages/tools/CompressPdf';
 import SplitPdf from './pages/tools/SplitPdf';
 import PdfToJpg from './pages/tools/PdfToJpg';
+import PdfToPng from './pages/tools/PdfToPng';
+import PdfToPptx from './pages/tools/PdfToPptx';
+import PdfToWord from './pages/tools/PdfToWord';
+import WordToPdf from './pages/tools/WordToPdf';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 
@@ -32,6 +36,10 @@ function App() {
           <Route path="/compress-pdf" element={<CompressPdf />} />
           <Route path="/split-pdf" element={<SplitPdf />} />
           <Route path="/pdf-to-jpg" element={<PdfToJpg />} />
+          <Route path="/pdf-to-png" element={<PdfToPng />} />
+          <Route path="/pdf-to-pptx" element={<PdfToPptx />} />
+          <Route path="/pdf-to-word" element={<PdfToWord />} />
+          <Route path="/word-to-pdf" element={<WordToPdf />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/privacy" element={<Privacy />} />

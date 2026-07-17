@@ -2,9 +2,9 @@ import { useState } from 'react';
 import * as pdfjsLib from 'pdfjs-dist';
 import { Image, FileUp, CheckCircle, AlertCircle, Loader } from 'lucide-react';
 
-export default function PdfToJpgTool() {
+export default function PdfToJpgTool({ defaultFormat = 'jpeg' }) {
   const [file, setFile] = useState(null);
-  const [format, setFormat] = useState('jpeg'); // 'jpeg' | 'png'
+  const [format, setFormat] = useState(defaultFormat); // 'jpeg' | 'png'
   const [status, setStatus] = useState({ type: null, message: '' });
 
   const handleFileChange = (e) => {
