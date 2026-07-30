@@ -118,6 +118,7 @@ export default function PdfEditor() {
     { format: 'DOCX', path: '/pdf-to-word', label: 'PDF → Word', description: 'Convert PDF to editable Word document', icon: '📝' },
     { format: 'WORD_TO_PDF', path: '/word-to-pdf', label: 'Word → PDF', description: 'Convert Word document to PDF', icon: '📄' },
     { format: 'PPTX', path: '/pdf-to-pptx', label: 'PDF → PowerPoint', description: 'Smart slide layout from PDF structure', icon: '📊' },
+    { format: 'PPTX_TO_PDF', path: '/pptx-to-pdf', label: 'PowerPoint → PDF', description: 'Convert PowerPoint slides to PDF', icon: '🎴' },
     { format: 'PNG', path: '/pdf-to-png', label: 'PDF → PNG', description: 'High-quality lossless images inside ZIP', icon: '🖼️' },
     { format: 'JPG', path: '/pdf-to-jpg', label: 'PDF → JPG', description: 'Compressed JPEG images inside ZIP', icon: '🗜️' },
   ];
