@@ -8,15 +8,19 @@ import PptxToPdfTool from '../../components/pdf/PptxToPdfTool';
 const faqs = [
   {
     q: "How do I convert PowerPoint to PDF for free?",
-    a: "Upload your PowerPoint (.pptx or .ppt) document to PdfNest's PowerPoint to PDF converter. Our tool will securely convert your presentation to a universally accessible PDF format."
+    a: "Upload your PowerPoint (.pptx) document to PdfNest's converter. The file is processed entirely in your browser — nothing is uploaded to any server. Your PDF is generated instantly and downloaded automatically."
   },
   {
     q: "Will my slide formatting be preserved?",
-    a: "Yes! Converting PowerPoint to PDF ensures that your slides, fonts, images, and layout look exactly the same on any device without requiring PowerPoint installed."
+    a: "Yes! PdfNest renders each slide using your browser's layout engine, preserving text formatting, images, tables, and positioning. Each slide is captured at high resolution for crisp output."
   },
   {
     q: "Is it safe to convert PowerPoint documents to PDF online?",
-    a: "Absolutely. We built PdfNest with privacy in mind. Your confidential presentations are never uploaded to any cloud server."
+    a: "Absolutely. PdfNest processes everything locally in your browser. Your files never leave your device — no uploads, no servers, complete privacy."
+  },
+  {
+    q: "What file types are supported?",
+    a: "PdfNest supports .pptx (modern PowerPoint) files. The converter handles text, images, tables, shapes, and backgrounds."
   }
 ];
 
@@ -76,8 +80,8 @@ export default function PptxToPdf() {
           <div className="grid md:grid-cols-3 gap-6 mb-10">
             {[
               { step: '1', title: 'Upload Your PPTX File', desc: 'Click or drag & drop your PowerPoint (.pptx) document into the dropzone.' },
-              { step: '2', title: 'Automatic Conversion', desc: 'Our engine will securely convert the file into a fixed-layout PDF.' },
-              { step: '3', title: 'Download PDF', desc: 'Instantly download your universally readable PDF document.' },
+              { step: '2', title: 'Browser Renders Slides', desc: 'Each slide is rendered locally in your browser and captured at high resolution.' },
+              { step: '3', title: 'Download PDF', desc: 'Your perfectly formatted PDF is generated and downloaded instantly.' },
             ].map(item => (
               <div key={item.step} className="p-5 border border-white/10 rounded-xl">
                 <div className="w-8 h-8 rounded-full bg-orange-400/20 text-orange-400 flex items-center justify-center font-bold text-sm mb-3">

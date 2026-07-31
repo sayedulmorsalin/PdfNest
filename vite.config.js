@@ -11,5 +11,13 @@ export default defineConfig({
   optimizeDeps: {
     include: ['jspdf', 'jszip', 'pdf-lib'],
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+      },
+    },
+  },
 })
 
