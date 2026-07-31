@@ -4,7 +4,6 @@
 // Get your free secret at: https://www.convertapi.com/a/si
 
 export default async function handler(req, res) {
-  // Only accept POST
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -12,68 +11,100 @@ export default async function handler(req, res) {
   const apiSecret = process.env.CONVERTAPI_SECRET;
   if (!apiSecret) {
     return res.status(500).json({
-      error: 'ConvertAPI secret not configured. Set CONVERTAPI_SECRET in your Vercel environment variables.',
+      error: 'ConvertAPI secret is not configured on Vercel. Please add CONVERTAPI_SECRET in Vercel Project Settings -> Environment Variables (get a free key at https://www.convertapi.com/a/si).',
     });
   }
 
   try {
-    // Read the raw request body
-    const chunks = [];
-    for await (const chunk of req) {
-      chunks.push(chunk);
-    }
-    const body = Buffer.concat(chunks);
-
-    // Extract file from multipart form data
+    let fileParam = null;
+    let originalFilename = 'presentation.pptx';
     const contentType = req.headers['content-type'] || '';
-    const boundary = contentType.split('boundary=')[1];
-    if (!boundary) {
-      return res.status(400).json({ error: 'Invalid request: missing multipart boundary' });
+
+    // Case 1: JSON request with fileUrl (bypasses Vercel 4.5MB Serverless request body limit)
+    if (contentType.includes('application/json')) {
+      const chunks = [];
+      for await (const chunk of req) {
+        chunks.push(chunk);
+      }
+      const bodyStr = Buffer.concat(chunks).toString('utf8');
+      const data = JSON.parse(bodyStr);
+
+      if (!data.fileUrl) {
+        return res.status(400).json({ error: 'Missing fileUrl in JSON request' });
+      }
+
+      originalFilename = data.filename || 'presentation.pptx';
+      fileParam = {
+        Name: 'File',
+        Value: data.fileUrl,
+      };
+    }
+    // Case 2: Multipart FormData upload (direct file upload)
+    else if (contentType.includes('multipart/form-data')) {
+      const boundary = contentType.split('boundary=')[1];
+      if (!boundary) {
+        return res.status(400).json({ error: 'Invalid request: missing multipart boundary' });
+      }
+
+      const chunks = [];
+      for await (const chunk of req) {
+        chunks.push(chunk);
+      }
+      const body = Buffer.concat(chunks);
+      const fileData = extractFile(body, boundary);
+
+      if (!fileData) {
+        return res.status(400).json({ error: 'No file found in multipart request' });
+      }
+
+      originalFilename = fileData.filename || 'presentation.pptx';
+      fileParam = {
+        Name: 'File',
+        FileValue: {
+          Name: originalFilename,
+          Data: fileData.buffer.toString('base64'),
+        },
+      };
+    } else {
+      return res.status(400).json({ error: `Unsupported content-type: ${contentType}` });
     }
 
-    const fileData = extractFile(body, boundary);
-    if (!fileData) {
-      return res.status(400).json({ error: 'No file found in request' });
-    }
-
-    // Convert file to base64 for ConvertAPI
-    const base64File = fileData.buffer.toString('base64');
-
-    // Call ConvertAPI (single request, simple!)
+    // Call ConvertAPI
     const convertRes = await fetch(
       `https://v2.convertapi.com/convert/pptx/to/pdf?Secret=${apiSecret}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          Parameters: [
-            {
-              Name: 'File',
-              FileValue: {
-                Name: fileData.filename,
-                Data: base64File,
-              },
-            },
-          ],
+          Parameters: [fileParam],
         }),
       }
     );
 
     if (!convertRes.ok) {
       const errData = await convertRes.json().catch(() => ({}));
-      throw new Error(errData.Message || `ConvertAPI error: ${convertRes.statusText}`);
+      throw new Error(errData.Message || `ConvertAPI error (${convertRes.status}: ${convertRes.statusText})`);
     }
 
     const result = await convertRes.json();
 
     if (!result.Files || result.Files.length === 0) {
-      throw new Error('ConvertAPI returned no files');
+      throw new Error('ConvertAPI returned no PDF files');
     }
 
-    // Return the PDF as binary
-    const pdfBase64 = result.Files[0].FileData;
-    const pdfBuffer = Buffer.from(pdfBase64, 'base64');
-    const pdfFilename = fileData.filename.replace(/\.pptx?$/i, '.pdf');
+    // Extract PDF buffer
+    let pdfBuffer;
+    if (result.Files[0].FileData) {
+      pdfBuffer = Buffer.from(result.Files[0].FileData, 'base64');
+    } else if (result.Files[0].Url) {
+      const pdfRes = await fetch(result.Files[0].Url);
+      const arrayBuf = await pdfRes.arrayBuffer();
+      pdfBuffer = Buffer.from(arrayBuf);
+    } else {
+      throw new Error('No valid PDF data returned from ConvertAPI');
+    }
+
+    const pdfFilename = originalFilename.replace(/\.pptx?$/i, '.pdf');
 
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename="${pdfFilename}"`);
