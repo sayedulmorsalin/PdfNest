@@ -127,39 +127,42 @@ export async function convertPdfToWord(file, onProgress, mode = 'text') {
 
 async function convertPdfToWordImageMode(file, pdf, numPages, onProgress) {
   onProgress(`Rendering ${numPages} page${numPages > 1 ? 's' : ''} at high resolution...`);
-  const children = [];
 
+  // Collect all pages first (needed to build one section per page with correct page size)
+  const pages = [];
   for (let pageNum = 1; pageNum <= numPages; pageNum++) {
     onProgress(`Converting page ${pageNum} of ${numPages} to image...`);
-    const { uint8Array, displayW, displayH } = await renderPageToImageBuffer(pdf, pageNum);
+    const result = await renderPageToImageBuffer(pdf, pageNum);
+    pages.push(result);
+  }
 
-    children.push(
+  onProgress('Assembling Word document with full-page images...');
+
+  // Build one section per page, each with exact PDF page dimensions and zero margins
+  // This makes each image fill the entire page perfectly
+  const sections = pages.map(({ uint8Array, displayW, displayH, twipsW, twipsH }, idx) => ({
+    properties: {
+      page: {
+        size: { width: twipsW, height: twipsH },
+        margin: { top: 0, right: 0, bottom: 0, left: 0 },
+      },
+    },
+    children: [
       new Paragraph({
         children: [
           new ImageRun({
             type: 'png',
             data: uint8Array,
-            transformation: {
-              width: displayW,
-              height: displayH,
-            },
+            transformation: { width: displayW, height: displayH },
           }),
         ],
         spacing: { before: 0, after: 0 },
-        pageBreakBefore: pageNum > 1,
-      })
-    );
-  }
+      }),
+    ],
+  }));
 
   onProgress('Finalizing .docx document...');
-  const doc = new Document({
-    sections: [{
-      properties: {
-        page: { margin: { top: 0, right: 0, bottom: 0, left: 0 } },
-      },
-      children,
-    }],
-  });
+  const doc = new Document({ sections });
 
   const docBlob = await Packer.toBlob(doc);
   const baseName = (file.name || 'document').replace(/\.[^/.]+$/, '').replace(/[^a-z0-9\-_ ]/gi, '_');
@@ -445,21 +448,24 @@ function buildParagraph(line) {
  */
 async function renderPageToImageBuffer(pdf, pageNum) {
   const page = await pdf.getPage(pageNum);
+  // pdfjs scale:1.0 already returns CSS pixels at 96 DPI — do NOT multiply by (96/72)
   const origViewport = page.getViewport({ scale: 1.0 });
+  const naturalW = origViewport.width;   // CSS px at 96 DPI
+  const naturalH = origViewport.height;  // CSS px at 96 DPI
 
-  // Convert PDF points → pixels at 96 DPI
-  const ptToPixel = 96 / 72; // ≈ 1.333
-  const naturalW = origViewport.width * ptToPixel;
-  const naturalH = origViewport.height * ptToPixel;
+  // Clamp to US letter page width (8.25" × 96 dpi = 792px) for edge cases
+  const MAX_PX = 792;
+  const shrink = Math.min(1, MAX_PX / naturalW);
+  const displayW = Math.round(naturalW * shrink);
+  const displayH = Math.round(naturalH * shrink);
 
-  // Clamp to Word's 6.5-inch (624px) content width
-  const MAX_WIDTH_PX = 624;
-  const scale = Math.min(1, MAX_WIDTH_PX / naturalW);
-  const displayW = Math.round(naturalW * scale);
-  const displayH = Math.round(naturalH * scale);
+  // twips for Word page size: 1 CSS px @ 96dpi = (1/96)" = 1440/96 = 15 twips
+  const PX_TO_TWIP = 15;
+  const twipsW = Math.round(displayW * PX_TO_TWIP);
+  const twipsH = Math.round(displayH * PX_TO_TWIP);
 
-  // Render at 2× for sharpness
-  const renderScale = (2 * displayW) / origViewport.width;
+  // Render at 2× resolution for crisp output
+  const renderScale = (2 * displayW) / naturalW;
   const viewport = page.getViewport({ scale: renderScale });
 
   const canvas = document.createElement('canvas');
@@ -471,8 +477,7 @@ async function renderPageToImageBuffer(pdf, pageNum) {
   const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
   const buffer = await blob.arrayBuffer();
   const uint8Array = new Uint8Array(buffer);
-  // Return display dimensions (pixels), not raw canvas size
-  return { uint8Array, displayW, displayH };
+  return { uint8Array, displayW, displayH, twipsW, twipsH };
 }
 
 function blobToDataUrl(blob) {
