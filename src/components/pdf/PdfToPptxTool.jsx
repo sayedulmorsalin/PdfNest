@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FileUp, CheckCircle, AlertCircle, Loader, Presentation } from 'lucide-react';
-import { convertPdfToPptx } from '../../utils/pdfConverter';
+import { convertPdfToPptx } from '../../utils/pptxConverter';
 
 export default function PdfToPptxTool() {
   const [file, setFile] = useState(null);
@@ -43,11 +43,10 @@ export default function PdfToPptxTool() {
   return (
     <div className="space-y-6">
       {status.type && (
-        <div className={`flex items-center gap-3 p-4 rounded-lg border text-sm ${
-          status.type === 'loading' ? 'bg-blue-500/10 border-blue-500/30 text-blue-300' :
-          status.type === 'success' ? 'bg-green-500/10 border-green-500/30 text-green-300' :
-          'bg-red-500/10 border-red-500/30 text-red-300'
-        }`}>
+        <div className={`flex items-center gap-3 p-4 rounded-lg border text-sm ${status.type === 'loading' ? 'bg-blue-500/10 border-blue-500/30 text-blue-300' :
+            status.type === 'success' ? 'bg-green-500/10 border-green-500/30 text-green-300' :
+              'bg-red-500/10 border-red-500/30 text-red-300'
+          }`}>
           {status.type === 'loading' && <Loader className="w-4 h-4 animate-spin shrink-0" />}
           {status.type === 'success' && <CheckCircle className="w-4 h-4 shrink-0" />}
           {status.type === 'error' && <AlertCircle className="w-4 h-4 shrink-0" />}

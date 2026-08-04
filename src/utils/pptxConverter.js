@@ -1,13 +1,21 @@
 import { UDocClient } from '@docmentis/udoc-viewer';
 import { jsPDF } from 'jspdf';
-import { triggerDownload } from './pdfConverter';
+import { triggerDownload, convertPdfToPptx as convertPdfToPptxBrowser } from './pdfConverter';
+import { tryServerConvert } from './serverConverter';
 
 /**
- * 100% Browser-Based High-Fidelity PPTX to PDF Converter
- * Uses @docmentis/udoc-viewer WebAssembly / Rust PowerPoint engine + jsPDF.
- * Zero 3rd-party APIs, zero serverless limits, zero API keys required!
+ * High-Fidelity PPTX to PDF Converter
+ * 1) Tries local server Microsoft PowerPoint COM Automation / LibreOffice (/api/convert/pptx-to-pdf)
+ * 2) Falls back to browser WebAssembly (@docmentis/udoc-viewer + jsPDF)
  */
 export async function convertPptxToPdf(file, onProgress) {
+  onProgress('Starting PowerPoint to PDF conversion...');
+
+  // Try server engine first
+  const serverSuccess = await tryServerConvert(file, '/api/convert/pptx-to-pdf', 'pdf', onProgress);
+  if (serverSuccess) return;
+
+  // Browser-based fallback via WebAssembly @docmentis/udoc-viewer + jsPDF
   let client = null;
   let viewer = null;
 
@@ -17,10 +25,9 @@ export async function convertPptxToPdf(file, onProgress) {
       googleFonts: true,
     });
 
-    // Headless viewer instance (no container needed)
     viewer = await client.createViewer({});
 
-    onProgress('Loading presentation into high-fidelity engine...');
+    onProgress('Loading presentation into browser engine...');
     await viewer.load(file);
 
     const count = viewer.pageCount;
@@ -31,7 +38,6 @@ export async function convertPptxToPdf(file, onProgress) {
     onProgress(`Rendering ${count} slide${count > 1 ? 's' : ''} at high resolution...`);
 
     let doc = null;
-    // Scale 2 is ~144 DPI (2x PDF points), providing sharp slides and fast generation
     const scale = 2;
 
     for (let i = 0; i < count; i++) {
@@ -80,6 +86,22 @@ export async function convertPptxToPdf(file, onProgress) {
       try { client.destroy(); } catch (e) { /* ignore */ }
     }
   }
+}
+
+/**
+ * High-Fidelity PDF to PPTX Converter
+ * 1) Tries local server LibreOffice Impress / Office COM (/api/convert/pdf-to-pptx)
+ * 2) Falls back to browser PptxGenJS text hierarchy extraction
+ */
+export async function convertPdfToPptx(file, onProgress) {
+  onProgress('Starting PDF to PowerPoint conversion...');
+
+  // Try server engine first
+  const serverSuccess = await tryServerConvert(file, '/api/convert/pdf-to-pptx', 'pptx', onProgress);
+  if (serverSuccess) return;
+
+  // Browser-based fallback
+  return convertPdfToPptxBrowser(file, onProgress);
 }
 
 function blobToDataUrl(blob) {

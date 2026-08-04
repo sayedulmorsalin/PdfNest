@@ -36,7 +36,8 @@ export async function extractStructuredContent(file) {
         if (Math.abs(k - y) <= 3) { lineKey = k; break; }
       }
       if (lineKey === null) { lineKey = y; lineMap.set(lineKey, []); }
-      lineMap.get(lineKey).push({ text: item.str, x, fontSize, isBold, isItalic });
+      const width = item.width ? Math.round(item.width) : Math.round(item.str.length * fontSize * 0.5);
+      lineMap.get(lineKey).push({ text: item.str, x, width, fontSize, isBold, isItalic });
     }
 
     const sortedKeys = [...lineMap.keys()].sort((a, b) => a - b);
@@ -47,9 +48,27 @@ export async function extractStructuredContent(file) {
       const boldCount = items.filter(i => i.isBold).length;
       const allBold = boldCount > items.length / 2;
       const allItalic = items.every(i => i.isItalic);
-      const text = items.map(i => i.text).join('').replace(/\s+/g, ' ').trim();
+
+      let fullText = '';
+      const processedRuns = [];
+      for (let i = 0; i < items.length; i++) {
+        const cur = items[i];
+        let str = cur.text;
+        if (i > 0) {
+          const prev = items[i - 1];
+          const prevRight = prev.x + (prev.width || (prev.text.length * prev.fontSize * 0.5));
+          const gap = cur.x - prevRight;
+          if (gap > Math.max(2, prev.fontSize * 0.2) && !prev.text.endsWith(' ') && !str.startsWith(' ')) {
+            str = ' ' + str;
+          }
+        }
+        fullText += str;
+        processedRuns.push({ ...cur, text: str });
+      }
+
+      const text = fullText.replace(/\s+/g, ' ').trim();
       if (!text) continue;
-      allLines.push({ text, fontSize: maxFontSize, isBold: allBold, isItalic: allItalic, x: minX, page: pageNum, runs: items });
+      allLines.push({ text, fontSize: maxFontSize, isBold: allBold, isItalic: allItalic, x: minX, page: pageNum, runs: processedRuns });
     }
 
     if (pageNum < pdf.numPages) allLines.push({ pageBreak: true, page: pageNum });
@@ -99,50 +118,47 @@ export function triggerDownload(blob, fileName) {
 
 
 export async function convertPdfToPptx(file, onProgress) {
-  onProgress('Extracting PDF content…');
-  const rawLines = await extractStructuredContent(file);
-  if (!rawLines || rawLines.length === 0) {
-    throw new Error('No content found in PDF. Scanned documents are not yet supported.');
-  }
-  const classified = classifyLines(rawLines);
+  onProgress('Loading PDF presentation into browser engine…');
+  pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 
-  onProgress('Building PowerPoint slides…');
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  const numPages = pdf.numPages;
+
+  if (!numPages || numPages === 0) {
+    throw new Error('No pages found in PDF.');
+  }
+
+  onProgress(`Rendering ${numPages} page${numPages > 1 ? 's' : ''} at high resolution…`);
   const prs = new PptxGenJS();
-  const PRIMARY = '2563EB', DARK = '111827', GRAY = '6B7280';
 
-  const titleLine = classified.find(l => l.role === 'heading1' || l.role === 'heading2');
-  const slide0 = prs.addSlide();
-  slide0.background = { color: 'F8FAFC' };
-  slide0.addText(titleLine ? titleLine.text : file.name.replace(/\.pdf$/i, ''), {
-    x: 0.8, y: 1.8, w: 8.4, h: 1.4, fontSize: 40, bold: true, color: PRIMARY, align: 'center', fontFace: 'Calibri',
-  });
-  slide0.addShape(prs.ShapeType.rect, { x: 3.5, y: 4.0, w: 3, h: 0.06, fill: { color: PRIMARY }, line: { type: 'none' } });
-  slide0.addText(new Date().toLocaleDateString(), { x: 0.8, y: 4.3, w: 8.4, h: 0.4, fontSize: 14, color: GRAY, align: 'center' });
+  for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+    onProgress(`Converting page ${pageNum} of ${numPages} to PowerPoint slide…`);
+    const page = await pdf.getPage(pageNum);
+    const viewport = page.getViewport({ scale: 2.0 });
 
-  const contentLines = classified.filter(l => !l.pageBreak && l.role !== 'heading1');
-  const LINES_PER_SLIDE = 12;
-  for (let i = 0; i < contentLines.length; i += LINES_PER_SLIDE) {
-    const chunk = contentLines.slice(i, i + LINES_PER_SLIDE);
+    const canvas = document.createElement('canvas');
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+    const ctx = canvas.getContext('2d');
+
+    await page.render({ canvasContext: ctx, viewport }).promise;
+    const imgDataUrl = canvas.toDataURL('image/png');
+
+    const origViewport = page.getViewport({ scale: 1.0 });
+    const isLandscape = origViewport.width > origViewport.height;
+
     const slide = prs.addSlide();
-    slide.background = { color: 'FFFFFF' };
-    slide.addShape(prs.ShapeType.rect, { x: 0, y: 0, w: 10, h: 0.7, fill: { color: PRIMARY }, line: { type: 'none' } });
-    slide.addText(`Slide ${Math.floor(i / LINES_PER_SLIDE) + 1}`, {
-      x: 0.3, y: 0.1, w: 9.4, h: 0.5, fontSize: 18, bold: true, color: 'FFFFFF', fontFace: 'Calibri',
+    slide.addImage({
+      data: imgDataUrl,
+      x: 0,
+      y: 0,
+      w: '100%',
+      h: '100%',
     });
-    let yPos = 0.9;
-    for (const line of chunk) {
-      if (yPos > 6.5) break;
-      const isHead = line.role === 'heading2' || line.role === 'heading3';
-      slide.addText(line.role === 'bullet' ? `• ${line.text.replace(/^[\u2022\-\*]\s*/, '')}` : line.text, {
-        x: 0.4, y: yPos, w: 9.2, h: isHead ? 0.5 : 0.38,
-        fontSize: isHead ? 18 : 13, bold: isHead || line.isBold, color: isHead ? PRIMARY : DARK,
-        fontFace: 'Calibri', align: 'left',
-      });
-      yPos += isHead ? 0.55 : 0.42;
-    }
   }
 
-  onProgress('Saving file…');
+  onProgress('Saving PowerPoint presentation…');
   const pptxBlob = await prs.write({ outputType: 'blob' });
   const baseName = (file.name || 'presentation').replace(/\.[^/.]+$/, '').replace(/[^a-z0-9\-_ ]/gi, '_');
   triggerDownload(pptxBlob, `${baseName}.pptx`);
