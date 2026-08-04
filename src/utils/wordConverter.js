@@ -1,6 +1,6 @@
 import { UDocClient } from '@docmentis/udoc-viewer';
 import { jsPDF } from 'jspdf';
-import * as pdfjsLib from 'pdfjs-dist';
+import { pdfjsLib, configurePdfWorker } from './pdfWorker';
 import { tryServerConvert } from './serverConverter';
 import { triggerDownload, extractStructuredContent, classifyLines } from './pdfConverter';
 import {
@@ -107,7 +107,7 @@ export async function convertPdfToWord(file, onProgress, mode = 'text') {
 
   // ── 2. Browser fallback ───────────────────────────────────────────────────
   onProgress('Loading PDF document into browser engine...');
-  pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+  configurePdfWorker();
 
   const arrayBuffer = await file.arrayBuffer();
   const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;

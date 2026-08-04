@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import * as pdfjsLib from 'pdfjs-dist';
+import { pdfjsLib, configurePdfWorker } from '../../utils/pdfWorker';
 import { jsPDF } from 'jspdf';
 import { FileDown, FileUp, CheckCircle, AlertCircle, Loader } from 'lucide-react';
 
@@ -38,7 +38,7 @@ export default function CompressTool() {
 
     try {
       // 1. Configure PDF.js worker
-      pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+      configurePdfWorker();
 
       // 2. Load the PDF
       const arrayBuffer = await file.arrayBuffer();

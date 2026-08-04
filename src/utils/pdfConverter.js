@@ -1,10 +1,10 @@
-import * as pdfjsLib from 'pdfjs-dist';
+import { pdfjsLib, configurePdfWorker } from './pdfWorker';
 import PptxGenJS from 'pptxgenjs';
 
 // ─── PDF Text Extraction (same pattern as CompressTool — proven to work) ─────────
 
 export async function extractStructuredContent(file) {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+  configurePdfWorker();
 
   const arrayBuffer = await file.arrayBuffer();
   const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
@@ -119,7 +119,7 @@ export function triggerDownload(blob, fileName) {
 
 export async function convertPdfToPptx(file, onProgress) {
   onProgress('Loading PDF presentation into browser engine…');
-  pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+  configurePdfWorker();
 
   const arrayBuffer = await file.arrayBuffer();
   const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;

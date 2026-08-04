@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import * as pdfjsLib from 'pdfjs-dist';
+import { pdfjsLib, configurePdfWorker } from '../../utils/pdfWorker';
 import { Image, FileUp, CheckCircle, AlertCircle, Loader } from 'lucide-react';
 
 export default function PdfToJpgTool({ defaultFormat = 'jpeg' }) {
@@ -34,7 +34,7 @@ export default function PdfToJpgTool({ defaultFormat = 'jpeg' }) {
 
     try {
       // Configure PDF.js worker
-      pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+      configurePdfWorker();
 
       const arrayBuffer = await file.arrayBuffer();
       const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
