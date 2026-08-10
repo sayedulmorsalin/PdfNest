@@ -2,17 +2,49 @@
   command = "npm run build"
   publish = "dist"
 
+[build.environment]
+  NODE_VERSION = "20"
+
+# ─── Headers ───────────────────────────────────────────────────────────────────
+
+# JavaScript module files
 [[headers]]
   for = "/*.mjs"
   [headers.values]
     Content-Type = "application/javascript"
 
+# Long-cache for the large PDF worker (immutable — cache busted by filename hash)
 [[headers]]
   for = "/pdf.worker.min.mjs"
   [headers.values]
     Content-Type = "application/javascript"
     Cache-Control = "public, max-age=31536000, immutable"
 
+# Cache static assets (JS/CSS bundles from Vite — filename-hashed)
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# HTML pages — short cache so search engines get fresh content fast
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+    X-Robots-Tag = "index, follow"
+
+# Security + SEO headers for all pages
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# ─── SPA Routing ───────────────────────────────────────────────────────────────
+# Because we prerender each route as index.html, Netlify serves static HTML directly.
+# This fallback catches any paths not matched by a static file (e.g., 404s).
 [[redirects]]
   from = "/*"
   to = "/index.html"
