@@ -51,6 +51,8 @@ export default function BlogPost() {
             description: post.metaDescription,
             slug: post.slug,
             datePublished: post.publishDate,
+            dateModified: post.dateModified || post.publishDate,
+            image: `https://pdfnest.shop/image.png?v=2`,
           }),
           ...(post.faqs ? [buildFAQSchema(post.faqs)] : []),
           buildBreadcrumbSchema(breadcrumbs),

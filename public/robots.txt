@@ -1,4 +1,16 @@
 User-agent: *
 Allow: /
+Disallow: /uploads/
+Disallow: /api/
+
+# Allow major search engines explicitly
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
 
 Sitemap: https://pdfnest.shop/sitemap.xml

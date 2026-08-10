@@ -4,21 +4,42 @@ import SEO, { buildBreadcrumbSchema } from '../components/SEO';
 import Breadcrumb from '../components/Breadcrumb';
 import blogPosts from '../data/blogPosts';
 
+const SITE_URL = 'https://pdfnest.shop';
+
 const breadcrumbs = [
   { name: 'Home', path: '/' },
   { name: 'Blog' }
 ];
 
 export default function Blog() {
+  const collectionPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "PdfNest Blog — PDF Tips, Guides & Tutorials",
+    "description": "Expert guides, tutorials, and tips on compressing, converting, merging, and managing PDF files. All articles written by the PdfNest team.",
+    "url": `${SITE_URL}/blog`,
+    "mainEntity": {
+      "@type": "ItemList",
+      "itemListElement": blogPosts.map((post, index) => ({
+        "@type": "ListItem",
+        "position": index + 1,
+        "name": post.title,
+        "url": `${SITE_URL}/blog/${post.slug}`,
+        "description": post.metaDescription,
+      }))
+    }
+  };
+
   return (
     <div className="space-y-0">
       <SEO
         title="PdfNest Blog — PDF Tips, Guides & Tutorials"
-        description="Read the latest tips, guides, and tutorials on how to manage, convert, merge, and compress PDF files effectively."
+        description="Expert guides and tutorials on compressing, converting, merging, and managing PDF files. Learn how to use free online PDF tools effectively — no software needed."
         canonical="/blog"
-        keywords="pdf blog, pdf tips, pdf guides, pdf tutorials, how to pdf, pdfnest blog"
+        keywords="pdf blog, pdf tips, pdf guides, pdf tutorials, how to compress pdf, how to merge pdf, pdf converter guide, pdfnest blog, free pdf tools guide"
         schemas={[
-          buildBreadcrumbSchema(breadcrumbs)
+          collectionPageSchema,
+          buildBreadcrumbSchema(breadcrumbs),
         ]}
       />
 

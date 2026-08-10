@@ -12,6 +12,8 @@ export default function Navbar() {
     { name: 'Merge PDF', path: '/merge-pdf' },
     { name: 'Compress PDF', path: '/compress-pdf' },
     { name: 'Split PDF', path: '/split-pdf' },
+    { name: 'Compress DOCX', path: '/compress-docx' },
+    { name: 'Compress PPTX', path: '/compress-pptx' },
   ];
 
   const dropdownLinks = [

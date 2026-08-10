@@ -87,8 +87,9 @@ export function buildBreadcrumbSchema(items) {
       "@type": "ListItem",
       "position": index + 1,
       "name": item.name,
-      "item": `${SITE_URL}${item.url}`
-    }))
+      // Use item.path (the field used in all breadcrumb arrays), fall back to item.url for legacy callers
+      "item": item.path ? `${SITE_URL}${item.path}` : (item.url ? `${SITE_URL}${item.url}` : undefined)
+    })).filter(entry => entry.item !== undefined)
   };
 }
 
@@ -165,6 +166,9 @@ export default function SEO({
       <meta name="keywords" content={metaKeywords} />
       <link rel="canonical" href={canonicalUrl} />
       <meta name="author" content="PdfNest" />
+      <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+      <meta name="googlebot" content="index, follow" />
+      <meta name="language" content="English" />
 
       {/* Open Graph / Facebook */}
       <meta property="og:type" content={ogType} />
