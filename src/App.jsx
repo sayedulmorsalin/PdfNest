@@ -19,6 +19,8 @@ import PdfToPptx from './pages/tools/PdfToPptx';
 import PdfToWord from './pages/tools/PdfToWord';
 import WordToPdf from './pages/tools/WordToPdf';
 import PptxToPdf from './pages/tools/PptxToPdf';
+import CompressDocx from './pages/tools/CompressDocx';
+import CompressPptx from './pages/tools/CompressPptx';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 
@@ -42,6 +44,8 @@ function App() {
           <Route path="/pdf-to-word" element={<PdfToWord />} />
           <Route path="/word-to-pdf" element={<WordToPdf />} />
           <Route path="/pptx-to-pdf" element={<PptxToPdf />} />
+          <Route path="/compress-docx" element={<CompressDocx />} />
+          <Route path="/compress-pptx" element={<CompressPptx />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/privacy" element={<Privacy />} />
