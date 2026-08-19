@@ -294,38 +294,38 @@ const ROUTES = [
   },
   {
     path: '/compress-docx',
-    title: 'Compress Word Document Online Free — Reduce DOCX File Size',
+    title: 'Compress Word Document Online Free – Reduce DOCX File Size | PdfNest',
     description:
-      'Compress Word documents (.docx) online for free. Reduce DOCX file size without losing formatting or quality. No watermarks, no registration. Fast, secure, browser-based.',
+      'Compress Word documents (.docx) online for free. Reduce DOCX file size without losing text formatting, tables, or image quality. Fast, secure, 100% browser-based.',
     keywords:
-      'compress docx, reduce word document size, compress word file, docx compressor, shrink word document, compress docx online, reduce docx size',
-    heading: 'Compress Word Document — Reduce DOCX Size for Free',
+      'compress docx, reduce word document size, compress word file, docx compressor, shrink word document, compress docx online, reduce docx size, word file compressor, compress docx size, docx reducer, word document compressor, reduce file size docx, compress word file online, reduce word file size online free, compress docx file online free',
+    heading: 'Compress Word Documents Online',
     content:
-      'Shrink your Word documents by optimizing embedded images and repacking with maximum compression. All text, styles, fonts, tables, and page layouts remain completely intact. 100% browser-based — your files never leave your device.',
-    breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor'], ['Compress DOCX']],
+      'Shrink your Word documents (.docx) instantly while preserving formatting and quality. 100% free and private — your documents are never uploaded to any server. Optimize embedded images and zip archives in your browser.',
+    breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['Compress DOCX']],
     schemas: [
-      softwareApp('PdfNest DOCX Compressor', 'Free online tool to compress and reduce Word document file size without losing formatting.', [
-        'Image optimization', 'No formatting loss', 'Browser-based processing', 'No watermarks', 'Free unlimited use',
+      softwareApp('PdfNest Word Document Compressor', 'Free online tool to compress Word documents (.docx) and reduce file size without losing formatting.', [
+        'Compress Word document DOCX online', 'Reduce Word file size free', 'Preserve text formatting and tables', '100% private client-side processing', 'No watermarks or registration',
       ]),
-      breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor'], ['Compress DOCX']]),
+      breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['Compress DOCX', '/compress-docx/']]),
     ],
   },
   {
     path: '/compress-pptx',
-    title: 'Compress PowerPoint Online Free — Reduce PPTX File Size',
+    title: 'Compress PowerPoint Online Free – Reduce PPT & PPTX Size | PdfNest',
     description:
-      'Compress PowerPoint presentations (.pptx) online for free. Reduce PPTX file size without losing slide quality or formatting. No watermarks, no registration. Browser-based.',
+      'Compress PowerPoint files online for free. Reduce PPT, PPTX, and presentation file size without losing image quality or slide formatting. Fast, secure, 100% browser-based.',
     keywords:
-      'compress pptx, reduce powerpoint size, compress powerpoint file, pptx compressor, shrink presentation, compress pptx online, reduce pptx size',
-    heading: 'Compress PowerPoint — Reduce PPTX Size for Free',
+      'compress powerpoint, ppt file compressor, compress powerpoint file, compress ppt, ppt compressor, compress ppt file, compress ppt size online, compress powerpoint online free, free ppt compressor, pptx compressor, compress powerpoint presentation, compress pptx, reduce ppt size, powerpoint file reducer, online ppt file compressor',
+    heading: 'Compress PowerPoint Files Online',
     content:
-      'Shrink your PowerPoint presentations by optimizing embedded images and repacking with maximum compression. All slide layouts, animations, and content remain intact. 100% browser-based — your files never leave your device.',
-    breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor'], ['Compress PPTX']],
+      'Reduce the file size of your PowerPoint presentations (.pptx, .ppsx) quickly and easily. 100% free and private — your presentation slides never leave your device. Smart image re-encoding and XML package compression.',
+    breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['Compress PPTX']],
     schemas: [
-      softwareApp('PdfNest PPTX Compressor', 'Free online tool to compress and reduce PowerPoint presentation file size.', [
-        'Image optimization', 'No slide content loss', 'Browser-based processing', 'No watermarks', 'Free unlimited use',
+      softwareApp('PdfNest PowerPoint Compressor', 'Free online tool to compress PowerPoint presentations (.pptx) and reduce file size without losing quality.', [
+        'Compress PPT and PPTX online', 'Reduce PowerPoint size free', '100% private browser processing', 'No quality loss option', 'No watermarks or file limits',
       ]),
-      breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor'], ['Compress PPTX']]),
+      breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['Compress PPTX', '/compress-pptx/']]),
     ],
   },
   {
@@ -533,7 +533,8 @@ function esc(str) {
 
 function generateHtml(baseHtml, route) {
   const fullTitle = route.title.includes('PdfNest') ? route.title : `${route.title} | PdfNest`;
-  const canonicalUrl = `${SITE_URL}${route.path}`;
+  const formattedPath = route.path === '/' ? '/' : (route.path.endsWith('/') ? route.path : `${route.path}/`);
+  const canonicalUrl = `${SITE_URL}${formattedPath}`;
   const ogType = route.ogType || 'website';
 
   // Build schema scripts

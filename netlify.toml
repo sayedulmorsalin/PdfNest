@@ -42,7 +42,98 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
 
-# ─── SPA Routing ───────────────────────────────────────────────────────────────
+# ─── 301 Trailing Slash Canonical Redirects ─────────────────────────────────────
+[[redirects]]
+  from = "/compress-pptx"
+  to = "/compress-pptx/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/compress-docx"
+  to = "/compress-docx/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pdf-editor"
+  to = "/pdf-editor/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/merge-pdf"
+  to = "/merge-pdf/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/compress-pdf"
+  to = "/compress-pdf/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/split-pdf"
+  to = "/split-pdf/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pdf-to-word"
+  to = "/pdf-to-word/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/word-to-pdf"
+  to = "/word-to-pdf/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pdf-to-jpg"
+  to = "/pdf-to-jpg/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pdf-to-png"
+  to = "/pdf-to-png/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pdf-to-pptx"
+  to = "/pdf-to-pptx/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pptx-to-pdf"
+  to = "/pptx-to-pdf/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/json-formatter"
+  to = "/json-formatter/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/image-compressor"
+  to = "/image-compressor/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/blog"
+  to = "/blog/"
+  status = 301
+  force = true
+
+# ─── SPA Routing Fallback ──────────────────────────────────────────────────────
 # Because we prerender each route as index.html, Netlify serves static HTML directly.
 # This fallback catches any paths not matched by a static file (e.g., 404s).
 [[redirects]]

@@ -147,10 +147,16 @@ export default function SEO({
   includeWebsite = false,
 }) {
   const siteTitle = 'PdfNest — All-in-One Free Online Tools';
-  const fullTitle = title ? `${title} | PdfNest` : siteTitle;
+  const fullTitle = title ? (title.includes('PdfNest') ? title : `${title} | PdfNest`) : siteTitle;
   const metaDescription = description || DEFAULT_DESCRIPTION;
   const metaKeywords = keywords || DEFAULT_KEYWORDS;
-  const canonicalUrl = canonical ? `${SITE_URL}${canonical}` : SITE_URL;
+  
+  // Format canonical path to ensure consistent trailing slash
+  let canonicalPath = canonical || '';
+  if (canonicalPath && canonicalPath !== '/' && !canonicalPath.endsWith('/') && !canonicalPath.includes('.')) {
+    canonicalPath += '/';
+  }
+  const canonicalUrl = canonicalPath ? `${SITE_URL}${canonicalPath}` : `${SITE_URL}/`;
   const image = ogImage || DEFAULT_IMAGE;
 
   // Build all schemas

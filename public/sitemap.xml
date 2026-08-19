@@ -2,40 +2,40 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
   <!-- Core Pages -->
-  <url><loc>https://pdfnest.shop/</loc><lastmod>2026-08-10</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://pdfnest.shop/pdf-editor</loc><lastmod>2026-08-10</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://pdfnest.shop/</loc><lastmod>2026-08-20</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://pdfnest.shop/pdf-editor/</loc><lastmod>2026-08-20</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
 
-  <!-- PDF Tools -->
-  <url><loc>https://pdfnest.shop/merge-pdf</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://pdfnest.shop/compress-pdf</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://pdfnest.shop/split-pdf</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://pdfnest.shop/pdf-to-word</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://pdfnest.shop/word-to-pdf</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://pdfnest.shop/pdf-to-jpg</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://pdfnest.shop/pdf-to-png</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://pdfnest.shop/pdf-to-pptx</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://pdfnest.shop/pptx-to-pdf</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://pdfnest.shop/compress-docx</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://pdfnest.shop/compress-pptx</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <!-- PDF & Document Tools -->
+  <url><loc>https://pdfnest.shop/compress-pptx/</loc><lastmod>2026-08-20</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://pdfnest.shop/compress-docx/</loc><lastmod>2026-08-20</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://pdfnest.shop/merge-pdf/</loc><lastmod>2026-08-20</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://pdfnest.shop/compress-pdf/</loc><lastmod>2026-08-20</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://pdfnest.shop/split-pdf/</loc><lastmod>2026-08-20</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://pdfnest.shop/pdf-to-word/</loc><lastmod>2026-08-20</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://pdfnest.shop/word-to-pdf/</loc><lastmod>2026-08-20</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://pdfnest.shop/pdf-to-jpg/</loc><lastmod>2026-08-20</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://pdfnest.shop/pdf-to-png/</loc><lastmod>2026-08-20</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://pdfnest.shop/pdf-to-pptx/</loc><lastmod>2026-08-20</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pdfnest.shop/pptx-to-pdf/</loc><lastmod>2026-08-20</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
 
   <!-- Developer & Utility Tools -->
-  <url><loc>https://pdfnest.shop/json-formatter</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://pdfnest.shop/image-compressor</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://pdfnest.shop/cgpa-calculator</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://pdfnest.shop/code-formatter</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pdfnest.shop/json-formatter/</loc><lastmod>2026-08-20</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pdfnest.shop/image-compressor/</loc><lastmod>2026-08-20</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pdfnest.shop/cgpa-calculator/</loc><lastmod>2026-08-20</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pdfnest.shop/code-formatter/</loc><lastmod>2026-08-20</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 
   <!-- Blog -->
-  <url><loc>https://pdfnest.shop/blog</loc><lastmod>2026-08-10</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://pdfnest.shop/blog/how-to-compress-pdf-without-losing-quality</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://pdfnest.shop/blog/best-free-pdf-converter-2026</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://pdfnest.shop/blog/how-to-merge-multiple-pdfs-online</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://pdfnest.shop/blog/pdf-vs-docx-which-format-should-you-use</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://pdfnest.shop/blog/convert-pdf-to-word-without-adobe</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://pdfnest.shop/blog/top-10-free-online-pdf-tools-2026</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pdfnest.shop/blog/</loc><lastmod>2026-08-20</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pdfnest.shop/blog/how-to-compress-pdf-without-losing-quality/</loc><lastmod>2026-08-20</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pdfnest.shop/blog/best-free-pdf-converter-2026/</loc><lastmod>2026-08-20</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pdfnest.shop/blog/how-to-merge-multiple-pdfs-online/</loc><lastmod>2026-08-20</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pdfnest.shop/blog/pdf-vs-docx-which-format-should-you-use/</loc><lastmod>2026-08-20</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pdfnest.shop/blog/convert-pdf-to-word-without-adobe/</loc><lastmod>2026-08-20</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pdfnest.shop/blog/top-10-free-online-pdf-tools-2026/</loc><lastmod>2026-08-20</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 
   <!-- Legal / Info Pages -->
-  <url><loc>https://pdfnest.shop/privacy</loc><lastmod>2026-08-10</lastmod><changefreq>yearly</changefreq><priority>0.4</priority></url>
-  <url><loc>https://pdfnest.shop/terms</loc><lastmod>2026-08-10</lastmod><changefreq>yearly</changefreq><priority>0.4</priority></url>
-  <url><loc>https://pdfnest.shop/contact</loc><lastmod>2026-08-10</lastmod><changefreq>yearly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://pdfnest.shop/privacy/</loc><lastmod>2026-08-20</lastmod><changefreq>yearly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://pdfnest.shop/terms/</loc><lastmod>2026-08-20</lastmod><changefreq>yearly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://pdfnest.shop/contact/</loc><lastmod>2026-08-20</lastmod><changefreq>yearly</changefreq><priority>0.5</priority></url>
 
 </urlset>

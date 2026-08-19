@@ -8,19 +8,19 @@ export default function Navbar() {
 
   const links = [
     { name: 'Home', path: '/' },
-    { name: 'PDF Editor', path: '/pdf-editor' },
-    { name: 'Merge PDF', path: '/merge-pdf' },
-    { name: 'Compress PDF', path: '/compress-pdf' },
-    { name: 'Split PDF', path: '/split-pdf' },
-    { name: 'Compress DOCX', path: '/compress-docx' },
-    { name: 'Compress PPTX', path: '/compress-pptx' },
+    { name: 'PDF Editor', path: '/pdf-editor/' },
+    { name: 'Merge PDF', path: '/merge-pdf/' },
+    { name: 'Compress PDF', path: '/compress-pdf/' },
+    { name: 'Split PDF', path: '/split-pdf/' },
+    { name: 'Compress DOCX', path: '/compress-docx/' },
+    { name: 'Compress PPTX', path: '/compress-pptx/' },
   ];
 
   const dropdownLinks = [
-    { name: 'JSON Formatter', path: '/json-formatter' },
-    { name: 'Image Compressor', path: '/image-compressor' },
-    { name: 'CGPA Calculator', path: '/cgpa-calculator' },
-    { name: 'Code Formatter', path: '/code-formatter' },
+    { name: 'JSON Formatter', path: '/json-formatter/' },
+    { name: 'Image Compressor', path: '/image-compressor/' },
+    { name: 'CGPA Calculator', path: '/cgpa-calculator/' },
+    { name: 'Code Formatter', path: '/code-formatter/' },
   ];
 
   return (
