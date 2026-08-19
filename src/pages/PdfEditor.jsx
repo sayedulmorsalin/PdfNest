@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FileUp, Download, Zap, Merge, Scissors, FileDown, CheckCircle, AlertCircle, Loader, X, FileText, Image } from 'lucide-react';
 import SEO, { buildFAQSchema } from '../components/SEO';
@@ -144,9 +144,9 @@ export default function PdfEditor() {
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {converterOptions.map((opt) => (
-          <a
+          <Link
             key={opt.format}
-            href={opt.path}
+            to={opt.path}
             className="p-6 border border-white/10 rounded-xl hover:border-primary/50 hover:bg-primary/5 transition-all group block"
           >
             <div className="flex items-start gap-4">
@@ -159,7 +159,7 @@ export default function PdfEditor() {
               </div>
               <Download className="w-5 h-5 text-primary opacity-0 group-hover:opacity-100 transition-opacity mt-1" />
             </div>
-          </a>
+          </Link>
         ))}
       </div>
       <div className="p-4 bg-amber-500/10 border border-amber-500/20 rounded-lg text-sm text-amber-200 space-y-1">

@@ -40,6 +40,7 @@ body {
   min-height: 100vh;
   background-color: var(--color-background, #1a1a2e);
   color: var(--color-foreground, #f0f0f0);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 #root {
@@ -65,7 +66,7 @@ body {
   background: var(--color-border);
 }
 
-/* Glassmorphism Classes */
+/* Glassmorphism Classes - Dark Mode Default */
 .glass {
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(12px);
@@ -99,4 +100,102 @@ body {
     0 10px,
     10px -10px,
     -10px 0px;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Light Theme System Overrides
+   ───────────────────────────────────────────────────────────────────────────── */
+html.light {
+  color-scheme: light;
+  --color-background: #f8fafc;
+  --color-foreground: #0f172a;
+  --color-card: #ffffff;
+  --color-card-foreground: #0f172a;
+  --color-muted: #e2e8f0;
+  --color-muted-foreground: #475569;
+  --color-border: #cbd5e1;
+}
+
+html.light body {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+html.light .text-white {
+  color: #0f172a !important;
+}
+
+html.light .text-muted-foreground {
+  color: #475569 !important;
+}
+
+html.light .glass {
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+}
+
+html.light .glass-card {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #0f172a !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04) !important;
+}
+
+html.light .glass-card:hover {
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+}
+
+html.light .bg-white\/5 {
+  background-color: rgba(15, 23, 42, 0.04) !important;
+}
+
+html.light .bg-white\/10 {
+  background-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+html.light .bg-black\/20,
+html.light .bg-black\/40,
+html.light .bg-black\/60 {
+  background-color: rgba(241, 245, 249, 0.8) !important;
+}
+
+html.light .border-white\/5,
+html.light .border-white\/10,
+html.light .border-white\/15,
+html.light .border-white\/20 {
+  border-color: #e2e8f0 !important;
+}
+
+html.light .bg-zinc-900,
+html.light .bg-zinc-950,
+html.light .bg-\[\#131427\],
+html.light .bg-\[\#15162c\] {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #e2e8f0 !important;
+}
+
+html.light .from-white {
+  --tw-gradient-from: #0f172a var(--tw-gradient-from-position) !important;
+}
+
+html.light .to-white\/60 {
+  --tw-gradient-to: rgba(15, 23, 42, 0.6) var(--tw-gradient-to-position) !important;
+}
+
+html.light input,
+html.light textarea,
+html.light select {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+html.light input::placeholder,
+html.light textarea::placeholder {
+  color: #94a3b8 !important;
 }
