@@ -28,6 +28,7 @@ import BlogPost from './pages/BlogPost';
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <Layout>
         <Routes>
           <Route path="/" element={<Home />} />
