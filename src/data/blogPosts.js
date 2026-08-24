@@ -119,6 +119,7 @@ In this comprehensive comparison, we evaluate the best free PDF converters avail
         heading: '1. PdfNest — Best for Privacy',
         content: `**Price:** Free (no limits)
 **Conversion formats:** PDF → Word (DOCX), PDF → PowerPoint (PPTX), PDF → JPG, PDF → PNG
+**Additional Tools:** [PPTX Compressor](/compress-pptx/) (compress PowerPoint decks up to 300MB+), [PDF Compressor](/compress-pdf/), [Merge PDF](/merge-pdf/)
 **Processing:** 100% browser-based (no server uploads)
 
 PdfNest stands out for its privacy-first approach. Unlike every other online converter, PdfNest processes your files entirely within your web browser using JavaScript. Your documents are never uploaded to any server.
@@ -128,6 +129,7 @@ PdfNest stands out for its privacy-first approach. Unlike every other online con
 - Files never leave your device
 - No registration or account needed
 - Fast processing (no upload/download wait)
+- Integrated PowerPoint PPTX and PDF compression
 - Works offline after initial page load
 
 **Cons:**
@@ -595,36 +597,36 @@ When you need to share PDF content on platforms that only accept images.`
 While not strictly a PDF tool, image compression often goes hand-in-hand with PDF work — especially when preparing images to include in PDFs.`
       },
       {
-        heading: '7. JSON Formatter',
+        heading: '7. PowerPoint PPTX Compressor',
+        content: `**What it does:** Shrinks Microsoft PowerPoint presentations (.pptx, .ppsx) by re-encoding embedded images and optimizing XML archives.
+**Why you need it:** Email attachments fail over 25MB, and heavy 100MB–300MB slide decks lag when presenting on mobile or video calls.
+**Best free option:** PdfNest ([pdfnest.shop/compress-pptx/](/compress-pptx/)) — 100% browser-based with support for large 300MB+ decks.
+
+A game-changer for business presenters and students who frequently share image-heavy slide decks.`
+      },
+      {
+        heading: '8. JSON Formatter',
         content: `**What it does:** Formats, validates, and minifies JSON data with syntax highlighting.
 **Why you need it:** API development, configuration files, data debugging.
-**Best free option:** PdfNest (pdfnest.shop/json-formatter) — Clean and fast.
+**Best free option:** PdfNest ([pdfnest.shop/json-formatter/](/json-formatter/)) — Clean and fast.
 
 A developer essential. When you're working with APIs, configurations, or data files, a good JSON formatter is invaluable.`
       },
       {
-        heading: '8. Word to PDF Converter',
+        heading: '9. Word to PDF Converter',
         content: `**What it does:** Converts Word documents to PDF format.
 **Why you need it:** Creating professional, universally-readable documents from your Word files.
-**Best free option:** PdfNest (pdfnest.shop/word-to-pdf) — Preserves all formatting.
+**Best free option:** PdfNest ([pdfnest.shop/word-to-pdf/](/word-to-pdf/)) — Preserves all formatting.
 
 The reverse of PDF to Word — and equally important. Use it when you're ready to share a finalized document.`
       },
       {
-        heading: '9. Code Formatter',
+        heading: '10. Code Formatter',
         content: `**What it does:** Formats code (JavaScript, HTML, CSS, JSON) using Prettier standards.
 **Why you need it:** Clean, consistent code is easier to read, debug, and maintain.
-**Best free option:** PdfNest (pdfnest.shop/code-formatter) — Supports multiple languages.
+**Best free option:** PdfNest ([pdfnest.shop/code-formatter/](/code-formatter/)) — Supports multiple languages.
 
 Another developer tool that pairs well with the JSON formatter. Consistent code formatting is a sign of professionalism.`
-      },
-      {
-        heading: '10. CGPA Calculator',
-        content: `**What it does:** Calculates your cumulative GPA based on the BD grading system.
-**Why you need it:** Students need to track academic performance.
-**Best free option:** PdfNest (pdfnest.shop/cgpa-calculator) — Quick and accurate.
-
-A unique tool for students that complements the document tools nicely.`
       },
       {
         heading: 'Why PdfNest for All These Tools?',
@@ -634,7 +636,7 @@ A unique tool for students that complements the document tools nicely.`
 2. **Free:** No limits, no watermarks, no premium tiers. Everything is free.
 3. **Convenience:** One website for all your document needs. No need to bookmark 10 different sites.
 
-Visit pdfnest.shop to access all these tools for free.`
+Visit [pdfnest.shop](/) to access all these tools for free.`
       }
     ],
     faqs: [
@@ -643,7 +645,112 @@ Visit pdfnest.shop to access all these tools for free.`
       { q: 'Is my data safe using online PDF tools?', a: 'With PdfNest, absolutely. All processing happens locally in your browser. Your files never leave your device.' },
       { q: 'Do I need to create an account?', a: 'No. PdfNest requires no registration, no login, and no personal information to use any tool.' },
     ]
+  },
+  {
+    slug: 'how-to-compress-powerpoint-presentation-reduce-file-size',
+    title: 'How to Compress a PowerPoint Presentation: Reduce PPT & PPTX Size in 2026',
+    metaDescription: 'Learn how to compress PowerPoint presentations (.ppt & .pptx) without losing slide quality. Reduce large PPT decks over 300MB for email, Google Drive, and web.',
+    keywords: 'compress powerpoint, reduce ppt size, ppt compressor, compress pptx, compress large powerpoint 300mb, powerpoint file size reducer, compress ppt online, how to shrink powerpoint',
+    publishDate: '2026-08-22',
+    category: 'Presentation Tips',
+    tags: ['PowerPoint', 'PPTX', 'Compression', 'File Size', 'Office'],
+    readTime: '7 min read',
+    sections: [
+      {
+        heading: 'Why PowerPoint Presentations Become Huge (Over 100MB–300MB)',
+        content: `Every professional, educator, and student has experienced the frustration of trying to email a PowerPoint presentation, only to get hit with a bounce message: **"Attachment size exceeds 25MB limit."**
+
+PowerPoint files (.pptx) balloon in size primarily because modern smartphones, digital cameras, and stock photo websites produce ultra-high-resolution images (often 4000×3000 pixels or larger). When you drag and drop these photos onto a slide, Microsoft PowerPoint embeds the full uncompressed image file into the background of the presentation package.
+
+A deck with just 15–20 slides containing charts, screenshots, and photos can easily grow beyond **100MB, 200MB, or even 300MB+**.
+
+Fortunately, you can compress your PowerPoint presentations by up to **70–80%** without sacrificing the visual sharpness of your slides.`
+      },
+      {
+        heading: 'Method 1: Use PdfNest\'s Free PPTX Compressor (Best for Privacy & Large 300MB+ Decks)',
+        content: `The easiest, fastest, and most private way to compress a PowerPoint file is using [PdfNest's Free Online PowerPoint Compressor](/compress-pptx/).
+
+Unlike traditional cloud tools that enforce strict 25MB or 50MB upload limits (and demand expensive paid upgrades for larger files), PdfNest processes your presentation **100% inside your web browser**.
+
+**Step-by-Step Instructions:**
+1. **Open the Compressor:** Go to [pdfnest.shop/compress-pptx/](/compress-pptx/) in any web browser.
+2. **Upload Your Presentation:** Drag and drop your \`.pptx\` or \`.ppsx\` file. Because it processes locally, you can upload heavy files even over 300MB without server timeout errors.
+3. **Choose Your Compression Level:**
+   - **Low Compression:** Best for large 4K projector displays. Preserves highest image resolution with ~35% size reduction.
+   - **Recommended:** Ideal for 95% of use cases. Gives an optimal balance of crisp visuals and ~60% size savings for email attachments.
+   - **High Compression:** Maximum compression for strict email gateways or low-bandwidth downloads.
+4. **Download Instantly:** Click **"Compress PPTX"** and download your newly optimized presentation.
+
+**Why Use PdfNest for PowerPoint Compression?**
+- **Zero Server Uploads:** Your slides and confidential business metrics never touch remote cloud servers.
+- **Handles Huge Decks:** Easily compress 100MB, 200MB, or 300MB+ PowerPoint files for free.
+- **Preserves Everything:** Fonts, animations, slide transitions, speaker notes, and vector shapes remain perfectly intact.`
+      },
+      {
+        heading: 'Method 2: Use Built-in Picture Compression in Microsoft PowerPoint',
+        content: `If you have the desktop Microsoft PowerPoint application installed on Windows or Mac, you can use its built-in image compression feature:
+
+1. Open your presentation in **Microsoft PowerPoint**.
+2. Click on any picture on any slide to open the **Picture Format** ribbon tab.
+3. Click **Compress Pictures** (located in the Adjust group).
+4. In the dialog box:
+   - **Uncheck** *"Apply only to this picture"* so the compression applies to all slides across the entire deck.
+   - **Check** *"Delete cropped areas of pictures"* to permanently remove hidden, cropped-out image data.
+   - Select a target resolution: **Web (150 ppi)** is recommended for email and presentations; **E-mail (96 ppi)** produces the smallest file size.
+5. Click **OK**, then save your presentation with a new file name (e.g., \`Presentation_compressed.pptx\`).`
+      },
+      {
+        heading: 'Method 3: Clean Unused Slide Masters & Layouts',
+        content: `When you download corporate PowerPoint templates or combine slides from multiple presentations, your file often accumulates dozens of **unused Slide Masters** and hidden background graphics.
+
+**How to remove unused slide masters:**
+1. In PowerPoint, navigate to the **View** tab > **Slide Master**.
+2. Scroll through the master slide hierarchy in the left sidebar.
+3. Look for master layouts that have no slides linked to them (hovering over the master thumbnail indicates how many slides are using it).
+4. Right-click and delete unused master layouts.
+5. Click **Close Master View** and save the file. This simple cleanup can shave 10MB–30MB off template-heavy presentations.`
+      },
+      {
+        heading: 'Method 4: Link Heavy Videos Instead of Embedding Them',
+        content: `Embedding a 2-minute 1080p HD video directly inside a slide will immediately add 100MB to 200MB to your PowerPoint file.
+
+If you need to distribute the presentation via email:
+- Upload your video clip to **YouTube (Unlisted)**, **Vimeo**, or **Google Drive**.
+- In PowerPoint, go to **Insert** > **Video** > **Online Video**, and paste the link.
+- PowerPoint will stream the video during the live presentation without bloating your local \`.pptx\` file size.`
+      },
+      {
+        heading: 'How Much File Reduction Can You Expect?',
+        content: `The amount of file savings depends on the types of assets inside your deck:
+
+| Presentation Type | Typical Size Reduction | Key Optimization Factor |
+|---|---|---|
+| Image-Heavy Pitch Decks | **60% – 80%** | Re-encoding high-resolution camera photos |
+| Standard Business Decks | **40% – 65%** | Image compression + XML Deflate level 9 |
+| Text & Vector Graphic Decks | **20% – 40%** | Deflate archive optimization |
+| Decks with Embedded Video | **10% – 25%** | Raster assets only (videos require linking) |
+| Previously Compressed Decks | **5% – 15%** | Marginal additional gains |
+
+For almost every standard PowerPoint presentation, running it through [PdfNest's PPTX Compressor](/compress-pptx/) brings it safely under the standard 25MB email limit.`
+      },
+      {
+        heading: 'Summary & Best Practices for PowerPoint Presenters',
+        content: `To keep your presentations lightweight and easy to share:
+
+- **Compress before sending:** Make it a routine habit to run your finalized deck through [PdfNest PPTX Compressor](/compress-pptx/).
+- **Use SVG icons instead of PNGs:** Vector graphics consume only a few kilobytes and scale cleanly to any resolution.
+- **Convert to PDF for sharing:** If your recipient only needs to read the presentation (without editing), use our [PDF to PowerPoint converter](/pdf-to-pptx/) or save as PDF to ensure universal compatibility.`
+      }
+    ],
+    faqs: [
+      { q: 'How can I compress a PowerPoint file over 300MB for free?', a: 'Use PdfNest\'s free PPTX compressor at pdfnest.shop/compress-pptx/. Because it processes files client-side in your web browser, there are no server payload limits, allowing you to compress large 300MB+ decks without timeouts or fees.' },
+      { q: 'Will compressing a PPTX file delete speaker notes or animations?', a: 'No. PdfNest only optimizes the raw image assets inside the presentation package. All text, slide layouts, animations, transitions, and speaker notes remain 100% intact.' },
+      { q: 'What is the difference between .PPT and .PPTX compression?', a: '.PPT is the legacy binary format from PowerPoint 97-2003, whereas .PPTX is an Open XML zipped package. Modern tools achieve much higher compression ratios on .PPTX files. To compress an older .ppt file, save it as .pptx first.' },
+      { q: 'How do I email a PowerPoint file larger than 25MB?', a: 'Run the file through PdfNest\'s Recommended or High compression mode to reduce the file size below 20MB, or export the slides to a compressed PDF document.' },
+      { q: 'Is it safe to compress confidential corporate pitch decks online?', a: 'With PdfNest, yes. Your files never leave your computer or get uploaded to third-party cloud servers. All processing happens locally in your browser memory.' },
+    ]
   }
 ];
 
 export default blogPosts;
+

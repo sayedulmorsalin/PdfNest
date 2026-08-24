@@ -8,7 +8,7 @@ const SITE_URL = 'https://pdfnest.shop';
 
 const breadcrumbs = [
   { name: 'Home', path: '/' },
-  { name: 'Blog' }
+  { name: 'Blog', path: '/blog/' }
 ];
 
 export default function Blog() {
@@ -17,14 +17,14 @@ export default function Blog() {
     "@type": "CollectionPage",
     "name": "PdfNest Blog — PDF Tips, Guides & Tutorials",
     "description": "Expert guides, tutorials, and tips on compressing, converting, merging, and managing PDF files. All articles written by the PdfNest team.",
-    "url": `${SITE_URL}/blog`,
+    "url": `${SITE_URL}/blog/`,
     "mainEntity": {
       "@type": "ItemList",
       "itemListElement": blogPosts.map((post, index) => ({
         "@type": "ListItem",
         "position": index + 1,
         "name": post.title,
-        "url": `${SITE_URL}/blog/${post.slug}`,
+        "url": `${SITE_URL}/blog/${post.slug}/`,
         "description": post.metaDescription,
       }))
     }
@@ -35,7 +35,7 @@ export default function Blog() {
       <SEO
         title="PdfNest Blog — PDF Tips, Guides & Tutorials"
         description="Expert guides and tutorials on compressing, converting, merging, and managing PDF files. Learn how to use free online PDF tools effectively — no software needed."
-        canonical="/blog"
+        canonical="/blog/"
         keywords="pdf blog, pdf tips, pdf guides, pdf tutorials, how to compress pdf, how to merge pdf, pdf converter guide, pdfnest blog, free pdf tools guide"
         schemas={[
           collectionPageSchema,
@@ -67,7 +67,7 @@ export default function Blog() {
             {blogPosts.map(post => (
               <Link 
                 key={post.slug} 
-                to={`/blog/${post.slug}`}
+                to={`/blog/${post.slug}/`}
                 className="group flex flex-col h-full bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-primary/50 transition-all hover:-translate-y-1"
               >
                 <div className="p-6 flex flex-col h-full">

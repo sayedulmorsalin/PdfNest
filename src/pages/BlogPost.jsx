@@ -16,7 +16,7 @@ export default function BlogPost() {
 
   const breadcrumbs = [
     { name: 'Home', path: '/' },
-    { name: 'Blog', path: '/blog' },
+    { name: 'Blog', path: '/blog/' },
     { name: post.title }
   ];
 
@@ -143,7 +143,7 @@ export default function BlogPost() {
         </footer>
         
         <div className="mt-16 text-center">
-          <Link to="/blog" className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors font-medium">
+          <Link to="/blog/" className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors font-medium">
             <ArrowLeft className="w-4 h-4" /> Back to Blog
           </Link>
         </div>

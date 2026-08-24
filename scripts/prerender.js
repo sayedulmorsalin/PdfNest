@@ -139,12 +139,12 @@ const ROUTES = [
     heading: 'Merge PDF Online — Combine Files for Free',
     content:
       'Combine multiple PDF files into one document instantly. Upload your PDFs, arrange them in order, and merge them with a single click. 100% browser-based — your files never leave your device. No watermarks, no registration required.',
-    breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor'], ['Merge PDF']],
+    breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['Merge PDF']],
     schemas: [
       softwareApp('PdfNest PDF Merger', 'Free online tool to merge multiple PDF files into one document.', [
         'Unlimited merges', 'Drag to reorder', 'Browser-based processing', 'No watermarks', 'Free unlimited use',
       ]),
-      breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor'], ['Merge PDF']]),
+      breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['Merge PDF']]),
     ],
   },
   {
@@ -157,12 +157,12 @@ const ROUTES = [
     heading: 'Compress PDF Online — Reduce File Size for Free',
     content:
       'Shrink your PDF files by up to 80% without visible quality loss. Choose Low, Recommended, or High compression. Perfect for email attachments, uploads, and storage. 100% browser-based — your files never leave your device.',
-    breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor'], ['Compress PDF']],
+    breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['Compress PDF']],
     schemas: [
       softwareApp('PdfNest PDF Compressor', 'Free online tool to compress and reduce PDF file size without quality loss.', [
         'Smart compression', 'No quality loss', 'Browser-based processing', 'No watermarks', 'Free unlimited use',
       ]),
-      breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor'], ['Compress PDF']]),
+      breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['Compress PDF']]),
     ],
   },
   {
@@ -175,12 +175,12 @@ const ROUTES = [
     heading: 'Split PDF Online — Extract Pages for Free',
     content:
       'Separate your PDF into individual pages or extract specific page ranges. Select pages by number or range, then download as a new PDF. Fast, free, and completely private — no server uploads required.',
-    breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor'], ['Split PDF']],
+    breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['Split PDF']],
     schemas: [
       softwareApp('PdfNest PDF Splitter', 'Free online tool to split PDF files and extract specific pages.', [
         'Extract specific pages', 'Split by page range', 'Split into individual files', 'Browser-based', 'Free unlimited use',
       ]),
-      breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor'], ['Split PDF']]),
+      breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['Split PDF']]),
     ],
   },
   {
@@ -193,13 +193,13 @@ const ROUTES = [
     heading: 'Convert PDF to Word — Free DOCX Converter',
     content:
       'Transform PDFs into fully editable Word (.docx) documents with preserved formatting, headings, and bullet points. Our smart parser detects font sizes, bold and italic text, and paragraph structure. 100% browser-based — your files never leave your device.',
-    breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor'], ['PDF to Word']],
+    breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['PDF to Word']],
     schemas: [
       softwareApp('PdfNest PDF to Word Converter', 'Free online tool to convert PDF documents into editable Word (.docx) files.', [
         'Formatting preservation', 'Heading detection (H1, H2)', 'Bold and italic support',
         'Bullet point reconstruction', 'Browser-based', 'No watermarks', 'Free unlimited use',
       ]),
-      breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor'], ['PDF to Word']]),
+      breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['PDF to Word']]),
     ],
   },
   {
@@ -212,12 +212,12 @@ const ROUTES = [
     heading: 'Convert Word to PDF — Free Online Converter',
     content:
       'Transform Word documents (.docx) into universally readable PDF files with preserved formatting. Upload your Word file and download a perfectly formatted PDF instantly. 100% browser-based — your files never leave your device.',
-    breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor'], ['Word to PDF']],
+    breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['Word to PDF']],
     schemas: [
       softwareApp('PdfNest Word to PDF Converter', 'Free online tool to convert Word documents into PDF files.', [
         'Formatting preservation', 'Browser-based processing', 'Free unlimited use',
       ]),
-      breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor'], ['Word to PDF']]),
+      breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['Word to PDF']]),
     ],
   },
   {
@@ -230,12 +230,12 @@ const ROUTES = [
     heading: 'Convert PDF to JPG — Free Image Converter',
     content:
       'Transform PDF pages into high-quality JPG images instantly. Perfect for presentations, social media, and sharing. Each page becomes a separate JPG image. Download individually or all pages as a zip file. 100% browser-based — completely private.',
-    breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor'], ['PDF to JPG']],
+    breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['PDF to JPG']],
     schemas: [
       softwareApp('PdfNest PDF to JPG Converter', 'Free online tool to convert PDF pages to high-quality JPG images.', [
         'High-resolution output', 'Multi-page support', 'Batch download', 'Browser-based processing', 'Free unlimited use',
       ]),
-      breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor'], ['PDF to JPG']]),
+      breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['PDF to JPG']]),
     ],
   },
   {
@@ -248,12 +248,12 @@ const ROUTES = [
     heading: 'Convert PDF to PNG — Free Image Converter',
     content:
       'Transform PDF pages into lossless PNG images. Perfect for documents requiring transparency or crisp text quality. Each page becomes a separate high-resolution PNG. 100% browser-based — completely private.',
-    breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor'], ['PDF to PNG']],
+    breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['PDF to PNG']],
     schemas: [
       softwareApp('PdfNest PDF to PNG Converter', 'Free online tool to convert PDF pages to lossless PNG images.', [
         'Lossless quality', 'Multi-page support', 'Batch download', 'Browser-based',
       ]),
-      breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor'], ['PDF to PNG']]),
+      breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['PDF to PNG']]),
     ],
   },
   {
@@ -266,12 +266,12 @@ const ROUTES = [
     heading: 'Convert PDF to PowerPoint — Free PPTX Converter',
     content:
       'Transform PDF documents into ready-to-present PowerPoint (.pptx) files. Our engine automatically paginates content and formats headers for slide titles. 100% browser-based — your files never leave your device.',
-    breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor'], ['PDF to PowerPoint']],
+    breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['PDF to PowerPoint']],
     schemas: [
       softwareApp('PdfNest PDF to PowerPoint Converter', 'Free online tool to convert PDF documents into PowerPoint presentations.', [
         'Smart slide layout', 'Browser-based processing', 'Free unlimited use',
       ]),
-      breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor'], ['PDF to PowerPoint']]),
+      breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['PDF to PowerPoint']]),
     ],
   },
   {
@@ -284,12 +284,12 @@ const ROUTES = [
     heading: 'Convert PowerPoint to PDF — Free Online Converter',
     content:
       'Transform PowerPoint presentations into universally readable PDF files with preserved formatting. Each slide is captured at high resolution. 100% browser-based — your files never leave your device.',
-    breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor'], ['PowerPoint to PDF']],
+    breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['PowerPoint to PDF']],
     schemas: [
       softwareApp('PdfNest PowerPoint to PDF Converter', 'Free online tool to convert PowerPoint presentations into PDF files.', [
         'Formatting preservation', 'Browser-based processing', 'Free unlimited use',
       ]),
-      breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor'], ['PowerPoint to PDF']]),
+      breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['PowerPoint to PDF']]),
     ],
   },
   {
@@ -312,18 +312,18 @@ const ROUTES = [
   },
   {
     path: '/compress-pptx',
-    title: 'Compress PowerPoint Online Free – Reduce PPT & PPTX Size | PdfNest',
+    title: 'Compress PowerPoint Online Free – Reduce PPT & PPTX Size (300MB+) | PdfNest',
     description:
-      'Compress PowerPoint files online for free. Reduce PPT, PPTX, and presentation file size without losing image quality or slide formatting. Fast, secure, 100% browser-based.',
+      'Compress PowerPoint files online for free. Reduce PPT, PPTX, and presentation file size (even 300MB+) without losing image quality or slide formatting. Fast, secure, 100% browser-based.',
     keywords:
-      'compress powerpoint, ppt file compressor, compress powerpoint file, compress ppt, ppt compressor, compress ppt file, compress ppt size online, compress powerpoint online free, free ppt compressor, pptx compressor, compress powerpoint presentation, compress pptx, reduce ppt size, powerpoint file reducer, online ppt file compressor',
+      'compress powerpoint, ppt compressor, compress ppt, compress powerpoint file, ppt file compressor, compress ppt file, reduce ppt size online, compress ppt online more than 300mb free, compress pptx, free ppt compressor, compress powerpoint presentation, powerpoint size reducer, reduce pptx size online free, shrink powerpoint file, ppt size reducer',
     heading: 'Compress PowerPoint Files Online',
     content:
-      'Reduce the file size of your PowerPoint presentations (.pptx, .ppsx) quickly and easily. 100% free and private — your presentation slides never leave your device. Smart image re-encoding and XML package compression.',
+      'Reduce the file size of your PowerPoint presentations (.pptx, .ppsx) quickly and easily. 100% free and private — handles large 300MB+ decks without server limits. Smart image re-encoding and XML package compression directly in your browser.',
     breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['Compress PPTX']],
     schemas: [
-      softwareApp('PdfNest PowerPoint Compressor', 'Free online tool to compress PowerPoint presentations (.pptx) and reduce file size without losing quality.', [
-        'Compress PPT and PPTX online', 'Reduce PowerPoint size free', '100% private browser processing', 'No quality loss option', 'No watermarks or file limits',
+      softwareApp('PdfNest PowerPoint Compressor', 'Free online tool to compress PowerPoint presentations (.pptx, .ppsx) and reduce file size without losing quality. Handles large files over 300MB.', [
+        'Compress PPT and PPTX online', 'Reduce PowerPoint size free', 'Support for large files over 300MB', '100% private browser processing', 'No quality loss option', 'No watermarks or file limits',
       ]),
       breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['Compress PPTX', '/compress-pptx/']]),
     ],
@@ -409,9 +409,31 @@ const ROUTES = [
         '@type': 'Blog',
         name: 'PdfNest Blog',
         description: 'Expert guides and tutorials on PDF tools, compression, conversion, and document management.',
-        url: `${SITE_URL}/blog`,
+        url: `${SITE_URL}/blog/`,
       },
-      breadcrumbSchema([['Home', '/'], ['Blog']]),
+      breadcrumbSchema([['Home', '/'], ['Blog', '/blog/']]),
+    ],
+  },
+  {
+    path: '/blog/how-to-compress-powerpoint-presentation-reduce-file-size',
+    title: 'How to Compress a PowerPoint Presentation: Reduce PPT & PPTX Size in 2026',
+    description:
+      'Learn how to compress PowerPoint presentations (.ppt & .pptx) without losing slide quality. Reduce large PPT decks over 300MB for email, Google Drive, and web.',
+    keywords:
+      'compress powerpoint, reduce ppt size, ppt compressor, compress pptx, compress large powerpoint 300mb, powerpoint file size reducer, compress ppt online, how to shrink powerpoint',
+    heading: 'How to Compress a PowerPoint Presentation: Reduce PPT & PPTX Size in 2026',
+    content:
+      'PowerPoint files balloon in size because of high-resolution embedded media. Learn how to compress PowerPoint presentations (.pptx & .ppt) by up to 80% using free browser-based tools and built-in PowerPoint compression settings.',
+    breadcrumbs: [['Home', '/'], ['Blog', '/blog/'], ['Compress PowerPoint Guide']],
+    ogType: 'article',
+    schemas: [
+      blogPosting(
+        'How to Compress a PowerPoint Presentation: Reduce PPT & PPTX Size in 2026',
+        'Learn how to compress PowerPoint presentations (.ppt & .pptx) without losing slide quality. Reduce large PPT decks over 300MB.',
+        'how-to-compress-powerpoint-presentation-reduce-file-size',
+        '2026-08-22'
+      ),
+      breadcrumbSchema([['Home', '/'], ['Blog', '/blog/'], ['Compress PowerPoint Guide', '/blog/how-to-compress-powerpoint-presentation-reduce-file-size/']]),
     ],
   },
   {
@@ -585,13 +607,13 @@ ${schemaScripts}
       <a href="/" style="text-decoration:none;color:inherit;font-weight:bold;font-size:1.25rem">PdfNest</a>
       <nav aria-label="Main navigation" style="display:inline-flex;gap:1rem;margin-left:2rem;font-size:0.875rem">
         <a href="/" style="color:#888">Home</a>
-        <a href="/pdf-editor" style="color:#888">PDF Editor</a>
-        <a href="/merge-pdf" style="color:#888">Merge PDF</a>
-        <a href="/compress-pdf" style="color:#888">Compress PDF</a>
-        <a href="/split-pdf" style="color:#888">Split PDF</a>
-        <a href="/compress-docx" style="color:#888">Compress DOCX</a>
-        <a href="/compress-pptx" style="color:#888">Compress PPTX</a>
-        <a href="/blog" style="color:#888">Blog</a>
+        <a href="/pdf-editor/" style="color:#888">PDF Editor</a>
+        <a href="/merge-pdf/" style="color:#888">Merge PDF</a>
+        <a href="/compress-pdf/" style="color:#888">Compress PDF</a>
+        <a href="/split-pdf/" style="color:#888">Split PDF</a>
+        <a href="/compress-docx/" style="color:#888">Compress DOCX</a>
+        <a href="/compress-pptx/" style="color:#888">Compress PPTX</a>
+        <a href="/blog/" style="color:#888">Blog</a>
       </nav>
     </header>
     <main>
@@ -603,10 +625,10 @@ ${schemaScripts}
     <footer style="margin-top:3rem;padding-top:1rem;border-top:1px solid #eee;font-size:0.8rem;color:#999">
       <p>PdfNest — Free Online PDF Tools. All processing is 100% browser-based. Your files never leave your device.</p>
       <nav style="display:flex;gap:1rem;margin-top:0.5rem">
-        <a href="/privacy" style="color:#999">Privacy Policy</a>
-        <a href="/terms" style="color:#999">Terms of Service</a>
-        <a href="/contact" style="color:#999">Contact</a>
-        <a href="/blog" style="color:#999">Blog</a>
+        <a href="/privacy/" style="color:#999">Privacy Policy</a>
+        <a href="/terms/" style="color:#999">Terms of Service</a>
+        <a href="/contact/" style="color:#999">Contact</a>
+        <a href="/blog/" style="color:#999">Blog</a>
       </nav>
     </footer>
   </div>`;

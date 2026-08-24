@@ -217,7 +217,7 @@ export default function Navbar() {
               </div>
 
               <Link 
-                to="/blog" 
+                to="/blog/" 
                 className={`text-sm font-medium transition-colors hover:text-primary ${
                   location.pathname.startsWith('/blog') ? 'text-primary font-semibold' : 'text-muted-foreground'
                 }`}
@@ -280,7 +280,7 @@ export default function Navbar() {
                   Home
                 </Link>
                 <Link
-                  to="/blog"
+                  to="/blog/"
                   onClick={() => setIsOpen(false)}
                   className={`block px-4 py-3 rounded-xl text-base font-semibold transition-colors ${
                     location.pathname.startsWith('/blog') ? 'bg-primary/20 text-primary border border-primary/30' : 'text-white hover:bg-white/5'

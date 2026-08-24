@@ -31,10 +31,10 @@ export default function Footer() {
         <div>
           <h4 className="font-semibold mb-6 text-white">Resources</h4>
           <ul className="space-y-4 text-sm text-muted-foreground">
-            <li><Link to="/blog" className="hover:text-primary transition-colors text-primary font-medium">Blog & Guides</Link></li>
-            <li><Link to="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link></li>
-            <li><Link to="/terms" className="hover:text-primary transition-colors">Terms of Service</Link></li>
-            <li><Link to="/contact" className="hover:text-primary transition-colors">Contact</Link></li>
+            <li><Link to="/blog/" className="hover:text-primary transition-colors text-primary font-medium">Blog & Guides</Link></li>
+            <li><Link to="/privacy/" className="hover:text-primary transition-colors">Privacy Policy</Link></li>
+            <li><Link to="/terms/" className="hover:text-primary transition-colors">Terms of Service</Link></li>
+            <li><Link to="/contact/" className="hover:text-primary transition-colors">Contact</Link></li>
           </ul>
         </div>
 
