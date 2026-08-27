@@ -4,6 +4,7 @@ import {
   Search, Menu, X, Sun, Moon, ChevronDown, 
   FileText, FileJson, Image as ImageIcon, Calculator, Code, Merge, Scissors, FileDown, Zap, FileImage
 } from 'lucide-react';
+import BrandLogo from './icons/BrandLogo';
 import { ALL_TOOLS } from './RelatedTools';
 
 export default function Navbar() {
@@ -105,8 +106,8 @@ export default function Navbar() {
           {/* Logo & Main Nav */}
           <div className="flex items-center gap-8">
             <Link to="/" className="flex items-center gap-2.5 group">
-              <div className="w-9 h-9 rounded-xl overflow-hidden group-hover:rotate-6 transition-transform border border-white/15 shadow-md">
-                <img src="/image.png?v=2" alt="PdfNest Logo" className="w-full h-full object-cover" />
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center group-hover:rotate-6 transition-transform drop-shadow-md">
+                <BrandLogo className="w-9 h-9 drop-shadow-[0_2px_10px_rgba(235,61,30,0.35)]" />
               </div>
               <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-white via-white/90 to-white/60 bg-clip-text text-transparent">
                 PdfNest

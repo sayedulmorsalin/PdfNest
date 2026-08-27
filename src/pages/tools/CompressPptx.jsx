@@ -140,27 +140,27 @@ export default function CompressPptx() {
           <div className="text-center md:text-left mb-10">
             <h2 className="text-3xl font-bold mb-3 text-white">How to Compress a PowerPoint Presentation in 3 Steps</h2>
             <p className="text-muted-foreground leading-relaxed max-w-3xl">
-              PowerPoint decks quickly become unmanageable when you embed high-resolution photos, screenshots, or diagram textures. 
+              PowerPoint decks quickly become unmanageable when you embed high-resolution photos, screenshots, or diagram textures.
               With PdfNest, optimizing your presentation takes just a few seconds without installing heavy desktop software.
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 mb-16">
             {[
-              { 
-                step: '1', 
-                title: 'Upload Your Presentation', 
-                desc: 'Drag and drop your .pptx or .ppsx file into the compressor above. Works with decks of any size, including files over 100MB–300MB.' 
+              {
+                step: '1',
+                title: 'Upload Your Presentation',
+                desc: 'Drag and drop your .pptx or .ppsx file into the compressor above. Works with decks of any size, including files over 100MB–300MB.'
               },
-              { 
-                step: '2', 
-                title: 'Select Compression Level', 
-                desc: 'Pick Low (highest quality), Recommended (optimal balance for email/web), or High (maximum size reduction).' 
+              {
+                step: '2',
+                title: 'Select Compression Level',
+                desc: 'Pick Low (highest quality), Recommended (optimal balance for email/web), or High (maximum size reduction).'
               },
-              { 
-                step: '3', 
-                title: 'Download Compressed PPTX', 
-                desc: 'Click Compress PPTX and download your lightweight presentation immediately. See exact MB savings before downloading.' 
+              {
+                step: '3',
+                title: 'Download Compressed PPTX',
+                desc: 'Click Compress PPTX and download your lightweight presentation immediately. See exact MB savings before downloading.'
               },
             ].map((item) => (
               <div key={item.step} className="p-6 border border-white/10 rounded-2xl bg-white/[0.02] hover:border-orange-400/30 transition-colors">

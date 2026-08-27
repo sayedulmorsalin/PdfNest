@@ -209,8 +209,8 @@ export default function PdfEditor() {
           "screenshot": "https://pdfnest.shop/screenshots/pdf-editor.png"
         },
         buildFAQSchema(faqs)
-      ]}
-    />
+        ]}
+      />
       <div className="min-h-screen">
         {/* Hero */}
         <section className="px-4 py-12 md:py-20 border-b border-white/5">
@@ -248,11 +248,10 @@ export default function PdfEditor() {
                   <button
                     key={tab.id}
                     onClick={() => handleTabChange(tab.id)}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all text-sm font-medium ${
-                      activeTab === tab.id
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all text-sm font-medium ${activeTab === tab.id
                         ? 'bg-primary/10 border border-primary/50 text-primary'
                         : 'text-muted-foreground hover:text-white'
-                    }`}
+                      }`}
                   >
                     <Icon className="w-4 h-4" />
                     {tab.name}
@@ -269,13 +268,13 @@ export default function PdfEditor() {
           <div className="max-w-4xl mx-auto prose prose-invert prose-lg">
             <h2 className="text-3xl font-bold text-white mb-6">The Ultimate Free Online PDF Editor</h2>
             <p className="text-muted-foreground leading-relaxed mb-8">
-              Managing PDF documents shouldn't require expensive software subscriptions or clunky desktop applications. 
+              Managing PDF documents shouldn't require expensive software subscriptions or clunky desktop applications.
               Welcome to the PdfNest <strong>Online PDF Editor</strong> hub. This suite of tools is designed to handle all your daily document needs—from converting PDFs to editable Word documents, to merging reports, to compressing file sizes for email attachments.
             </p>
 
             <h3 className="text-2xl font-bold text-white mb-4">A Privacy-First Approach to PDF Editing</h3>
             <p className="text-muted-foreground leading-relaxed mb-6">
-              When you use traditional online PDF converters, you are forced to upload your files to an external server. This is a massive security risk if you are working with tax returns, legal contracts, or confidential business data. 
+              When you use traditional online PDF converters, you are forced to upload your files to an external server. This is a massive security risk if you are working with tax returns, legal contracts, or confidential business data.
               <strong>PdfNest is different.</strong> Our tools utilize cutting-edge client-side WebAssembly and JavaScript technologies. This means that when you convert or edit a PDF, the processing power of your own device is used. <strong>Your files never leave your computer or mobile phone.</strong>
             </p>
 
@@ -310,7 +309,7 @@ export default function PdfEditor() {
         </section>
 
         <FAQSection faqs={faqs} title="PDF Editor — Frequently Asked Questions" />
-        
+
         <div className="max-w-4xl mx-auto pt-8 pb-12">
           <RelatedTools currentToolId="pdf-editor" category="PDF Tools" />
         </div>

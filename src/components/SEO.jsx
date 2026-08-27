@@ -143,6 +143,7 @@ export default function SEO({
   schemas = [],
   ogImage,
   ogType = 'website',
+  favicon = '/favicon.svg?v=3',
   includeOrganization = true,
   includeWebsite = false,
 }) {
@@ -166,6 +167,13 @@ export default function SEO({
 
   return (
     <Helmet>
+      {/* Favicons / Browser Tab Icon */}
+      <link rel="icon" type="image/svg+xml" href={favicon} />
+      <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=3" />
+      <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=3" />
+      <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3" />
+      <link rel="shortcut icon" href="/favicon.ico?v=3" />
+
       {/* Basic Metadata */}
       <title>{fullTitle}</title>
       <meta name="description" content={metaDescription} />

@@ -136,13 +136,12 @@ export default function CompressPptxTool() {
     <div className="space-y-6">
       {status.type && (
         <div
-          className={`flex items-center gap-3 p-4 rounded-lg border text-sm ${
-            status.type === 'loading'
+          className={`flex items-center gap-3 p-4 rounded-lg border text-sm ${status.type === 'loading'
               ? 'bg-blue-500/10 border-blue-500/30 text-blue-300'
               : status.type === 'success'
-              ? 'bg-green-500/10 border-green-500/30 text-green-300'
-              : 'bg-red-500/10 border-red-500/30 text-red-300'
-          }`}
+                ? 'bg-green-500/10 border-green-500/30 text-green-300'
+                : 'bg-red-500/10 border-red-500/30 text-red-300'
+            }`}
         >
           {status.type === 'loading' && <Loader className="w-4 h-4 animate-spin shrink-0" />}
           {status.type === 'success' && <CheckCircle className="w-4 h-4 shrink-0" />}
@@ -209,11 +208,10 @@ export default function CompressPptxTool() {
                 <div
                   key={level.id}
                   onClick={() => setCompressionLevel(level.id)}
-                  className={`p-4 border rounded-xl cursor-pointer transition-all ${
-                    compressionLevel === level.id
+                  className={`p-4 border rounded-xl cursor-pointer transition-all ${compressionLevel === level.id
                       ? 'border-primary bg-primary/5 text-white'
                       : 'border-white/10 bg-white/5 text-muted-foreground hover:border-white/20'
-                  }`}
+                    }`}
                 >
                   <p className="text-sm font-bold">{level.label}</p>
                   <p className="text-xs mt-1 opacity-80">{level.desc}</p>

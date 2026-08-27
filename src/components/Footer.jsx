@@ -1,5 +1,6 @@
 import { ExternalLink, Github, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import BrandLogo from './icons/BrandLogo';
 import { ALL_TOOLS } from './RelatedTools';
 
 export default function Footer() {
@@ -8,8 +9,8 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
         <div className="col-span-1 md:col-span-1">
           <Link to="/" className="flex items-center gap-2 mb-6 group">
-            <div className="w-8 h-8 rounded-lg overflow-hidden border border-white/10 group-hover:rotate-12 transition-transform">
-              <img src="/image.png?v=2" alt="PdfNest Logo" className="w-full h-full object-cover" />
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center group-hover:rotate-12 transition-transform drop-shadow-md">
+              <BrandLogo className="w-8 h-8 drop-shadow-[0_2px_8px_rgba(235,61,30,0.3)]" />
             </div>
             <span className="text-xl font-bold tracking-tight">PdfNest</span>
           </Link>

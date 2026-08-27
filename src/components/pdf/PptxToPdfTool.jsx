@@ -105,11 +105,10 @@ export default function PptxToPdfTool() {
     <div className="space-y-6">
       {/* Status Banner */}
       {status.type && (
-        <div className={`flex items-center gap-3 p-4 rounded-xl border text-sm transition-all duration-300 ${
-          status.type === 'loading' ? 'bg-blue-500/10 border-blue-500/30 text-blue-300' :
-          status.type === 'success' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300' :
-          'bg-red-500/10 border-red-500/30 text-red-300'
-        }`}>
+        <div className={`flex items-center gap-3 p-4 rounded-xl border text-sm transition-all duration-300 ${status.type === 'loading' ? 'bg-blue-500/10 border-blue-500/30 text-blue-300' :
+            status.type === 'success' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300' :
+              'bg-red-500/10 border-red-500/30 text-red-300'
+          }`}>
           {status.type === 'loading' && <Loader className="w-4 h-4 animate-spin shrink-0" />}
           {status.type === 'success' && <CheckCircle className="w-4 h-4 shrink-0" />}
           {status.type === 'error' && <AlertCircle className="w-4 h-4 shrink-0" />}
@@ -130,21 +129,18 @@ export default function PptxToPdfTool() {
       {/* Upload Zone */}
       {!file ? (
         <label
-          className={`relative flex flex-col items-center justify-center p-12 border-2 border-dashed rounded-2xl cursor-pointer transition-all duration-300 group ${
-            isDragOver
+          className={`relative flex flex-col items-center justify-center p-12 border-2 border-dashed rounded-2xl cursor-pointer transition-all duration-300 group ${isDragOver
               ? 'border-primary bg-primary/5 scale-[1.02]'
               : 'border-white/20 hover:border-primary/50 hover:bg-white/[0.02]'
-          }`}
+            }`}
           onDrop={handleDrop}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
         >
-          <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-5 transition-all duration-300 ${
-            isDragOver ? 'bg-primary/20 scale-110' : 'bg-white/5 group-hover:bg-primary/10'
-          }`}>
-            <Presentation className={`w-8 h-8 transition-colors duration-300 ${
-              isDragOver ? 'text-primary' : 'text-muted-foreground group-hover:text-primary'
-            }`} />
+          <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-5 transition-all duration-300 ${isDragOver ? 'bg-primary/20 scale-110' : 'bg-white/5 group-hover:bg-primary/10'
+            }`}>
+            <Presentation className={`w-8 h-8 transition-colors duration-300 ${isDragOver ? 'text-primary' : 'text-muted-foreground group-hover:text-primary'
+              }`} />
           </div>
           <span className="text-lg font-semibold text-white mb-2">
             {isDragOver ? 'Drop your file here' : 'Upload PowerPoint Presentation'}

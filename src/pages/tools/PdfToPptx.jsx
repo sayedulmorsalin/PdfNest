@@ -58,7 +58,7 @@ export default function PdfToPptx() {
               Convert PDF to PowerPoint
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Instantly transform lengthy PDF reports into ready-to-present PowerPoint (.pptx) slides. 
+              Instantly transform lengthy PDF reports into ready-to-present PowerPoint (.pptx) slides.
               <strong className="text-white">100% browser-based</strong> — completely private.
             </p>
           </div>

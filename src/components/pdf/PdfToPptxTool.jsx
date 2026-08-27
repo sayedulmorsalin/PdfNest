@@ -44,8 +44,8 @@ export default function PdfToPptxTool() {
     <div className="space-y-6">
       {status.type && (
         <div className={`flex items-center gap-3 p-4 rounded-lg border text-sm ${status.type === 'loading' ? 'bg-blue-500/10 border-blue-500/30 text-blue-300' :
-            status.type === 'success' ? 'bg-green-500/10 border-green-500/30 text-green-300' :
-              'bg-red-500/10 border-red-500/30 text-red-300'
+          status.type === 'success' ? 'bg-green-500/10 border-green-500/30 text-green-300' :
+            'bg-red-500/10 border-red-500/30 text-red-300'
           }`}>
           {status.type === 'loading' && <Loader className="w-4 h-4 animate-spin shrink-0" />}
           {status.type === 'success' && <CheckCircle className="w-4 h-4 shrink-0" />}
