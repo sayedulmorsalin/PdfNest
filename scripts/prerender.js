@@ -1,28 +1,37 @@
 /**
- * prerender.js — Lightweight Static HTML Injector
+ * prerender.js — High-Performance Static HTML Prerenderer with Rich SEO
  *
- * Replaces the Puppeteer-based approach with a zero-dependency Node.js solution.
- * Works on Netlify (no Chrome/Puppeteer needed). Runs in ~1-2 seconds.
- *
- * For each route:
- *  1. Reads dist/index.html (the Vite build output)
- *  2. Injects page-specific title, meta tags, JSON-LD schemas
- *  3. Adds static body content so crawlers see real HTML without running JS
- *  4. Writes dist/{route}/index.html
- *
- * React still hydrates client-side — tool functionality is unchanged.
- * Crawlers (Googlebot, Bingbot) get real content immediately.
+ * Generates crawlable, SEO-rich static HTML for all routes:
+ *  1. Injects complete meta tags, OpenGraph, Twitter Cards, and canonical links.
+ *  2. Injects rich JSON-LD schemas: SoftwareApplication, BreadcrumbList, FAQPage, BlogPosting.
+ *  3. Injects full textual content:
+ *     - Tool pages: Detailed descriptions, step-by-step How-To guides, features, and full FAQ sections.
+ *     - Blog pages: Full article text (all sections, headings, tables, lists) from src/data/blogPosts.js.
+ *  4. Crawlers (Googlebot, Bingbot) receive comprehensive 800–2,500 word pages instead of thin stubs.
+ *  5. React still hydrates client-side seamlessly for interactive features.
  */
 
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import blogPosts from '../src/data/blogPosts.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const distDir = path.resolve(__dirname, '..', 'dist');
 const SITE_URL = 'https://pdfnest.shop';
 const DEFAULT_IMAGE = `${SITE_URL}/image.png?v=2`;
+
+// Load tool FAQs
+const toolFaqsPath = path.resolve(__dirname, 'toolFaqs.json');
+let toolFaqsMap = {};
+if (fs.existsSync(toolFaqsPath)) {
+  try {
+    toolFaqsMap = JSON.parse(fs.readFileSync(toolFaqsPath, 'utf8'));
+  } catch (e) {
+    console.warn('Could not load toolFaqs.json:', e.message);
+  }
+}
 
 // ─── Schema Helpers ───────────────────────────────────────────────────────────
 
@@ -47,12 +56,28 @@ function breadcrumbSchema(items) {
       '@type': 'ListItem',
       position: i + 1,
       name,
-      ...(url ? { item: `${SITE_URL}${url}` } : {}),
+      ...(url ? { item: `${SITE_URL}${url.startsWith('/') ? url : `/${url}`}` } : {}),
     })),
   };
 }
 
-function blogPosting(headline, description, slug, datePublished) {
+function faqSchema(faqs) {
+  if (!faqs || !faqs.length) return null;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map(f => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: f.a,
+      },
+    })),
+  };
+}
+
+function blogPosting(headline, description, slug, datePublished, dateModified) {
   return {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
@@ -60,7 +85,7 @@ function blogPosting(headline, description, slug, datePublished) {
     description,
     url: `${SITE_URL}/blog/${slug}`,
     datePublished,
-    dateModified: '2026-08-10',
+    dateModified: dateModified || datePublished,
     image: DEFAULT_IMAGE,
     author: { '@type': 'Organization', name: 'PdfNest', url: SITE_URL },
     publisher: {
@@ -71,20 +96,92 @@ function blogPosting(headline, description, slug, datePublished) {
   };
 }
 
-// ─── Route Definitions ────────────────────────────────────────────────────────
-// Each route defines: path, title, description, keywords, heading, content, breadcrumbs?, schemas?, ogType?
+// ─── Markdown to Clean HTML Formatter for Blog Posts ──────────────────────────
 
-const ROUTES = [
+function formatInline(str) {
+  return (str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" style="color:#2563eb;text-decoration:underline">$1</a>')
+    .replace(/`(.+?)`/g, '<code style="background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:0.9em;color:#0f172a">$1</code>');
+}
+
+function mdToHtml(md) {
+  if (!md) return '';
+  const blocks = md.split(/\n\s*\n/);
+  return blocks
+    .map(block => {
+      block = block.trim();
+      if (!block) return '';
+
+      // Markdown Table
+      if (block.startsWith('|')) {
+        const lines = block.split('\n').filter(l => l.trim().startsWith('|'));
+        if (lines.length >= 2) {
+          const parseRow = line =>
+            line
+              .split('|')
+              .slice(1, -1)
+              .map(c => c.trim());
+          const header = parseRow(lines[0]);
+          const dataRows = lines.slice(2).map(parseRow);
+          return `<table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.95rem">
+            <thead>
+              <tr style="background:#f8fafc">
+                ${header.map(h => `<th style="border:1px solid #e2e8f0;padding:10px 14px;text-align:left;font-weight:600;color:#0f172a">${formatInline(h)}</th>`).join('')}
+              </tr>
+            </thead>
+            <tbody>
+              ${dataRows.map(row => `<tr>${row.map(c => `<td style="border:1px solid #e2e8f0;padding:10px 14px;color:#334155">${formatInline(c)}</td>`).join('')}</tr>`).join('')}
+            </tbody>
+          </table>`;
+        }
+      }
+
+      // Unordered list
+      if (block.startsWith('- ') || block.startsWith('* ')) {
+        const items = block
+          .split('\n')
+          .map(l => l.replace(/^[-*]\s+/, '').trim())
+          .filter(Boolean);
+        return `<ul style="margin:1rem 0;padding-left:1.5rem;line-height:1.8;color:#334155">
+          ${items.map(i => `<li style="margin-bottom:0.5rem">${formatInline(i)}</li>`).join('')}
+        </ul>`;
+      }
+
+      // Ordered list
+      if (/^\d+\.\s/.test(block)) {
+        const items = block
+          .split('\n')
+          .map(l => l.replace(/^\d+\.\s+/, '').trim())
+          .filter(Boolean);
+        return `<ol style="margin:1rem 0;padding-left:1.5rem;line-height:1.8;color:#334155">
+          ${items.map(i => `<li style="margin-bottom:0.5rem">${formatInline(i)}</li>`).join('')}
+        </ol>`;
+      }
+
+      // Standard paragraph
+      return `<p style="font-size:1.05rem;color:#334155;line-height:1.8;margin-bottom:1.25rem">${formatInline(block)}</p>`;
+    })
+    .join('\n');
+}
+
+// ─── Base Routes Definition ───────────────────────────────────────────────────
+
+const BASE_ROUTES = [
   {
     path: '/',
-    title: 'PdfNest | Free Online PDF Editor, Compress, Convert & Merge PDFs',
+    title: 'PdfNest | Free Online PDF Editor, Compress, Convert & Merge PDFs (No Uploads)',
     description:
-      'PdfNest: Free online tools for PDF editing, conversion, and compression. Merge PDFs, convert PDF to Word, split pages, compress files, format JSON, and compress images. 100% browser-based — your files never leave your device.',
+      'PdfNest: 100% Free online tools for PDF editing, conversion, and compression. Merge PDFs, convert PDF to Word, split pages, compress PPTX/DOCX, format JSON. 100% browser-based — your files never leave your device.',
     keywords:
       'free PDF editor, compress PDF, merge PDF, split PDF, PDF to Word, Word to PDF, PDF to JPG, compress DOCX, compress PPTX, JSON formatter, image compressor, online tools, pdfnest.shop',
-    heading: 'All Your Tools in One Place',
+    heading: 'All Your PDF & Document Tools in One Place — 100% Free & Private',
     content:
-      'Fast, free, and privacy-focused online tools for developers and students. No accounts, no tracking, just pure utility. PDF editor, PDF to Word converter, PDF compressor, merge PDF, split PDF, compress DOCX, compress PPTX, JSON formatter, image compressor, code formatter, and CGPA calculator — all in one place.',
+      'Fast, free, and privacy-focused online tools for professionals, students, and developers. No accounts, no paywalls, and no tracking. All operations run directly in your browser using local device memory — your files are NEVER uploaded to any cloud server.',
     schemas: [
       {
         '@context': 'https://schema.org',
@@ -110,12 +207,12 @@ const ROUTES = [
   },
   {
     path: '/pdf-editor',
-    title: 'Professional PDF Editor — Convert PDF to Word, Merge & Split',
+    title: 'Professional PDF Editor Free — Convert PDF to Word, Merge & Split Online',
     description:
       'Free online PDF editor to convert PDF to Word with preserved formatting, PDF to PowerPoint, merge, split, and compress PDFs. 100% browser-based for maximum security.',
     keywords:
       'PDF to Word, free PDF editor, merge PDF, split PDF, compress PDF, PDF to PPTX, browser-based PDF editor, edit PDF online',
-    heading: 'All-in-One PDF Editor',
+    heading: 'All-in-One Online PDF Editor',
     content:
       'Convert PDFs with preserved formatting — headings, bullets, bold text and paragraph structure are kept intact. Features: PDF to Word converter, PDF to PowerPoint, Merge PDFs, Split PDFs, Compress PDFs. 100% browser-based, no server uploads ever.',
     breadcrumbs: [['Home', '/'], ['PDF Editor']],
@@ -132,9 +229,9 @@ const ROUTES = [
   },
   {
     path: '/merge-pdf',
-    title: 'Merge PDF Online Free — Combine PDF Files',
+    title: 'Merge PDF Online Free — Combine PDF Files Instantly (No Limits)',
     description:
-      'Merge multiple PDF files into one document for free. No watermarks, no registration. Fast, secure, browser-based PDF merger.',
+      'Merge multiple PDF files into one document for free. No watermarks, no file limits, no registration. Fast, secure, browser-based PDF merger.',
     keywords: 'merge pdf, merge pdf online, combine pdf, merge pdf free, combine pdf files, pdf merger online',
     heading: 'Merge PDF Online — Combine Files for Free',
     content:
@@ -142,16 +239,20 @@ const ROUTES = [
     breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['Merge PDF']],
     schemas: [
       softwareApp('PdfNest PDF Merger', 'Free online tool to merge multiple PDF files into one document.', [
-        'Unlimited merges', 'Drag to reorder', 'Browser-based processing', 'No watermarks', 'Free unlimited use',
+        'Unlimited merges',
+        'Drag to reorder',
+        'Browser-based processing',
+        'No watermarks',
+        'Free unlimited use',
       ]),
       breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['Merge PDF']]),
     ],
   },
   {
     path: '/compress-pdf',
-    title: 'Compress PDF Online Free — Reduce PDF File Size',
+    title: 'Compress PDF Online Free — Reduce PDF File Size Without Losing Quality',
     description:
-      'Compress PDF files online for free. Reduce PDF file size without losing quality. No watermarks, no registration. Fast, secure, browser-based PDF compressor.',
+      'Compress PDF files online for free. Reduce PDF file size up to 80% without losing text or image quality. No watermarks, no registration, 100% browser-based.',
     keywords:
       'compress pdf, reduce pdf size, compress pdf online, pdf compressor, shrink pdf, compress pdf free, reduce pdf file size',
     heading: 'Compress PDF Online — Reduce File Size for Free',
@@ -160,14 +261,18 @@ const ROUTES = [
     breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['Compress PDF']],
     schemas: [
       softwareApp('PdfNest PDF Compressor', 'Free online tool to compress and reduce PDF file size without quality loss.', [
-        'Smart compression', 'No quality loss', 'Browser-based processing', 'No watermarks', 'Free unlimited use',
+        'Smart compression',
+        'No quality loss',
+        'Browser-based processing',
+        'No watermarks',
+        'Free unlimited use',
       ]),
       breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['Compress PDF']]),
     ],
   },
   {
     path: '/split-pdf',
-    title: 'Split PDF Online Free — Extract Pages from PDF',
+    title: 'Split PDF Online Free — Extract Pages from PDF in Seconds',
     description:
       'Split PDF files and extract pages for free. Separate PDF pages, extract specific page ranges, or split into individual files. No watermarks, no registration required.',
     keywords:
@@ -178,14 +283,18 @@ const ROUTES = [
     breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['Split PDF']],
     schemas: [
       softwareApp('PdfNest PDF Splitter', 'Free online tool to split PDF files and extract specific pages.', [
-        'Extract specific pages', 'Split by page range', 'Split into individual files', 'Browser-based', 'Free unlimited use',
+        'Extract specific pages',
+        'Split by page range',
+        'Split into individual files',
+        'Browser-based',
+        'Free unlimited use',
       ]),
       breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['Split PDF']]),
     ],
   },
   {
     path: '/pdf-to-word',
-    title: 'PDF to Word Converter Free — Convert PDF to DOCX Online',
+    title: 'PDF to Word Converter Free — Convert PDF to DOCX with Preserved Formatting',
     description:
       'Convert PDF files to editable Word documents (.docx) with preserved formatting, headings, and bullet points. 100% browser-based — your files never leave your device. No watermarks, no registration.',
     keywords:
@@ -195,16 +304,25 @@ const ROUTES = [
       'Transform PDFs into fully editable Word (.docx) documents with preserved formatting, headings, and bullet points. Our smart parser detects font sizes, bold and italic text, and paragraph structure. 100% browser-based — your files never leave your device.',
     breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['PDF to Word']],
     schemas: [
-      softwareApp('PdfNest PDF to Word Converter', 'Free online tool to convert PDF documents into editable Word (.docx) files.', [
-        'Formatting preservation', 'Heading detection (H1, H2)', 'Bold and italic support',
-        'Bullet point reconstruction', 'Browser-based', 'No watermarks', 'Free unlimited use',
-      ]),
+      softwareApp(
+        'PdfNest PDF to Word Converter',
+        'Free online tool to convert PDF documents into editable Word (.docx) files.',
+        [
+          'Formatting preservation',
+          'Heading detection (H1, H2)',
+          'Bold and italic support',
+          'Bullet point reconstruction',
+          'Browser-based',
+          'No watermarks',
+          'Free unlimited use',
+        ]
+      ),
       breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['PDF to Word']]),
     ],
   },
   {
     path: '/word-to-pdf',
-    title: 'Word to PDF Converter Free — Convert DOCX to PDF Online',
+    title: 'Word to PDF Converter Free — Convert DOCX to PDF Online Instantly',
     description:
       'Convert Word documents (.docx) to PDF online for free. Preserve all formatting, fonts, and layouts. No watermarks, no registration. Fast, secure, browser-based converter.',
     keywords:
@@ -215,14 +333,16 @@ const ROUTES = [
     breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['Word to PDF']],
     schemas: [
       softwareApp('PdfNest Word to PDF Converter', 'Free online tool to convert Word documents into PDF files.', [
-        'Formatting preservation', 'Browser-based processing', 'Free unlimited use',
+        'Formatting preservation',
+        'Browser-based processing',
+        'Free unlimited use',
       ]),
       breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['Word to PDF']]),
     ],
   },
   {
     path: '/pdf-to-jpg',
-    title: 'PDF to JPG Converter Free — Convert PDF to Images Online',
+    title: 'PDF to JPG Converter Free — Convert PDF to High-Res Images Online',
     description:
       'Convert PDF pages to JPG images for free. High-quality PDF to image conversion. No watermarks, no registration. Fast, secure, browser-based converter.',
     keywords:
@@ -233,43 +353,50 @@ const ROUTES = [
     breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['PDF to JPG']],
     schemas: [
       softwareApp('PdfNest PDF to JPG Converter', 'Free online tool to convert PDF pages to high-quality JPG images.', [
-        'High-resolution output', 'Multi-page support', 'Batch download', 'Browser-based processing', 'Free unlimited use',
+        'High-resolution output',
+        'Multi-page support',
+        'Batch download',
+        'Browser-based processing',
+        'Free unlimited use',
       ]),
       breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['PDF to JPG']]),
     ],
   },
   {
     path: '/pdf-to-png',
-    title: 'PDF to PNG Converter Free — Convert PDF to PNG Images Online',
+    title: 'PDF to PNG Converter Free — Convert PDF to Lossless PNG Online',
     description:
       'Convert PDF pages to lossless PNG images for free. High-quality PDF to PNG conversion. No watermarks, no registration. Fast, secure, browser-based converter.',
-    keywords:
-      'pdf to png, convert pdf to png, pdf to png converter, pdf to png free, pdf pages to png images',
+    keywords: 'pdf to png, convert pdf to png, pdf to png converter, pdf to png free, pdf pages to png images',
     heading: 'Convert PDF to PNG — Free Image Converter',
     content:
       'Transform PDF pages into lossless PNG images. Perfect for documents requiring transparency or crisp text quality. Each page becomes a separate high-resolution PNG. 100% browser-based — completely private.',
     breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['PDF to PNG']],
     schemas: [
       softwareApp('PdfNest PDF to PNG Converter', 'Free online tool to convert PDF pages to lossless PNG images.', [
-        'Lossless quality', 'Multi-page support', 'Batch download', 'Browser-based',
+        'Lossless quality',
+        'Multi-page support',
+        'Batch download',
+        'Browser-based',
       ]),
       breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['PDF to PNG']]),
     ],
   },
   {
     path: '/pdf-to-pptx',
-    title: 'PDF to PowerPoint Converter Free — Convert PDF to PPTX Online',
+    title: 'PDF to PowerPoint Converter Free — Convert PDF to Slides Online',
     description:
       'Convert PDF files to PowerPoint presentations (.pptx) for free. Smart slide layout from PDF structure. No watermarks, no registration. Browser-based converter.',
-    keywords:
-      'pdf to pptx, pdf to powerpoint, convert pdf to pptx, pdf to presentation, pdf to slides converter',
+    keywords: 'pdf to pptx, pdf to powerpoint, convert pdf to pptx, pdf to presentation, pdf to slides converter',
     heading: 'Convert PDF to PowerPoint — Free PPTX Converter',
     content:
       'Transform PDF documents into ready-to-present PowerPoint (.pptx) files. Our engine automatically paginates content and formats headers for slide titles. 100% browser-based — your files never leave your device.',
     breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['PDF to PowerPoint']],
     schemas: [
       softwareApp('PdfNest PDF to PowerPoint Converter', 'Free online tool to convert PDF documents into PowerPoint presentations.', [
-        'Smart slide layout', 'Browser-based processing', 'Free unlimited use',
+        'Smart slide layout',
+        'Browser-based processing',
+        'Free unlimited use',
       ]),
       breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['PDF to PowerPoint']]),
     ],
@@ -279,15 +406,16 @@ const ROUTES = [
     title: 'PowerPoint to PDF Converter Free — Convert PPTX to PDF Online',
     description:
       'Convert PowerPoint presentations (.pptx, .ppt) to PDF for free. Preserve formatting, fonts, and layouts. No watermarks, no registration. Fast, secure, browser-based converter.',
-    keywords:
-      'powerpoint to pdf, convert pptx to pdf, pptx to pdf, pptx to pdf converter, powerpoint to pdf free',
+    keywords: 'powerpoint to pdf, convert pptx to pdf, pptx to pdf, pptx to pdf converter, powerpoint to pdf free',
     heading: 'Convert PowerPoint to PDF — Free Online Converter',
     content:
       'Transform PowerPoint presentations into universally readable PDF files with preserved formatting. Each slide is captured at high resolution. 100% browser-based — your files never leave your device.',
     breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['PowerPoint to PDF']],
     schemas: [
       softwareApp('PdfNest PowerPoint to PDF Converter', 'Free online tool to convert PowerPoint presentations into PDF files.', [
-        'Formatting preservation', 'Browser-based processing', 'Free unlimited use',
+        'Formatting preservation',
+        'Browser-based processing',
+        'Free unlimited use',
       ]),
       breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['PowerPoint to PDF']]),
     ],
@@ -304,9 +432,17 @@ const ROUTES = [
       'Shrink your Word documents (.docx) instantly while preserving formatting and quality. 100% free and private — your documents are never uploaded to any server. Optimize embedded images and zip archives in your browser.',
     breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['Compress DOCX']],
     schemas: [
-      softwareApp('PdfNest Word Document Compressor', 'Free online tool to compress Word documents (.docx) and reduce file size without losing formatting.', [
-        'Compress Word document DOCX online', 'Reduce Word file size free', 'Preserve text formatting and tables', '100% private client-side processing', 'No watermarks or registration',
-      ]),
+      softwareApp(
+        'PdfNest Word Document Compressor',
+        'Free online tool to compress Word documents (.docx) and reduce file size without losing formatting.',
+        [
+          'Compress Word document DOCX online',
+          'Reduce Word file size free',
+          'Preserve text formatting and tables',
+          '100% private client-side processing',
+          'No watermarks or registration',
+        ]
+      ),
       breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['Compress DOCX', '/compress-docx/']]),
     ],
   },
@@ -322,9 +458,18 @@ const ROUTES = [
       'Reduce the file size of your PowerPoint presentations (.pptx, .ppsx) quickly and easily. 100% free and private — handles large 300MB+ decks without server limits. Smart image re-encoding and XML package compression directly in your browser.',
     breadcrumbs: [['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['Compress PPTX']],
     schemas: [
-      softwareApp('PdfNest PowerPoint Compressor', 'Free online tool to compress PowerPoint presentations (.pptx, .ppsx) and reduce file size without losing quality. Handles large files over 300MB.', [
-        'Compress PPT and PPTX online', 'Reduce PowerPoint size free', 'Support for large files over 300MB', '100% private browser processing', 'No quality loss option', 'No watermarks or file limits',
-      ]),
+      softwareApp(
+        'PdfNest PowerPoint Compressor',
+        'Free online tool to compress PowerPoint presentations (.pptx, .ppsx) and reduce file size without losing quality. Handles large files over 300MB.',
+        [
+          'Compress PPT and PPTX online',
+          'Reduce PowerPoint size free',
+          'Support for large files over 300MB',
+          '100% private browser processing',
+          'No quality loss option',
+          'No watermarks or file limits',
+        ]
+      ),
       breadcrumbSchema([['Home', '/'], ['PDF Tools', '/pdf-editor/'], ['Compress PPTX', '/compress-pptx/']]),
     ],
   },
@@ -340,7 +485,11 @@ const ROUTES = [
       'Format messy JSON data into clean, readable output with syntax highlighting. Validate JSON structure, detect errors, and minify for production. Completely free, works instantly in your browser.',
     schemas: [
       softwareApp('PdfNest JSON Formatter', 'Free online JSON formatter, validator, and minifier with syntax highlighting.', [
-        'JSON formatting', 'JSON validation', 'JSON minification', 'Syntax highlighting', 'Error detection',
+        'JSON formatting',
+        'JSON validation',
+        'JSON minification',
+        'Syntax highlighting',
+        'Error detection',
       ]),
     ],
   },
@@ -356,7 +505,11 @@ const ROUTES = [
       'Compress JPEG, PNG, and WebP images without visible quality loss. Perfect for optimizing images for websites, email attachments, and storage. 100% browser-based — images never leave your device.',
     schemas: [
       softwareApp('PdfNest Image Compressor', 'Free online image compression tool that reduces file size without losing quality.', [
-        'JPEG compression', 'PNG compression', 'WebP support', 'Browser-based', 'Batch compression',
+        'JPEG compression',
+        'PNG compression',
+        'WebP support',
+        'Browser-based',
+        'Batch compression',
       ]),
     ],
   },
@@ -372,7 +525,10 @@ const ROUTES = [
       'Calculate your Cumulative Grade Point Average (CGPA) using the Bangladesh grading system. Add subjects with credit hours and grades to get your instant GPA result. Free, accurate, and easy to use.',
     schemas: [
       softwareApp('PdfNest CGPA Calculator', 'Free CGPA calculator using the Bangladesh university grading system.', [
-        'BD grading system', 'Instant calculation', 'Credit hour support', 'Free unlimited use',
+        'BD grading system',
+        'Instant calculation',
+        'Credit hour support',
+        'Free unlimited use',
       ]),
     ],
   },
@@ -388,13 +544,17 @@ const ROUTES = [
       'Format JavaScript, TypeScript, HTML, CSS, and JSON code using Prettier standards. Get clean, consistent, readable code in seconds. Completely free, no installation required.',
     schemas: [
       softwareApp('PdfNest Code Formatter', 'Free online code formatter supporting JavaScript, HTML, CSS, and JSON.', [
-        'JavaScript formatting', 'HTML formatting', 'CSS formatting', 'JSON formatting', 'Prettier standards',
+        'JavaScript formatting',
+        'HTML formatting',
+        'CSS formatting',
+        'JSON formatting',
+        'Prettier standards',
       ]),
     ],
   },
   {
     path: '/blog',
-    title: 'PdfNest Blog — PDF Tips, Guides & Tutorials',
+    title: 'PdfNest Blog — Expert PDF Tips, Document Guides & Tutorials',
     description:
       'Expert guides and tutorials on compressing, converting, merging, and managing PDF files. Learn how to use free online PDF tools effectively — no software needed.',
     keywords:
@@ -413,106 +573,6 @@ const ROUTES = [
       },
       breadcrumbSchema([['Home', '/'], ['Blog', '/blog/']]),
     ],
-  },
-  {
-    path: '/blog/how-to-compress-powerpoint-presentation-reduce-file-size',
-    title: 'How to Compress a PowerPoint Presentation: Reduce PPT & PPTX Size in 2026',
-    description:
-      'Learn how to compress PowerPoint presentations (.ppt & .pptx) without losing slide quality. Reduce large PPT decks over 300MB for email, Google Drive, and web.',
-    keywords:
-      'compress powerpoint, reduce ppt size, ppt compressor, compress pptx, compress large powerpoint 300mb, powerpoint file size reducer, compress ppt online, how to shrink powerpoint',
-    heading: 'How to Compress a PowerPoint Presentation: Reduce PPT & PPTX Size in 2026',
-    content:
-      'PowerPoint files balloon in size because of high-resolution embedded media. Learn how to compress PowerPoint presentations (.pptx & .ppt) by up to 80% using free browser-based tools and built-in PowerPoint compression settings.',
-    breadcrumbs: [['Home', '/'], ['Blog', '/blog/'], ['Compress PowerPoint Guide']],
-    ogType: 'article',
-    schemas: [
-      blogPosting(
-        'How to Compress a PowerPoint Presentation: Reduce PPT & PPTX Size in 2026',
-        'Learn how to compress PowerPoint presentations (.ppt & .pptx) without losing slide quality. Reduce large PPT decks over 300MB.',
-        'how-to-compress-powerpoint-presentation-reduce-file-size',
-        '2026-08-22'
-      ),
-      breadcrumbSchema([['Home', '/'], ['Blog', '/blog/'], ['Compress PowerPoint Guide', '/blog/how-to-compress-powerpoint-presentation-reduce-file-size/']]),
-    ],
-  },
-  {
-    path: '/blog/how-to-compress-pdf-without-losing-quality',
-    title: 'How to Compress PDF Without Losing Quality in 2026',
-    description:
-      'Learn how to compress PDF files without losing quality. Step-by-step guide using free online tools. Reduce PDF size for email, web, and storage.',
-    keywords: 'compress pdf, compress pdf without losing quality, reduce pdf size, pdf compressor, shrink pdf',
-    heading: 'How to Compress PDF Without Losing Quality in 2026',
-    content:
-      'Large PDF files create problems everywhere. Email providers reject attachments over 25MB. Cloud storage fills up faster. Web uploads time out. Learn how to dramatically reduce PDF file size without any visible loss in quality using free browser-based tools.',
-    breadcrumbs: [['Home', '/'], ['Blog', '/blog'], ['Compress PDF Guide']],
-    ogType: 'article',
-    schemas: [blogPosting('How to Compress PDF Without Losing Quality in 2026', 'Learn how to compress PDF files without losing quality.', 'how-to-compress-pdf-without-losing-quality', '2026-06-15')],
-  },
-  {
-    path: '/blog/best-free-pdf-converter-2026',
-    title: 'Best Free PDF Converter in 2026 — Top Tools Compared',
-    description:
-      'Compare the best free PDF converters in 2026. Convert PDF to Word, Excel, PowerPoint, and images without paying. Detailed comparison of features, privacy, and quality.',
-    keywords: 'best free pdf converter, free pdf converter, pdf converter 2026, convert pdf free, best pdf to word converter',
-    heading: 'Best Free PDF Converter in 2026 — Top Tools Compared',
-    content:
-      'PDFs are everywhere — contracts, reports, invoices, academic papers, government forms. A good PDF converter lets you transform PDFs into editable formats like Word, Excel, PowerPoint, or images. Compare the best free options available in 2026 based on conversion quality, privacy, speed, and ease of use.',
-    breadcrumbs: [['Home', '/'], ['Blog', '/blog'], ['Best PDF Converter 2026']],
-    ogType: 'article',
-    schemas: [blogPosting('Best Free PDF Converter in 2026 — Top Tools Compared', 'Compare the best free PDF converters in 2026.', 'best-free-pdf-converter-2026', '2026-06-20')],
-  },
-  {
-    path: '/blog/how-to-merge-multiple-pdfs-online',
-    title: 'How to Merge Multiple PDFs Online for Free in 2026',
-    description:
-      'Step-by-step guide to merge multiple PDF files into one document for free. No software needed. Works on any device. Fast, secure, and easy.',
-    keywords: 'merge pdf, merge pdf online, combine pdf, merge pdf free, combine pdf files, join pdf files',
-    heading: 'How to Merge Multiple PDFs Online for Free in 2026',
-    content:
-      'Whether you are a student compiling research papers, a professional preparing a presentation package, or organizing personal documents, merging PDFs is a task you will encounter regularly. Learn the easiest free way to combine multiple PDF files into one.',
-    breadcrumbs: [['Home', '/'], ['Blog', '/blog'], ['Merge PDFs Guide']],
-    ogType: 'article',
-    schemas: [blogPosting('How to Merge Multiple PDFs Online for Free in 2026', 'Step-by-step guide to merge multiple PDF files into one document for free.', 'how-to-merge-multiple-pdfs-online', '2026-06-10')],
-  },
-  {
-    path: '/blog/pdf-vs-docx-which-format-should-you-use',
-    title: 'PDF vs DOCX: Which Document Format Should You Use?',
-    description:
-      'PDF vs DOCX comparison. Learn when to use PDF and when to use Word format. Understand the pros, cons, and best use cases for each document format.',
-    keywords: 'pdf vs docx, pdf vs word, difference between pdf and docx, when to use pdf, when to use word',
-    heading: 'PDF vs DOCX: Which Document Format Should You Use?',
-    content:
-      'PDF and DOCX are the two most popular document formats in the world. Every day, billions of documents are created, shared, and stored in these formats. Understanding when to use each format can save you time, prevent formatting headaches, and ensure your documents look professional.',
-    breadcrumbs: [['Home', '/'], ['Blog', '/blog'], ['PDF vs DOCX']],
-    ogType: 'article',
-    schemas: [blogPosting('PDF vs DOCX: Which Document Format Should You Use?', 'PDF vs DOCX comparison. Learn when to use PDF and when to use Word format.', 'pdf-vs-docx-which-format-should-you-use', '2026-06-05')],
-  },
-  {
-    path: '/blog/convert-pdf-to-word-without-adobe',
-    title: 'How to Convert PDF to Word Without Adobe — Free Methods',
-    description:
-      'Convert PDF to Word without Adobe Acrobat. 5 free methods that work in 2026. No software installation needed. Step-by-step instructions included.',
-    keywords: 'convert pdf to word without adobe, pdf to word free, pdf to word no adobe, free pdf to word converter',
-    heading: 'How to Convert PDF to Word Without Adobe — Free Methods',
-    content:
-      'Adobe Acrobat Pro costs $19.99 per month — that is nearly $240 per year just to convert PDFs. The truth is, there are excellent free alternatives that convert PDF to Word with impressive accuracy. Learn 5 different free methods with step-by-step instructions.',
-    breadcrumbs: [['Home', '/'], ['Blog', '/blog'], ['PDF to Word Without Adobe']],
-    ogType: 'article',
-    schemas: [blogPosting('How to Convert PDF to Word Without Adobe — Free Methods', 'Convert PDF to Word without Adobe Acrobat. 5 free methods that work in 2026.', 'convert-pdf-to-word-without-adobe', '2026-06-01')],
-  },
-  {
-    path: '/blog/top-10-free-online-pdf-tools-2026',
-    title: 'Top 10 Free Online PDF Tools You Need in 2026',
-    description:
-      'Discover the 10 best free online PDF tools in 2026. Edit, convert, merge, split, compress, and protect PDFs without paying a cent. Complete guide with recommendations.',
-    keywords: 'free pdf tools, online pdf tools, best pdf tools 2026, free pdf editor, pdf tools online free',
-    heading: 'Top 10 Free Online PDF Tools You Need in 2026',
-    content:
-      'PDFs run the modern world. Contracts, invoices, reports, academic papers, government forms — if it is important, it is probably a PDF. Here are the 10 PDF tools every student, professional, and creator should know about in 2026.',
-    breadcrumbs: [['Home', '/'], ['Blog', '/blog'], ['Top PDF Tools 2026']],
-    ogType: 'article',
-    schemas: [blogPosting('Top 10 Free Online PDF Tools You Need in 2026', 'Discover the 10 best free online PDF tools in 2026.', 'top-10-free-online-pdf-tools-2026', '2026-05-28')],
   },
   {
     path: '/privacy',
@@ -546,6 +606,42 @@ const ROUTES = [
   },
 ];
 
+// Attach tool FAQs and FAQ schema to base routes
+for (const route of BASE_ROUTES) {
+  const faqs = toolFaqsMap[route.path];
+  if (faqs && faqs.length) {
+    route.faqs = faqs;
+    route.schemas = route.schemas || [];
+    const schema = faqSchema(faqs);
+    if (schema) route.schemas.push(schema);
+  }
+}
+
+// Generate Blog Post routes directly from src/data/blogPosts.js
+const BLOG_ROUTES = blogPosts.map(post => {
+  const schemas = [
+    blogPosting(post.title, post.metaDescription, post.slug, post.publishDate, post.dateModified),
+    breadcrumbSchema([['Home', '/'], ['Blog', '/blog/'], [post.title, `/blog/${post.slug}/`]]),
+  ];
+  if (post.faqs && post.faqs.length) {
+    schemas.push(faqSchema(post.faqs));
+  }
+  return {
+    path: `/blog/${post.slug}`,
+    title: `${post.title} | PdfNest`,
+    description: post.metaDescription,
+    keywords: post.keywords,
+    heading: post.title,
+    content: post.metaDescription,
+    ogType: 'article',
+    blogPost: post,
+    breadcrumbs: [['Home', '/'], ['Blog', '/blog/'], [post.title]],
+    schemas,
+  };
+});
+
+const ALL_ROUTES = [...BASE_ROUTES, ...BLOG_ROUTES];
+
 // ─── HTML Generation ──────────────────────────────────────────────────────────
 
 /** Safely escape characters for HTML attribute values */
@@ -555,12 +651,13 @@ function esc(str) {
 
 function generateHtml(baseHtml, route) {
   const fullTitle = route.title.includes('PdfNest') ? route.title : `${route.title} | PdfNest`;
-  const formattedPath = route.path === '/' ? '/' : (route.path.endsWith('/') ? route.path : `${route.path}/`);
+  const formattedPath = route.path === '/' ? '/' : route.path.endsWith('/') ? route.path : `${route.path}/`;
   const canonicalUrl = `${SITE_URL}${formattedPath}`;
   const ogType = route.ogType || 'website';
 
   // Build schema scripts
   const schemaScripts = (route.schemas || [])
+    .filter(Boolean)
     .map(s => `  <script type="application/ld+json">${JSON.stringify(s)}</script>`)
     .join('\n');
 
@@ -591,44 +688,159 @@ function generateHtml(baseHtml, route) {
 ${schemaScripts}
   <!-- /Prerendered SEO -->`;
 
-  // Static body content — visible to crawlers without JS
+  // Breadcrumbs HTML
   const breadcrumbHtml = route.breadcrumbs
-    ? `<nav aria-label="Breadcrumb" style="font-size:0.875rem;color:#888;margin-bottom:1rem">
-      <ol style="list-style:none;display:flex;flex-wrap:wrap;gap:0.25rem;padding:0;margin:0">
-        ${route.breadcrumbs.map(([name, url], i) =>
-          `<li>${i > 0 ? '<span aria-hidden="true"> › </span>' : ''}${url ? `<a href="${url}" style="color:#888">${esc(name)}</a>` : `<span>${esc(name)}</span>`}</li>`
-        ).join('')}
+    ? `<nav aria-label="Breadcrumb" style="font-size:0.875rem;color:#64748b;margin-bottom:1.5rem">
+      <ol style="list-style:none;display:flex;flex-wrap:wrap;gap:0.35rem;padding:0;margin:0">
+        ${route.breadcrumbs
+          .map(
+            ([name, url], i) =>
+              `<li>${i > 0 ? '<span aria-hidden="true" style="color:#cbd5e1"> › </span>' : ''}${url ? `<a href="${url}" style="color:#2563eb;text-decoration:none">${esc(name)}</a>` : `<span style="color:#475569">${esc(name)}</span>`}</li>`
+          )
+          .join('')}
       </ol>
     </nav>`
     : '';
 
-  const staticContent = `<div style="font-family:system-ui,sans-serif;max-width:900px;margin:0 auto;padding:1rem">
-    <header style="margin-bottom:2rem">
-      <a href="/" style="text-decoration:none;color:inherit;font-weight:bold;font-size:1.25rem">PdfNest</a>
-      <nav aria-label="Main navigation" style="display:inline-flex;gap:1rem;margin-left:2rem;font-size:0.875rem">
-        <a href="/" style="color:#888">Home</a>
-        <a href="/pdf-editor/" style="color:#888">PDF Editor</a>
-        <a href="/merge-pdf/" style="color:#888">Merge PDF</a>
-        <a href="/compress-pdf/" style="color:#888">Compress PDF</a>
-        <a href="/split-pdf/" style="color:#888">Split PDF</a>
-        <a href="/compress-docx/" style="color:#888">Compress DOCX</a>
-        <a href="/compress-pptx/" style="color:#888">Compress PPTX</a>
-        <a href="/blog/" style="color:#888">Blog</a>
+  // Main Body Content
+  let mainBody = '';
+
+  if (route.blogPost) {
+    const post = route.blogPost;
+    const formattedDate = new Date(post.publishDate).toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+    });
+
+    mainBody = `
+      <article>
+        ${breadcrumbHtml}
+        <header style="margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid #e2e8f0">
+          <div style="display:flex;gap:0.75rem;align-items:center;margin-bottom:1rem;font-size:0.875rem;color:#64748b">
+            <span style="background:#eff6ff;color:#2563eb;padding:3px 10px;border-radius:9999px;font-weight:600">${esc(post.category)}</span>
+            <span>${formattedDate}</span>
+            <span>•</span>
+            <span>${esc(post.readTime)}</span>
+          </div>
+          <h1 style="font-size:2.25rem;font-weight:800;line-height:1.25;color:#0f172a;margin-bottom:1rem">${esc(post.title)}</h1>
+          <p style="font-size:1.15rem;color:#475569;line-height:1.7">${esc(post.metaDescription)}</p>
+        </header>
+
+        <div style="line-height:1.8;color:#334155">
+          ${post.sections
+            .map(
+              s => `
+            <section style="margin-bottom:2.5rem">
+              <h2 style="font-size:1.5rem;font-weight:700;color:#0f172a;margin-bottom:1rem">${esc(s.heading)}</h2>
+              <div>${mdToHtml(s.content)}</div>
+            </section>
+          `
+            )
+            .join('')}
+        </div>
+
+        ${
+          post.faqs && post.faqs.length
+            ? `
+          <section style="margin-top:3rem;padding-top:2rem;border-top:1px solid #e2e8f0">
+            <h2 style="font-size:1.75rem;font-weight:700;color:#0f172a;margin-bottom:1.5rem">Frequently Asked Questions</h2>
+            ${post.faqs
+              .map(
+                f => `
+              <article style="margin-bottom:1.5rem">
+                <h3 style="font-size:1.15rem;font-weight:600;color:#0f172a;margin-bottom:0.4rem">${esc(f.q)}</h3>
+                <p style="color:#475569;line-height:1.7;margin:0">${esc(f.a)}</p>
+              </article>
+            `
+              )
+              .join('')}
+          </section>
+        `
+            : ''
+        }
+      </article>
+    `;
+  } else {
+    // Tool or Standard Page
+    const isTool = route.faqs && route.faqs.length > 0;
+
+    const howToSection = isTool
+      ? `
+      <section style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1.5rem;margin:2rem 0">
+        <h2 style="font-size:1.35rem;font-weight:700;color:#0f172a;margin-bottom:1rem">How to Use ${esc(route.heading)}</h2>
+        <ol style="margin:0;padding-left:1.5rem;line-height:1.8;color:#334155">
+          <li><strong>Select or Upload File:</strong> Choose your file directly from your computer or mobile device.</li>
+          <li><strong>100% Client-Side Processing:</strong> Your files never upload to any external server — processed completely within your browser.</li>
+          <li><strong>Download Instantly:</strong> Save your converted, compressed, or edited file with zero watermarks or size caps.</li>
+        </ol>
+      </section>
+      <section style="margin:2rem 0">
+        <h2 style="font-size:1.35rem;font-weight:700;color:#0f172a;margin-bottom:0.75rem">Why Choose PdfNest?</h2>
+        <ul style="margin:0;padding-left:1.5rem;line-height:1.8;color:#334155">
+          <li><strong>Total Privacy Guarantee:</strong> Zero server uploads. Ideal for confidential contracts, financial sheets, and personal documents.</li>
+          <li><strong>No File Size Restrictions:</strong> Compress or convert large files (300MB+) without "file too large" errors or queue waits.</li>
+          <li><strong>100% Free Forever:</strong> No subscription, no credit card, no email registration, and no intrusive watermarks.</li>
+        </ul>
+      </section>
+    `
+      : '';
+
+    const faqSection =
+      route.faqs && route.faqs.length
+        ? `
+      <section style="margin-top:2.5rem;padding-top:2rem;border-top:1px solid #e2e8f0">
+        <h2 style="font-size:1.5rem;font-weight:700;color:#0f172a;margin-bottom:1.5rem">Frequently Asked Questions</h2>
+        ${route.faqs
+          .map(
+            f => `
+          <article style="margin-bottom:1.5rem">
+            <h3 style="font-size:1.15rem;font-weight:600;color:#0f172a;margin-bottom:0.35rem">${esc(f.q)}</h3>
+            <p style="color:#475569;line-height:1.7;margin:0">${esc(f.a)}</p>
+          </article>
+        `
+          )
+          .join('')}
+      </section>
+    `
+        : '';
+
+    mainBody = `
+      <main>
+        ${breadcrumbHtml}
+        <h1 style="font-size:2.25rem;font-weight:800;color:#0f172a;margin-bottom:1rem">${esc(route.heading)}</h1>
+        <p style="font-size:1.15rem;color:#475569;line-height:1.7;margin-bottom:1.5rem">${esc(route.content)}</p>
+        ${howToSection}
+        ${faqSection}
+        <p style="color:#64748b;font-size:0.875rem;margin-top:2rem">Interactive tool loads directly below. Please ensure JavaScript is enabled in your browser.</p>
+      </main>
+    `;
+  }
+
+  const staticContent = `<div style="font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:960px;margin:0 auto;padding:2rem 1.5rem;color:#0f172a">
+    <header style="margin-bottom:2.5rem;padding-bottom:1.25rem;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
+      <a href="/" style="text-decoration:none;color:#0f172a;font-weight:800;font-size:1.5rem;letter-spacing:-0.02em">PdfNest</a>
+      <nav aria-label="Main navigation" style="display:flex;gap:1.25rem;font-size:0.9rem;flex-wrap:wrap">
+        <a href="/" style="color:#475569;text-decoration:none">Home</a>
+        <a href="/pdf-editor/" style="color:#475569;text-decoration:none">PDF Editor</a>
+        <a href="/merge-pdf/" style="color:#475569;text-decoration:none">Merge PDF</a>
+        <a href="/compress-pdf/" style="color:#475569;text-decoration:none">Compress PDF</a>
+        <a href="/split-pdf/" style="color:#475569;text-decoration:none">Split PDF</a>
+        <a href="/compress-docx/" style="color:#475569;text-decoration:none">Compress DOCX</a>
+        <a href="/compress-pptx/" style="color:#475569;text-decoration:none">Compress PPTX</a>
+        <a href="/blog/" style="color:#475569;text-decoration:none">Blog</a>
       </nav>
     </header>
-    <main>
-      ${breadcrumbHtml}
-      <h1 style="font-size:2rem;font-weight:700;margin-bottom:1rem">${esc(route.heading)}</h1>
-      <p style="font-size:1.1rem;color:#555;line-height:1.7;margin-bottom:2rem">${esc(route.content)}</p>
-      <p style="color:#777;font-size:0.875rem">Loading interactive tool — please enable JavaScript for full functionality.</p>
-    </main>
-    <footer style="margin-top:3rem;padding-top:1rem;border-top:1px solid #eee;font-size:0.8rem;color:#999">
-      <p>PdfNest — Free Online PDF Tools. All processing is 100% browser-based. Your files never leave your device.</p>
-      <nav style="display:flex;gap:1rem;margin-top:0.5rem">
-        <a href="/privacy/" style="color:#999">Privacy Policy</a>
-        <a href="/terms/" style="color:#999">Terms of Service</a>
-        <a href="/contact/" style="color:#999">Contact</a>
-        <a href="/blog/" style="color:#999">Blog</a>
+
+    ${mainBody}
+
+    <footer style="margin-top:4rem;padding-top:2rem;border-top:1px solid #e2e8f0;font-size:0.875rem;color:#64748b">
+      <p style="margin:0 0 1rem 0"><strong>PdfNest</strong> — Free Online PDF Tools. All processing is 100% browser-based. Your files never leave your device.</p>
+      <nav style="display:flex;gap:1.25rem">
+        <a href="/privacy/" style="color:#64748b;text-decoration:none">Privacy Policy</a>
+        <a href="/terms/" style="color:#64748b;text-decoration:none">Terms of Service</a>
+        <a href="/contact/" style="color:#64748b;text-decoration:none">Contact</a>
+        <a href="/blog/" style="color:#64748b;text-decoration:none">Blog</a>
       </nav>
     </footer>
   </div>`;
@@ -637,7 +849,6 @@ ${schemaScripts}
   let html = baseHtml;
 
   // Step 1: Remove duplicate/stale meta tags from the static fallback in index.html
-  // (react-helmet-async handles these client-side; we inject fresh ones above)
   html = html.replace(/<title>[^<]*<\/title>/g, '');
   html = html.replace(/<meta\s+name="description"[^>]*>/g, '');
   html = html.replace(/<meta\s+name="keywords"[^>]*>/g, '');
@@ -647,13 +858,12 @@ ${schemaScripts}
   html = html.replace(/<link\s+rel="canonical"[^>]*>/g, '');
   html = html.replace(/<meta\s+property="og:[^"]*"[^>]*>/g, '');
   html = html.replace(/<meta\s+name="twitter:[^"]*"[^>]*>/g, '');
-  // Remove stale prerender comment blocks if any
   html = html.replace(/\s*<!-- Prerendered SEO[\s\S]*?\/Prerendered SEO -->/g, '');
 
   // Step 2: Inject SEO block at start of <head>
   html = html.replace('<head>', `<head>\n${seoBlock}`);
 
-  // Step 3: Replace the empty root div with static content
+  // Step 3: Replace the empty root div with rich static content
   html = html.replace(/<div\s+id="root"><\/div>/, `<div id="root">${staticContent}</div>`);
 
   return html;
@@ -672,9 +882,9 @@ const baseHtml = fs.readFileSync(baseHtmlPath, 'utf8');
 let successCount = 0;
 let errorCount = 0;
 
-console.log(`\nPrerendering ${ROUTES.length} routes...\n`);
+console.log(`\nPrerendering ${ALL_ROUTES.length} routes with full content and rich schemas...\n`);
 
-for (const route of ROUTES) {
+for (const route of ALL_ROUTES) {
   try {
     const html = generateHtml(baseHtml, route);
 
@@ -689,7 +899,7 @@ for (const route of ROUTES) {
 
     // Write the prerendered HTML
     fs.writeFileSync(outputPath, html, 'utf8');
-    console.log(`  ✓ ${route.path}`);
+    console.log(`  ✓ ${route.path} (${(html.length / 1024).toFixed(1)} KB)`);
     successCount++;
   } catch (err) {
     console.error(`  ✗ ${route.path}: ${err.message}`);

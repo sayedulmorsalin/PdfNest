@@ -1,0 +1,386 @@
+{
+  "/merge-pdf": [
+    {
+      "q": "How do I merge PDF files online for free?",
+      "a": "Simply upload your PDF files to PdfNest's Merge PDF tool, arrange them in the order you want, and click 'Merge'. The combined PDF will download instantly. No registration, no watermarks — completely free."
+    },
+    {
+      "q": "Is there a limit to how many PDFs I can merge?",
+      "a": "There is no strict limit on the number of files. You can merge as many PDFs as your browser can handle. For very large batches (50+ files or hundreds of MBs), we recommend merging in groups for best performance."
+    },
+    {
+      "q": "Will the quality of my PDFs be affected after merging?",
+      "a": "No. PdfNest preserves the original quality of each PDF page. Text, images, hyperlinks, bookmarks, and formatting remain exactly as they were in the source files."
+    },
+    {
+      "q": "Is it safe to merge PDFs online?",
+      "a": "Absolutely. PdfNest processes everything locally in your browser using JavaScript. Your files are never uploaded to any server. This means your sensitive documents stay 100% private on your device."
+    },
+    {
+      "q": "Can I rearrange the page order before merging?",
+      "a": "Yes! After uploading your PDFs, you can drag and drop to reorder them before merging. You can also remove individual files if you change your mind."
+    },
+    {
+      "q": "What file formats are supported?",
+      "a": "The Merge PDF tool accepts standard PDF files (.pdf). If you need to merge other document types (Word, images), first convert them to PDF using our PDF Converter tool, then merge them."
+    },
+    {
+      "q": "Does merging PDFs require any software installation?",
+      "a": "No. PdfNest is a web-based tool that runs entirely in your browser. There's nothing to download, install, or update. It works on Windows, Mac, Linux, and mobile devices."
+    }
+  ],
+  "/compress-pdf": [
+    {
+      "q": "How do I compress a PDF without losing quality?",
+      "a": "PdfNest uses smart compression algorithms that remove redundant metadata, optimize embedded images, and streamline the PDF structure. The 'Recommended' setting gives you the best balance — typically 40-70% size reduction with virtually no visible quality loss."
+    },
+    {
+      "q": "What is the maximum file size I can compress?",
+      "a": "Since PdfNest processes files locally in your browser, the limit depends on your device's available memory. Most modern devices can handle PDFs up to 100MB without issues. For very large files, we recommend splitting them first."
+    },
+    {
+      "q": "Is my PDF safe when I compress it online?",
+      "a": "Yes, completely. PdfNest never uploads your files to any server. The compression happens entirely within your browser using JavaScript. Your documents never leave your computer."
+    },
+    {
+      "q": "Can I compress multiple PDFs at once?",
+      "a": "Currently, the compressor handles one file at a time for best results. However, you can compress files back-to-back instantly since there's no upload/download wait time."
+    },
+    {
+      "q": "How much can I reduce the file size?",
+      "a": "Results vary based on the PDF content. Image-heavy PDFs can see 50-80% reduction. Text-heavy documents typically see 20-40% reduction. Scanned PDFs with large images benefit the most from compression."
+    },
+    {
+      "q": "Will compressed PDFs work for email attachments?",
+      "a": "Absolutely! That's one of the most popular use cases. Most email providers limit attachments to 25MB. Our compressor can often bring large PDFs under that limit while maintaining readability."
+    },
+    {
+      "q": "Does compression remove any content from my PDF?",
+      "a": "No. Compression only optimizes how data is stored — it doesn't remove pages, text, or images. All content remains intact and accessible after compression."
+    }
+  ],
+  "/split-pdf": [
+    {
+      "q": "How do I split a PDF into separate pages?",
+      "a": "Upload your PDF to PdfNest's Split PDF tool, select which pages you want to extract, and download them as individual PDF files or as a new combined document. It's fast, free, and requires no registration."
+    },
+    {
+      "q": "Can I extract specific pages from a PDF?",
+      "a": "Yes! You can choose individual pages (e.g., pages 1, 3, 7) or a range of pages (e.g., pages 5-10) to extract. The selected pages are saved as a new PDF document."
+    },
+    {
+      "q": "Will splitting affect the quality of my PDF?",
+      "a": "No. Splitting a PDF simply separates pages — it doesn't re-encode or compress anything. Each extracted page retains its original quality, including text, images, and formatting."
+    },
+    {
+      "q": "Is it safe to split PDFs online?",
+      "a": "With PdfNest, absolutely. We process everything locally in your browser. Your PDF files are never uploaded to any server, so your confidential documents remain completely private."
+    },
+    {
+      "q": "Can I split a password-protected PDF?",
+      "a": "If you can open the PDF in your browser (i.e., you know the password), then yes. However, we cannot bypass PDF encryption without the correct password."
+    },
+    {
+      "q": "How many pages can I split at once?",
+      "a": "There's no page limit. Whether your PDF has 5 pages or 500 pages, you can split it freely. Performance depends on your device's capabilities."
+    },
+    {
+      "q": "Can I split and then merge specific pages?",
+      "a": "Absolutely! You can use PdfNest's Split tool to extract the pages you need, then use our Merge PDF tool to combine them with pages from other documents."
+    }
+  ],
+  "/pdf-to-word": [
+    {
+      "q": "How do I convert PDF to Word for free?",
+      "a": "Upload your PDF to PdfNest's PDF to Word converter. Our advanced engine analyzes the document structure to reconstruct text, headings, bold/italic formatting, and bullet points into a fully editable Word (.docx) file. No registration required."
+    },
+    {
+      "q": "Is it safe to convert PDFs to Word online?",
+      "a": "Yes! All processing happens completely inside your web browser using JavaScript. Your confidential business documents, resumes, and personal files are never uploaded to any cloud server. PdfNest is the only major online PDF converter that processes files locally."
+    },
+    {
+      "q": "Will my formatting be preserved?",
+      "a": "Yes. Our client-side parser detects font sizes, weights, and positioning to reconstruct Headings (H1, H2), bullet points, and paragraphs. Bold and italic text is also preserved. Complex multi-column layouts may need minor manual adjustments."
+    },
+    {
+      "q": "Can I convert scanned PDFs to Word?",
+      "a": "Scanned PDFs contain image data rather than embedded text. PdfNest works best with digital PDFs (where you can highlight text). Scanned documents require OCR technology — for those, Google Docs or Adobe Acrobat Online offer free basic OCR."
+    },
+    {
+      "q": "What is the maximum file size I can convert?",
+      "a": "Since all processing happens in your browser, the limit depends on your device's available memory. Most modern devices handle PDFs up to 100MB without issues. For very large documents, splitting the PDF first may improve performance."
+    },
+    {
+      "q": "Why does my converted Word document look different?",
+      "a": "PDF and DOCX are fundamentally different formats. PDFs store fixed page layouts; Word uses flowing text. During conversion, some spacing, font, or layout differences may appear — especially for PDFs with complex designs like multi-column text, overlapping elements, or decorative borders."
+    },
+    {
+      "q": "Can I convert multiple PDFs to Word at once?",
+      "a": "Currently, PdfNest converts one file at a time for best accuracy. Since there's no upload wait time, you can convert files back-to-back very quickly."
+    }
+  ],
+  "/word-to-pdf": [
+    {
+      "q": "How do I convert Word to PDF for free?",
+      "a": "Upload your Word (.docx or .doc) document to PdfNest's Word to PDF converter. Our tool will securely convert your file to a universally accessible PDF format."
+    },
+    {
+      "q": "Will my formatting be preserved?",
+      "a": "Yes! Converting Word to PDF ensures that your fonts, images, and layout look exactly the same on any device."
+    },
+    {
+      "q": "Is it safe to convert Word documents to PDF online?",
+      "a": "Absolutely. We built PdfNest with privacy in mind. Your confidential documents are never uploaded to any cloud server."
+    }
+  ],
+  "/pdf-to-jpg": [
+    {
+      "q": "How do I convert PDF to JPG for free?",
+      "a": "Upload your PDF to PdfNest's PDF to JPG converter. Each page of your PDF will be converted into a separate JPG image. You can download individual images or all pages at once. No registration required."
+    },
+    {
+      "q": "What resolution are the converted images?",
+      "a": "PdfNest converts PDF pages to high-resolution JPG images (typically 150-300 DPI). The output quality is suitable for both screen viewing and printing."
+    },
+    {
+      "q": "Can I convert a multi-page PDF to JPG?",
+      "a": "Yes! Each page of your PDF becomes a separate JPG image. A 10-page PDF will produce 10 individual JPG files, which you can download individually or as a zip archive."
+    },
+    {
+      "q": "What's the difference between PDF to JPG and PDF to PNG?",
+      "a": "JPG uses lossy compression, producing smaller files ideal for photographs and sharing. PNG uses lossless compression, producing larger files with perfect quality ideal for text-heavy documents and screenshots."
+    },
+    {
+      "q": "Is it safe to convert PDFs to images online?",
+      "a": "With PdfNest, yes. All processing happens locally in your browser. Your PDF is never uploaded to any server, ensuring complete privacy for sensitive documents."
+    },
+    {
+      "q": "Why would I convert a PDF to JPG?",
+      "a": "Common reasons include: embedding PDF content in presentations, sharing on social media (which doesn't support PDFs), creating thumbnails for documents, and making content accessible on platforms that only accept images."
+    }
+  ],
+  "/pdf-to-png": [
+    {
+      "q": "How do I convert PDF to PNG for free?",
+      "a": "Upload your PDF to PdfNest's PDF to PNG converter. Each page of your PDF will be converted into a separate PNG image. You can download individual images or all pages at once. No registration required."
+    },
+    {
+      "q": "What resolution are the converted images?",
+      "a": "PdfNest converts PDF pages to high-resolution PNG images. The output quality is lossless, preserving text crispness and graphics perfectly, suitable for both screen viewing and printing."
+    },
+    {
+      "q": "What's the difference between PDF to JPG and PDF to PNG?",
+      "a": "PNG uses lossless compression, producing larger files with perfect quality ideal for text-heavy documents, diagrams, and screenshots. JPG uses lossy compression, producing smaller files ideal for photographs."
+    },
+    {
+      "q": "Is it safe to convert PDFs to images online?",
+      "a": "With PdfNest, yes. All processing happens locally in your browser. Your PDF is never uploaded to any server, ensuring complete privacy for sensitive documents."
+    }
+  ],
+  "/pdf-to-pptx": [
+    {
+      "q": "How do I convert PDF to PowerPoint for free?",
+      "a": "Upload your PDF to PdfNest's PDF to PPTX converter. Our tool will analyze the document and automatically reconstruct slide layouts, generating a fully editable PowerPoint presentation. No registration required."
+    },
+    {
+      "q": "Is it safe to convert PDFs to PPTX online?",
+      "a": "Yes. All processing is done locally in your browser. Your PDF is never uploaded to any server, ensuring complete privacy."
+    },
+    {
+      "q": "Will the formatting be preserved?",
+      "a": "Our advanced client-side parser attempts to reconstruct the slide structure as closely as possible, maintaining headings, text layout, and general formatting."
+    }
+  ],
+  "/pptx-to-pdf": [
+    {
+      "q": "How do I convert PowerPoint to PDF for free?",
+      "a": "Upload your PowerPoint (.pptx) document to PdfNest's converter. The file is processed entirely in your browser — nothing is uploaded to any server. Your PDF is generated instantly and downloaded automatically."
+    },
+    {
+      "q": "Will my slide formatting be preserved?",
+      "a": "Yes! PdfNest renders each slide using your browser's layout engine, preserving text formatting, images, tables, and positioning. Each slide is captured at high resolution for crisp output."
+    },
+    {
+      "q": "Is it safe to convert PowerPoint documents to PDF online?",
+      "a": "Absolutely. PdfNest processes everything locally in your browser. Your files never leave your device — no uploads, no servers, complete privacy."
+    },
+    {
+      "q": "What file types are supported?",
+      "a": "PdfNest supports .pptx (modern PowerPoint) files. The converter handles text, images, tables, shapes, and backgrounds."
+    }
+  ],
+  "/compress-docx": [
+    {
+      "q": "How do I compress a Word document online for free?",
+      "a": "Upload your .docx document to PdfNest's free Word document compressor. Select your compression level (Low, Recommended, or High), and our browser-based engine will optimize embedded images and compress XML data in seconds. Download your reduced Word document immediately."
+    },
+    {
+      "q": "Can I reduce Word file size online without losing formatting or styles?",
+      "a": "Yes! PdfNest specifically targets embedded image files inside the DOCX archive. All paragraph styles, fonts, margins, header/footer layouts, bullet points, tables, and text remain 100% untouched."
+    },
+    {
+      "q": "Is it safe to compress sensitive Word documents online?",
+      "a": "Absolutely. PdfNest performs all processing locally inside your web browser using Web API technology. Your confidential Word documents are never uploaded to server storage or shared online."
+    },
+    {
+      "q": "How much can I compress a DOCX file?",
+      "a": "For documents containing high-resolution pictures, diagrams, or screenshots, file size reduction ranges from 40% to 75%. Text-heavy documents also benefit from maximum ZIP repacking compression."
+    },
+    {
+      "q": "What Word file formats are supported?",
+      "a": "Our compressor supports Microsoft Word Open XML documents (.docx). For older binary .doc files, open them in Word or Google Docs and save as .docx before compressing."
+    },
+    {
+      "q": "Is there any file size limit for DOCX compression?",
+      "a": "Since processing is executed directly on your device, there are no artificial file size limits or paywalls. You can compress documents over 50MB smoothly."
+    }
+  ],
+  "/compress-pptx": [
+    {
+      "q": "How can I reduce the size of a PowerPoint file online for free?",
+      "a": "Upload your PPT or PPTX presentation to PdfNest's free online PowerPoint compressor. Choose your preferred compression level (Low, Recommended, or High), and our tool shrinks your PowerPoint file by re-encoding embedded images and optimizing XML media data directly in your browser. Download your compressed presentation immediately with no watermarks."
+    },
+    {
+      "q": "Can I compress PPT files larger than 300MB or 500MB online for free?",
+      "a": "Yes! Unlike cloud-based tools that cap uploads at 25MB or 50MB and throw \"payload too large\" errors, PdfNest executes 100% client-side in your web browser. This means you can compress massive PowerPoint files (over 300MB or 500MB) without server timeouts, queue wait times, or paid upgrades."
+    },
+    {
+      "q": "Can I compress PPTX files online without losing slide quality?",
+      "a": "Yes. PdfNest uses intelligent compression algorithms that downscale and re-encode high-density image textures while preserving slide layout geometry, vector shapes, custom typography, slide animations, transitions, and speaker notes. Text and vectors remain 100% crisp."
+    },
+    {
+      "q": "How does browser-based compression protect confidential business pitch decks?",
+      "a": "Your presentations and slides never leave your device. All decompression, image optimization, and repacking are performed locally using your computer or phone's browser memory. No data is ever sent to external cloud servers, ensuring total privacy for proprietary company decks, student assignments, and financial presentations."
+    },
+    {
+      "q": "Will compressing my PowerPoint file delete animations, transitions, or speaker notes?",
+      "a": "No. PdfNest only targets the heavy binary raster assets inside the ppt/media/ folder (like large JPEG, PNG, or TIFF photos). All XML structure defining animations, slide transitions, master slides, speaker notes, and embedded tables remains completely untouched."
+    },
+    {
+      "q": "What PowerPoint formats are supported (.pptx, .ppsx, .ppt)?",
+      "a": "Our online presentation compressor supports modern Microsoft PowerPoint Open XML presentations (.pptx) and PowerPoint slide shows (.ppsx). If you have a legacy binary .ppt file (pre-2007), simply open it in Microsoft PowerPoint or Google Slides and click \"Save As .pptx\" before compressing."
+    },
+    {
+      "q": "Why do PowerPoint presentation files get so large in the first place?",
+      "a": "PowerPoint files swell in size primarily due to uncompressed media. When you paste high-resolution camera photos, 4K screenshots, or uncompressed stock images into slides, PowerPoint embeds the full-size image file inside the presentation package. A 20-slide presentation can easily reach 100MB to 300MB+ just from embedded media assets."
+    },
+    {
+      "q": "How do I choose between Low, Recommended, and High compression?",
+      "a": "• Low Compression: Best if you plan to present on massive 4K conference room screens or high-DPI projectors. Retains high image fidelity with ~30-40% file reduction.\n• Recommended: The sweet spot for 95% of users. Ideal for email attachments, Google Classroom, and LMS submissions with ~50-70% size reduction.\n• High Compression: Best when you need the absolute smallest file size to meet strict 20MB email limits or low-bandwidth downloads."
+    },
+    {
+      "q": "Is there any fee, daily limit, or watermark added to compressed slides?",
+      "a": "PdfNest's PowerPoint compressor is 100% free with unlimited daily usage, no file count limits, no email registration requirements, and zero watermarks."
+    }
+  ],
+  "/json-formatter": [
+    {
+      "q": "What is JSON?",
+      "a": "JSON (JavaScript Object Notation) is a lightweight data-interchange format. It is easy for humans to read and write, and easy for machines to parse and generate. It is heavily used in web development for sending data between a server and a client."
+    },
+    {
+      "q": "Why should I format my JSON data?",
+      "a": "Raw JSON data often comes minified (compressed into a single line) to save bandwidth, making it incredibly difficult to read. Formatting (or beautifying) JSON adds proper indentation, line breaks, and spacing, allowing developers to easily read the structure, spot errors, and understand the data hierarchy."
+    },
+    {
+      "q": "Is my JSON data secure when using this tool?",
+      "a": "Yes, 100% secure. PdfNest's JSON Formatter processes your data entirely on the client-side (in your browser). Your JSON data is never uploaded, saved, or transmitted to any server."
+    },
+    {
+      "q": "What does minifying JSON mean?",
+      "a": "Minifying JSON is the opposite of formatting. It removes all unnecessary whitespace, line breaks, and indentation from the JSON string. This reduces the file size, making it faster to transmit over the network in production environments."
+    },
+    {
+      "q": "How does the JSON validator work?",
+      "a": "Our tool automatically attempts to parse the JSON you paste in real-time. If the JSON is valid, a green 'Valid JSON' badge appears. If there is a syntax error (like a missing comma or unmatched bracket), the tool will catch the error and display exactly what went wrong when you attempt to format or minify it."
+    }
+  ],
+  "/image-compressor": [
+    {
+      "q": "How does the online image compressor work?",
+      "a": "Our image compressor uses advanced algorithms to reduce the file size of your images (JPG, PNG, WebP) by stripping unnecessary metadata and applying smart lossy compression. You can control the exact quality level using the slider."
+    },
+    {
+      "q": "Will my images lose quality when compressed?",
+      "a": "It depends on the quality setting you choose. At standard settings (around 80%), the visual difference is virtually imperceptible to the human eye, but the file size reduction can be up to 70%. You can use the live preview feature to compare the original and compressed images before downloading."
+    },
+    {
+      "q": "Is it safe to compress personal photos online?",
+      "a": "Yes, completely safe. PdfNest's image compressor is built using client-side technology. This means your images are processed directly on your device (in your web browser) and are NEVER uploaded to any external servers."
+    },
+    {
+      "q": "What image formats are supported?",
+      "a": "Our tool currently supports compressing JPG (JPEG), PNG, and WebP images. When you download the compressed image, it will maintain its original file format."
+    },
+    {
+      "q": "Why should I compress my images?",
+      "a": "Compressing images is crucial for website performance (faster loading times), reducing storage space on your device, and meeting file size limits when uploading documents or attaching photos to emails."
+    }
+  ],
+  "/cgpa-calculator": [
+    {
+      "q": "What grading system does this calculator use?",
+      "a": "This calculator uses the standard 4.0 grading scale adopted by the University Grants Commission (UGC) of Bangladesh. This is the official scale used by DU, BUET, NSU, AIUB, BRACU, and almost all public and private universities in Bangladesh."
+    },
+    {
+      "q": "How is CGPA calculated?",
+      "a": "CGPA (Cumulative Grade Point Average) is calculated by multiplying the grade points earned in each subject by the credit hours for that subject, adding all those values together, and then dividing by the total number of credit hours attempted."
+    },
+    {
+      "q": "What is the difference between GPA and CGPA?",
+      "a": "GPA (Grade Point Average) usually refers to the average of your grades for a single semester. CGPA refers to the cumulative average of your grades across all semesters you have completed."
+    },
+    {
+      "q": "Are my grades saved?",
+      "a": "No, PdfNest is a privacy-first platform. Your grades and subjects are processed entirely in your browser and are deleted the moment you close the tab or refresh the page."
+    },
+    {
+      "q": "How many subjects can I add?",
+      "a": "You can add an unlimited number of subjects! Just keep clicking the 'Add Another Subject' button for as many courses as you need to calculate."
+    }
+  ],
+  "/code-formatter": [
+    {
+      "q": "What programming languages does the formatter support?",
+      "a": "Currently, our code formatter supports JavaScript, JSON, HTML, and CSS. Simply select the appropriate language tab before clicking the format or minify buttons."
+    },
+    {
+      "q": "Why should I use a code formatter?",
+      "a": "Code formatting ensures consistent indentation and spacing, making your code significantly easier to read, maintain, and debug. It is considered a best practice in software development."
+    },
+    {
+      "q": "What does code minification do?",
+      "a": "Minification removes all unnecessary characters from your source code—such as whitespace, newlines, and comments—without changing its functionality. This reduces file size, leading to faster download times for your website visitors."
+    },
+    {
+      "q": "Does this tool save my code?",
+      "a": "No. For your security and privacy, all code formatting and minification happens entirely within your web browser using client-side JavaScript. Your code is never sent to our servers."
+    },
+    {
+      "q": "Is this tool free to use?",
+      "a": "Yes! The PdfNest Code Formatter is 100% free to use with no limits, no registration required, and no intrusive pop-up ads."
+    }
+  ],
+  "/pdf-editor": [
+    {
+      "q": "Is this PDF Editor completely free?",
+      "a": "Yes! PdfNest offers a 100% free PDF editor. There are no daily limits, no watermarks added to your documents, and you don't even need to create an account to use our tools."
+    },
+    {
+      "q": "How does the PDF to Word converter preserve formatting?",
+      "a": "Our advanced client-side PDF parser analyzes the geometric position, font size, and weight of every text element in the PDF. It uses this data to reconstruct headings, bullet points, and paragraphs in the output Word (.docx) document, rather than just dumping raw text."
+    },
+    {
+      "q": "Are my sensitive PDF documents secure?",
+      "a": "Absolutely. We built PdfNest with a privacy-first architecture. All PDF processing (conversion, formatting analysis, splitting, merging) happens entirely inside your web browser. Your confidential business documents, resumes, and personal files are never uploaded to any cloud server."
+    },
+    {
+      "q": "Can I use this on my mobile phone?",
+      "a": "Yes, our PDF tools are fully responsive and work on iOS and Android devices directly through your mobile web browser."
+    },
+    {
+      "q": "Why do some scanned PDFs not convert to text?",
+      "a": "If a PDF was created by scanning a physical piece of paper, it is essentially an image wrapped in a PDF file. Currently, our tool requires 'searchable' PDFs (PDFs where you can highlight the text). OCR (Optical Character Recognition) support for scanned documents is coming in a future update."
+    }
+  ]
+}
