@@ -6,7 +6,6 @@ import {
   ArrowRight,
   BookOpen
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 import SEO from '../components/SEO';
 import { ALL_TOOLS } from '../components/RelatedTools';
 

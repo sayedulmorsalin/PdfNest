@@ -1,24 +1,4 @@
-# SEO Trailing Slash 301 Canonical Redirects
-/compress-pptx    /compress-pptx/    301!
-/compress-docx    /compress-docx/    301!
-/merge-pdf        /merge-pdf/        301!
-/compress-pdf     /compress-pdf/     301!
-/split-pdf        /split-pdf/        301!
-/pdf-to-word      /pdf-to-word/      301!
-/word-to-pdf      /word-to-pdf/      301!
-/pdf-to-jpg       /pdf-to-jpg/       301!
-/pdf-to-png       /pdf-to-png/       301!
-/pdf-to-pptx      /pdf-to-pptx/      301!
-/pptx-to-pdf      /pptx-to-pdf/      301!
-/json-formatter   /json-formatter/   301!
-/image-compressor /image-compressor/ 301!
-/cgpa-calculator  /cgpa-calculator/  301!
-/code-formatter   /code-formatter/   301!
-/pdf-editor       /pdf-editor/       301!
-/blog             /blog/             301!
-/privacy          /privacy/          301!
-/terms            /terms/            301!
-/contact          /contact/          301!
-
 # SPA Fallback
-/*                /index.html        200
+# Static HTML files in dist/ (prerendered) are served first by Netlify automatically.
+# Any route not matching a static file falls back to /index.html for client-side routing.
+/*    /index.html    200

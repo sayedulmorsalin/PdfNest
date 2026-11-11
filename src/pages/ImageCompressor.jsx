@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { Upload, Download, Image as ImageIcon, RotateCcw, Sliders, Zap, AlertCircle } from 'lucide-react';
 import imageCompression from 'browser-image-compression';
 import SEO, { buildFAQSchema } from '../components/SEO';

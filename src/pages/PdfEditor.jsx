@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FileUp, Download, Zap, Merge, Scissors, FileDown, CheckCircle, AlertCircle, Loader, X, FileText, Image } from 'lucide-react';
+import { Zap, Merge, Scissors, FileDown } from 'lucide-react';
 import SEO, { buildFAQSchema } from '../components/SEO';
 import FAQSection from '../components/FAQSection';
 import RelatedTools from '../components/RelatedTools';
@@ -38,18 +37,11 @@ const faqs = [
 export default function PdfEditor() {
   const [searchParams, setSearchParams] = useSearchParams();
   const tabParam = searchParams.get('tab');
-  const [activeTab, setActiveTab] = useState(tabParam || 'converter');
+  const validTabs = ['converter', 'merger', 'splitter', 'compressor'];
+  const activeTab = tabParam && validTabs.includes(tabParam) ? tabParam : 'converter';
   const [status, setStatus] = useState({ type: null, message: '' }); // null | 'loading' | 'success' | 'error'
-  const [alertModal, setAlertModal] = useState({ isOpen: false, title: '', message: '', icon: null });
-
-  useEffect(() => {
-    if (tabParam && ['converter', 'merger', 'splitter', 'compressor'].includes(tabParam)) {
-      setActiveTab(tabParam);
-    }
-  }, [tabParam]);
 
   const handleTabChange = (tabId) => {
-    setActiveTab(tabId);
     setSearchParams({ tab: tabId });
     setStatus({ type: null, message: '' });
   };
@@ -60,57 +52,6 @@ export default function PdfEditor() {
     { id: 'splitter', name: 'PDF Splitter', icon: Scissors },
     { id: 'compressor', name: 'PDF Compressor', icon: FileDown },
   ];
-
-  const showAlert = (title, message, icon) => {
-    setAlertModal({ isOpen: true, title, message, icon });
-  };
-
-  const closeAlert = () => {
-    setAlertModal(prev => ({ ...prev, isOpen: false }));
-  };
-
-  const AlertModal = () => (
-    <AnimatePresence>
-      {alertModal.isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={closeAlert}
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-          />
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="relative w-full max-w-md bg-zinc-900 border border-white/10 rounded-2xl shadow-2xl overflow-hidden"
-          >
-            <div className="absolute top-4 right-4">
-              <button onClick={closeAlert} className="p-1 rounded-full hover:bg-white/5 transition-colors text-muted-foreground hover:text-white">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            <div className="p-8 text-center">
-              <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                {alertModal.icon ? <alertModal.icon className="w-8 h-8 text-primary" /> : <Zap className="w-8 h-8 text-primary" />}
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2">{alertModal.title}</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                {alertModal.message}
-              </p>
-              <button
-                onClick={closeAlert}
-                className="mt-8 w-full py-3 bg-primary text-primary-foreground rounded-xl font-semibold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20"
-              >
-                Got it
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      )}
-    </AnimatePresence>
-  );
 
   // File upload states removed since converter tab is now just links
 
@@ -314,7 +255,6 @@ export default function PdfEditor() {
           <RelatedTools currentToolId="pdf-editor" category="PDF Tools" />
         </div>
       </div>
-      <AlertModal />
     </>
   );
 }

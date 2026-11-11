@@ -36,7 +36,7 @@ export default function JsonFormatter() {
     try {
       JSON.parse(jsonString);
       return true;
-    } catch (e) {
+    } catch {
       return false;
     }
   };
@@ -76,7 +76,7 @@ export default function JsonFormatter() {
       await navigator.clipboard.writeText(code);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
+    } catch {
       setError('Failed to copy to clipboard');
     }
   };

@@ -88,7 +88,7 @@ export function classifyLines(lines) {
     if (line.pageBreak) return { ...line, role: 'pageBreak' };
     const { text, fontSize, isBold, x } = line;
     const indent = x - baseX;
-    const isBullet = /^[\u2022\u2023\u25e6\u2043\u2219\-\*]\s/.test(text) || /^\d+\.\s/.test(text);
+    const isBullet = /^[-*\u2022\u2023\u25e6\u2043\u2219]\s/.test(text) || /^\d+\.\s/.test(text);
     const isNumberedBullet = /^\d+\.\s/.test(text);
 
     let role = 'body';
@@ -144,9 +144,6 @@ export async function convertPdfToPptx(file, onProgress) {
 
     await page.render({ canvasContext: ctx, viewport }).promise;
     const imgDataUrl = canvas.toDataURL('image/png');
-
-    const origViewport = page.getViewport({ scale: 1.0 });
-    const isLandscape = origViewport.width > origViewport.height;
 
     const slide = prs.addSlide();
     slide.addImage({

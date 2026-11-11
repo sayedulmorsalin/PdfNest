@@ -95,18 +95,18 @@ export default function BlogPost() {
               <div className="text-muted-foreground leading-relaxed space-y-4">
                 <ReactMarkdown
                   components={{
-                    p: ({node, ...props}) => <p className="mb-4" {...props} />,
-                    ul: ({node, ...props}) => <ul className="list-disc list-outside ml-6 mb-6 space-y-2" {...props} />,
-                    ol: ({node, ...props}) => <ol className="list-decimal list-outside ml-6 mb-6 space-y-2" {...props} />,
-                    li: ({node, ...props}) => <li className="pl-2" {...props} />,
-                    strong: ({node, ...props}) => <strong className="text-white font-semibold" {...props} />,
-                    table: ({node, ...props}) => (
+                    p: ({node: _node, ...props}) => <p className="mb-4" {...props} />,
+                    ul: ({node: _node, ...props}) => <ul className="list-disc list-outside ml-6 mb-6 space-y-2" {...props} />,
+                    ol: ({node: _node, ...props}) => <ol className="list-decimal list-outside ml-6 mb-6 space-y-2" {...props} />,
+                    li: ({node: _node, ...props}) => <li className="pl-2" {...props} />,
+                    strong: ({node: _node, ...props}) => <strong className="text-white font-semibold" {...props} />,
+                    table: ({node: _node, ...props}) => (
                       <div className="overflow-x-auto my-8 border border-white/10 rounded-xl">
                         <table className="w-full text-sm text-left" {...props} />
                       </div>
                     ),
-                    th: ({node, ...props}) => <th className="px-4 py-3 bg-white/5 text-white font-semibold border-b border-white/10" {...props} />,
-                    td: ({node, ...props}) => <td className="px-4 py-3 border-b border-white/5" {...props} />,
+                    th: ({node: _node, ...props}) => <th className="px-4 py-3 bg-white/5 text-white font-semibold border-b border-white/10" {...props} />,
+                    td: ({node: _node, ...props}) => <td className="px-4 py-3 border-b border-white/5" {...props} />,
                   }}
                 >
                   {section.content}

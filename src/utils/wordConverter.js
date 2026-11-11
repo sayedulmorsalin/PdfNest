@@ -2,7 +2,7 @@ import { UDocClient } from '@docmentis/udoc-viewer';
 import { jsPDF } from 'jspdf';
 import { pdfjsLib, configurePdfWorker } from './pdfWorker';
 import { tryServerConvert } from './serverConverter';
-import { triggerDownload, extractStructuredContent, classifyLines } from './pdfConverter';
+import { triggerDownload, classifyLines } from './pdfConverter';
 import {
   Document,
   Packer,
@@ -83,8 +83,8 @@ export async function convertWordToPdf(file, onProgress) {
     console.error('[wordConverter] WebAssembly conversion error:', error);
     throw new Error(error.message || 'Word to PDF conversion failed');
   } finally {
-    if (viewer) try { viewer.destroy(); } catch (e) {}
-    if (client) try { client.destroy(); } catch (e) {}
+    if (viewer) try { viewer.destroy(); } catch { /* ignore */ }
+    if (client) try { client.destroy(); } catch { /* ignore */ }
   }
 }
 
@@ -140,7 +140,7 @@ async function convertPdfToWordImageMode(file, pdf, numPages, onProgress) {
 
   // Build one section per page, each with exact PDF page dimensions and zero margins
   // This makes each image fill the entire page perfectly
-  const sections = pages.map(({ uint8Array, displayW, displayH, twipsW, twipsH }, idx) => ({
+  const sections = pages.map(({ uint8Array, displayW, displayH, twipsW, twipsH }) => ({
     properties: {
       page: {
         size: { width: twipsW, height: twipsH },
@@ -367,8 +367,6 @@ async function extractPageLines(page) {
 /** Build a docx Paragraph from a classified line */
 function buildParagraph(line) {
   const { text, role, fontSize, isBold, isItalic, runs, indent } = line;
-
-  const halfPoints = Math.round((fontSize || 11) * 2);
 
   const makeRun = (runText, bold, italic, size) =>
     new TextRun({

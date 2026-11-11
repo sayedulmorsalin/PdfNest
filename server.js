@@ -63,7 +63,7 @@ function psSingleQuoteEscape(str) {
 // Helper: cleanup temp files
 function cleanupFiles(...files) {
   for (const f of files) {
-    try { if (f && fs.existsSync(f)) fs.unlinkSync(f); } catch (e) { /* ignore */ }
+    try { if (f && fs.existsSync(f)) fs.unlinkSync(f); } catch { /* ignore */ }
   }
 }
 
@@ -134,7 +134,7 @@ async function handlePptxToPdf(req, res) {
       console.log('[PPTX->PDF] Falling back to LibreOffice...');
       const libreCommand = `${getLibreOfficeExe()} --headless --convert-to pdf --outdir "${uploadsDir}" "${inputPath}"`;
 
-      exec(libreCommand, { timeout: 120000 }, (loError, loStdout, loStderr) => {
+      exec(libreCommand, { timeout: 120000 }, (loError) => {
         if (loError || !fs.existsSync(outputPdfPath)) {
           cleanupFiles(inputPath);
           return res.status(500).json({ error: 'PowerPoint to PDF conversion failed.' });
@@ -202,7 +202,7 @@ async function handleWordToPdf(req, res) {
       console.log('[WORD->PDF] Falling back to LibreOffice...');
       const libreCommand = `${getLibreOfficeExe()} --headless --convert-to pdf --outdir "${uploadsDir}" "${inputPath}"`;
 
-      exec(libreCommand, { timeout: 120000 }, (loError, loStdout, loStderr) => {
+      exec(libreCommand, { timeout: 120000 }, (loError) => {
         if (loError || !fs.existsSync(outputPdfPath)) {
           cleanupFiles(inputPath);
           return res.status(500).json({ error: 'Word to PDF conversion failed.' });
@@ -270,7 +270,7 @@ async function handlePdfToWord(req, res) {
       console.log('[PDF->WORD] Falling back to LibreOffice...');
       const libreCommand = `${getLibreOfficeExe()} --headless --infilter="writer_pdf_import" --convert-to docx --outdir "${uploadsDir}" "${inputPath}"`;
 
-      exec(libreCommand, { timeout: 120000 }, (loError, loStdout, loStderr) => {
+      exec(libreCommand, { timeout: 120000 }, (loError) => {
         if (loError || !fs.existsSync(outputDocxPath)) {
           cleanupFiles(inputPath);
           return res.status(500).json({ error: 'PDF to Word conversion failed.' });

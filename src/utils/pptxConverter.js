@@ -80,10 +80,10 @@ export async function convertPptxToPdf(file, onProgress) {
     throw new Error(error.message || 'PowerPoint conversion failed');
   } finally {
     if (viewer) {
-      try { viewer.destroy(); } catch (e) { /* ignore */ }
+      try { viewer.destroy(); } catch { /* ignore */ }
     }
     if (client) {
-      try { client.destroy(); } catch (e) { /* ignore */ }
+      try { client.destroy(); } catch { /* ignore */ }
     }
   }
 }
