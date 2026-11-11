@@ -575,6 +575,36 @@ const BASE_ROUTES = [
     ],
   },
   {
+    path: '/all-tools',
+    title: 'All Free Online PDF & Document Tools — PdfNest Directory',
+    description:
+      'Explore the complete collection of free online PDF, document, image, and developer tools on PdfNest. Merge, compress, convert, and edit with 100% browser-based privacy.',
+    keywords:
+      'all pdf tools, free online pdf tools, pdf converter tools, document tools directory, pdf nest tools',
+    heading: 'Complete Directory of Free Online Tools',
+    content:
+      'Explore our full suite of free, private, client-side document tools. From PDF merging, compression, and format conversion to image optimization and code formatting, every tool runs entirely within your browser for complete confidentiality and zero file uploads.',
+    breadcrumbs: [['Home', '/'], ['All Tools']],
+    schemas: [
+      breadcrumbSchema([['Home', '/'], ['All Tools', '/all-tools/']]),
+    ],
+  },
+  {
+    path: '/about',
+    title: 'About PdfNest — Free, Private, Browser-Based Document Productivity',
+    description:
+      'Learn about PdfNest, our mission to build fast, free, and completely private document utilities that process your files directly inside your web browser with zero server uploads.',
+    keywords:
+      'about pdfnest, client side pdf tools, browser based document security, private pdf converter',
+    heading: 'About PdfNest — Modern, Private Document Tools',
+    content:
+      'PdfNest was founded on a simple principle: productivity tools should never compromise your document confidentiality. Every tool we build runs entirely inside your browser using client-side JavaScript, WebAssembly, and HTML5 Canvas. Your documents, contracts, presentations, and personal records never touch our servers.',
+    breadcrumbs: [['Home', '/'], ['About']],
+    schemas: [
+      breadcrumbSchema([['Home', '/'], ['About', '/about/']]),
+    ],
+  },
+  {
     path: '/privacy',
     title: 'Privacy Policy — PdfNest',
     description:
@@ -583,6 +613,10 @@ const BASE_ROUTES = [
     heading: 'Privacy Policy',
     content:
       'At PdfNest, privacy is our core principle. All file processing happens locally in your browser using JavaScript. Your files are never uploaded to any server. We do not store, share, or collect your documents.',
+    breadcrumbs: [['Home', '/'], ['Privacy Policy']],
+    schemas: [
+      breadcrumbSchema([['Home', '/'], ['Privacy Policy', '/privacy/']]),
+    ],
   },
   {
     path: '/terms',
@@ -593,6 +627,10 @@ const BASE_ROUTES = [
     heading: 'Terms of Service',
     content:
       'By using PdfNest, you agree to these terms of service. Our tools are provided free of charge for personal and professional use. All processing is browser-based and your data stays on your device.',
+    breadcrumbs: [['Home', '/'], ['Terms of Service']],
+    schemas: [
+      breadcrumbSchema([['Home', '/'], ['Terms of Service', '/terms/']]),
+    ],
   },
   {
     path: '/contact',
@@ -603,6 +641,22 @@ const BASE_ROUTES = [
     heading: 'Contact Us',
     content:
       'Have a question or feedback about PdfNest? We would love to hear from you. Reach out to our team and we will get back to you as soon as possible. Email: sayadulmorsalin123@gmail.com',
+    breadcrumbs: [['Home', '/'], ['Contact Us']],
+    schemas: [
+      breadcrumbSchema([['Home', '/'], ['Contact Us', '/contact/']]),
+      {
+        '@context': 'https://schema.org',
+        '@type': 'ContactPage',
+        name: 'Contact PdfNest',
+        url: `${SITE_URL}/contact/`,
+        mainEntity: {
+          '@type': 'ContactPoint',
+          contactType: 'customer support',
+          email: 'sayadulmorsalin123@gmail.com',
+          availableLanguage: ['English'],
+        },
+      },
+    ],
   },
 ];
 
